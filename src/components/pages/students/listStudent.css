@@ -1,0 +1,12 @@
+.studentsList{
+    flex: 4;
+}
+
+.studentlistTitle{
+    align-items: center;
+    display: flex;
+    font-weight: 600;
+    font-size: 30px;
+    justify-content: center;
+   
+}
