@@ -20,7 +20,7 @@ export default function WidgetLarge() {
                        <img src="../../Assets/images/alf1.jpeg" alt=""
                        className="widgetLargeImg"
                        />
-                       <span className="widgetLargName">Ange Bernice</span>
+                       <span className="widgetLargName">umutoni aime</span>
                    </td>
                    <td className="widgetLargeDate">1 Jun 2021</td>
                    <td className="widgetLargeAmount">$ 100,2400</td>
@@ -31,7 +31,7 @@ export default function WidgetLarge() {
                        <img src="../../Assets/images/alf1.jpeg" alt=""
                        className="widgetLargeImg"
                        />
-                       <span className="widgetLargName">Ange Bernice</span>
+                       <span className="widgetLargName">kalisa isaac</span>
                    </td>
                    <td className="widgetLargeDate">1 Jun 2021</td>
                    <td className="widgetLargeAmount">$ 100,2400</td>
@@ -42,7 +42,7 @@ export default function WidgetLarge() {
                        <img src="../../Assets/images/alf1.jpeg" alt=""
                        className="widgetLargeImg"
                        />
-                       <span className="widgetLargName">Ange Bernice</span>
+                       <span className="widgetLargName">Ange uwera</span>
                    </td>
                    <td className="widgetLargeDate">1 Jun 2021</td>
                    <td className="widgetLargeAmount">$ 100,2400</td>
@@ -53,7 +53,7 @@ export default function WidgetLarge() {
                        <img src="../../Assets/images/alf1.jpeg" alt=""
                        className="widgetLargeImg"
                        />
-                       <span className="widgetLargName">Ange Bernice</span>
+                       <span className="widgetLargName">kagabo isa</span>
                    </td>
                    <td className="widgetLargeDate">1 Jun 2021</td>
                    <td className="widgetLargeAmount">$ 100,2400</td>
