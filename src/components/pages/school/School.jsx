@@ -10,16 +10,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
-
-import { DeleteOutline } from "@material-ui/icons";
-
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 import {Link} from "react-router-dom";
 
+import { DeleteOutline } from "@material-ui/icons";
 
 const levels = [
   {
@@ -29,7 +22,7 @@ const levels = [
   {
     value: "S3",
     label: "S3",
-  }
+  },
 ];
 
 const schools = [
@@ -40,7 +33,7 @@ const schools = [
   {
     value: "Saint Ignus",
     label: "Saint Ignus",
-  }
+  },
 ];
 
 const columns = [
@@ -69,17 +62,17 @@ const columns = [
     headerName: "Action",
     width: 150,
     renderCell: (params)=>{
-      return(
-          <>
-          <Link to={"/user/"+params.row.id}>
-          <button className="userListEdit" >Edit</button>
-          </Link>
-         
-          <DeleteOutline className="userListDelete" />
-          </>
+        return(
+            <>
+            <Link to={"/user/"+params.row.id}>
+            <button className="userListEdit" >Edit</button>
+            </Link>
+           
+            <DeleteOutline className="userListDelete" />
+            </>
 
-      )
-  }
+        )
+    }
   },
 ];
 
@@ -95,10 +88,14 @@ const rows = [
   { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
 ];
 
+ 
+
 export default function ListStudent(openn) {
   const [open, setOpen] = React.useState(false);
   //const [value, setValue] = React.useState(new Date());
+ 
 
+ 
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -120,14 +117,14 @@ export default function ListStudent(openn) {
       style={{ flex: 4, height: "auto", width: "400px", margin: "80px 0px" }}
     >
       <Button variant="outlined" onClick={handleClickOpen}>
-        Add new Student
+        Add School
       </Button>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Student Information</DialogTitle>
+        <DialogTitle>School Information</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please enter student information here.
+            Please enter School information here.
           </DialogContentText>
           {/* <TextField
             autoFocus
@@ -148,43 +145,17 @@ export default function ListStudent(openn) {
           >
             <TextField
               id="outlined-basic"
-              label="First Name"
+              label="School Name"
               variant="outlined"
             />
-            <TextField
-              id="outlined-basic"
-              label="Last Name"
-              variant="outlined"
-            />
-            <TextField
-        id="date"
-        label="Birthday"
-        type="date"
-        defaultValue="2017-05-24"
-        sx={{ width: 220 }}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-       <FormControl component="fieldset">
-      <FormLabel component="legend">Gender</FormLabel>
-      <RadioGroup
-        aria-label="gender"
-        defaultValue="female"
-        name="radio-buttons-group"
-      >
-        <FormControlLabel value="female" control={<Radio />} label="Female" />
-        <FormControlLabel value="male" control={<Radio />} label="Male" />
-      </RadioGroup>
-    </FormControl>
-          
+
             <TextField
               id="outlined-select-currency"
               select
-              label="School"
+              label="Province"
               value={school}
               onChange={handleChange}
-              helperText="Please select your School"
+              helperText="Please select your Province"
             >
               {schools.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -195,10 +166,52 @@ export default function ListStudent(openn) {
             <TextField
               id="outlined-select-currency"
               select
-              label="level"
+              label="Distrct"
               value={level}
               onChange={handleChange}
-              helperText="Please select your Level"
+              helperText="Please select your District"
+            >
+              {levels.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              id="outlined-select-currency"
+              select
+              label="Sector"
+              value={level}
+              onChange={handleChange}
+              helperText="Please select your Sector"
+            >
+              {levels.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              id="outlined-select-currency"
+              select
+              label="Cell"
+              value={level}
+              onChange={handleChange}
+              helperText="Please select your Cell"
+            >
+              {levels.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              id="outlined-select-currency"
+              select
+              label="Level"
+              value={level}
+              onChange={handleChange}
+              helperText="Please select your Cell"
             >
               {levels.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -210,7 +223,7 @@ export default function ListStudent(openn) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Add new Student</Button>
+          <Button onClick={handleClose}>Add new School</Button>
         </DialogActions>
       </Dialog>
       <DataGrid

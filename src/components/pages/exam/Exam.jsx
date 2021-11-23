@@ -9,39 +9,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import MenuItem from "@mui/material/MenuItem";
 
 import { DeleteOutline } from "@material-ui/icons";
 
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import {Link} from "react-router-dom";
-
-
-const levels = [
-  {
-    value: "P6",
-    label: "P6",
-  },
-  {
-    value: "S3",
-    label: "S3",
-  }
-];
-
-const schools = [
-  {
-    value: "Remara Catholic",
-    label: "Remera Catholic",
-  },
-  {
-    value: "Saint Ignus",
-    label: "Saint Ignus",
-  }
-];
+import { Link } from "react-router-dom";
 
 const columns = [
   { field: "id", headerName: "ID", width: 70 },
@@ -68,18 +39,17 @@ const columns = [
     field: "action",
     headerName: "Action",
     width: 150,
-    renderCell: (params)=>{
-      return(
-          <>
-          <Link to={"/user/"+params.row.id}>
-          <button className="userListEdit" >Edit</button>
+    renderCell: (params) => {
+      return (
+        <>
+          <Link to={"/user/" + params.row.id}>
+            <button className="userListEdit">Edit</button>
           </Link>
-         
-          <DeleteOutline className="userListDelete" />
-          </>
 
-      )
-  }
+          <DeleteOutline className="userListDelete" />
+        </>
+      );
+    },
   },
 ];
 
@@ -107,24 +77,17 @@ export default function ListStudent(openn) {
   };
 
   //select input field
-  const [school, setSchool] = React.useState("Shool");
-  const [level, setLevel] = React.useState("Shool");
-
-  const handleChange = (event) => {
-    setSchool(event.target.value);
-    setLevel(event.target.value);
-  };
 
   return (
     <div
       style={{ flex: 4, height: "auto", width: "400px", margin: "80px 0px" }}
     >
       <Button variant="outlined" onClick={handleClickOpen}>
-        Add new Student
+        Add new Exam
       </Button>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Student Information</DialogTitle>
+        <DialogTitle>Exam Information</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please enter student information here.
@@ -148,69 +111,25 @@ export default function ListStudent(openn) {
           >
             <TextField
               id="outlined-basic"
-              label="First Name"
+              label="Exam Name"
               variant="outlined"
             />
             <TextField
-              id="outlined-basic"
-              label="Last Name"
-              variant="outlined"
+              id="date"
+              label="Start Date"
+              type="datetime"
+              defaultValue="2017-05-24"
+              sx={{ width: 220 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
-            <TextField
-        id="date"
-        label="Birthday"
-        type="date"
-        defaultValue="2017-05-24"
-        sx={{ width: 220 }}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-       <FormControl component="fieldset">
-      <FormLabel component="legend">Gender</FormLabel>
-      <RadioGroup
-        aria-label="gender"
-        defaultValue="female"
-        name="radio-buttons-group"
-      >
-        <FormControlLabel value="female" control={<Radio />} label="Female" />
-        <FormControlLabel value="male" control={<Radio />} label="Male" />
-      </RadioGroup>
-    </FormControl>
-          
-            <TextField
-              id="outlined-select-currency"
-              select
-              label="School"
-              value={school}
-              onChange={handleChange}
-              helperText="Please select your School"
-            >
-              {schools.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              id="outlined-select-currency"
-              select
-              label="level"
-              value={level}
-              onChange={handleChange}
-              helperText="Please select your Level"
-            >
-              {levels.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+            <TextField id="outlined-basic" label="Subject" variant="outlined" />
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Add new Student</Button>
+          <Button onClick={handleClose}>Add new Exam</Button>
         </DialogActions>
       </Dialog>
       <DataGrid

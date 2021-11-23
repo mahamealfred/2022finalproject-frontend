@@ -22,15 +22,14 @@ export default function AddStudent() {
         <DialogTitle>Subscribe</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here. We
-            will send updates occasionally.
+           Please enter student information here.
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Email Address"
-            type="email"
+            label="First Name"
+            type="text"
             fullWidth
             variant="standard"
           />

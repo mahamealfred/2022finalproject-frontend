@@ -1,6 +1,6 @@
 import React from 'react';
 import './sidebar.css';
-import {LineStyle, Timeline,TrendingUp,Person,Gradient,MonetizationOn,Report} from '@material-ui/icons';
+import {LineStyle, Timeline,TrendingUp,Person,MonetizationOn,Report} from '@material-ui/icons';
 import {Link} from "react-router-dom";
 export default function Sidebar() {
     return (
@@ -21,7 +21,7 @@ export default function Sidebar() {
                         </li>
                         <li className="sidebarListItem">
                          <TrendingUp  className="sidebarIcon" />
-                         Sales
+                         Performance
                         </li>
                  </ul>
 
@@ -36,26 +36,44 @@ export default function Sidebar() {
                          Users
                         </li>
                         </Link>
-                        <Link to="/products" className="link">
-                        <li className="sidebarListItem active">
-                         <Gradient className="sidebarIcon" />
-                         Products
-                        </li>
-                        </Link>
                         <Link to="/students" className="link">
                         <li className="sidebarListItem">
                          <MonetizationOn  className="sidebarIcon" />
                          Students
                         </li>
                         </Link>
+                        <Link to="/school" className="link">
                         <li className="sidebarListItem">
                          <Report  className="sidebarIcon" />
-                         Reports
+                         Schools
                         </li>
+                        </Link>
 
                     </ul>
 
 
+                </div>
+                <div className="sideBarMenu">
+                    <h3 className="sideBarTitle">Exam Menu</h3>
+                    <ul className="sidebarList">
+                    <Link to="/exam" className="link">
+                        <li className="sidebarListItem active">
+                         <LineStyle className="sidebarIcon" />
+                         Exam
+                        </li>
+                        </Link>
+                        <Link to="/question" className="link">
+                        <li className="sidebarListItem">
+                         <Timeline  className="sidebarIcon" />
+                         Questions
+                        </li>
+                        </Link>
+                        <li className="sidebarListItem">
+                         <TrendingUp  className="sidebarIcon" />
+                        Answers
+                        </li>
+
+                    </ul>
                 </div>
                 <div className="sideBarMenu">
                     <h3 className="sideBarTitle">Notifications</h3>
@@ -66,29 +84,11 @@ export default function Sidebar() {
                         </li>
                         <li className="sidebarListItem">
                          <Timeline  className="sidebarIcon" />
-                         FeedBack
-                        </li>
-                        <li className="sidebarListItem">
-                         <TrendingUp  className="sidebarIcon" />
-                        Messages
-                        </li>
-
-                    </ul>
-                </div>
-                <div className="sideBarMenu">
-                    <h3 className="sideBarTitle">Staff</h3>
-                    <ul className="sidebarList">
-                        <li className="sidebarListItem active">
-                         <LineStyle className="sidebarIcon" />
-                         Manage
-                        </li>
-                        <li className="sidebarListItem">
-                         <Timeline  className="sidebarIcon" />
-                         Analytics
-                        </li>
-                        <li className="sidebarListItem">
-                         <TrendingUp  className="sidebarIcon" />
                          Report
+                        </li>
+                        <li className="sidebarListItem">
+                         <TrendingUp  className="sidebarIcon" />
+                         Message
                         </li>
 
                     </ul>
@@ -100,15 +100,15 @@ export default function Sidebar() {
                     <ul className="sidebarList">
                         <li className="sidebarListItem active">
                          <LineStyle className="sidebarIcon" />
-                         Home
+                         Reset password
                         </li>
                         <li className="sidebarListItem">
                          <Timeline  className="sidebarIcon" />
-                         Analytics
+                         Edit profile
                         </li>
                         <li className="sidebarListItem">
                          <TrendingUp  className="sidebarIcon" />
-                         Sales
+                         Logout
                         </li>
                         <li className="sidebarListItem">
                          <Person  className="sidebarIcon"/>
