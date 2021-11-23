@@ -11,9 +11,13 @@ export default function HomeTopbar() {
             alt=""
             className="topAvatar"
           />
+        
         </div>
+        <div className="leftTopBar">
+          <span className="logo">Primary and Ordinary level Quality Eduction Booste</span>
+          </div>
         <div className="toRight">
-          <span className="logo">Primary and Ordinary level Quality Eduction Booster</span>
+         
         </div>
       </div>
     </div>

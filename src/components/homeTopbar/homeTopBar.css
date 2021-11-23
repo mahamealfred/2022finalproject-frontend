@@ -15,11 +15,15 @@
     align-items: center;
     justify-content: space-between;
 }
+.leftTopBar{
+    margin: "0 0 0 0";
+}
 .logo{
     font-weight: bold;
-    font-size: 25px;
+    font-size: 18px;
     color:rgb(37, 132, 221);
     cursor: pointer;
+    margin: "0 0 0 0";
 }
 .topbarIconContainer{
     position:relative;
