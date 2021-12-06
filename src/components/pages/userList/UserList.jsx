@@ -3,10 +3,33 @@ import { DataGrid } from '@material-ui/data-grid';
 import { DeleteOutline } from "@material-ui/icons";
 import { userRows } from "../../../dummyData";
 import {Link} from "react-router-dom";
-import {useState} from "react";
+import PropTypes from "prop-types"
+import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 
-export default function UserList() {
-    const [data,setData] = useState(userRows);
+import {useState,useEffect} from "react";
+
+import { getUsersAction } from "../../../redux/actions/usersAction";
+
+function UserList({ ...rest}) {
+    const dispatch = useDispatch();
+    const usersState = useSelector((state) => state.users);
+    const [users, setUsers] = useState([]);
+   const [data,setData] = useState(userRows);
+   
+   const [userId, setUserId] = useState(0);
+   const [fullname, setFullname] = useState("");
+   const [email, setEmail] = useState("");
+   const [password,setPassword]=useState("");
+   const [role,setRole]=useState("");
+
+    useEffect(()=>{
+        if (!usersState.loading) {
+            if (usersState.users) {
+              setUsers(usersState.users);
+            }
+          }
+        }, [usersState.users]);
 
     const handleDelete=(id)=>{
      setData(data.filter((item)=>item.id !== id));
@@ -17,7 +40,7 @@ export default function UserList() {
             return(
                 <div className="userListUser">
                    <img className="userListImg" src={params.row.avatar} alt="" />
-                   {params.row.username}
+                   {params.user.fullname}
                 </div>
             )
         } },
@@ -26,11 +49,25 @@ export default function UserList() {
           field: 'status',
           headerName: 'Status',
           width: 120,
+          renderCell: (params)=>{
+            return(
+                <div className="userListUser">
+                   {params.user.email}
+                </div>
+            )
+          }
         },
         {
-            field: 'transaction',
-            headerName: 'Transaction Volume',
+            field: 'role',
+            headerName: 'Role',
             width: 160,
+            renderCell: (params)=>{
+                return(
+                    <div className="userListUser">
+                       {params.user.role}
+                    </div>
+                )
+              }
           },
           {
             field: 'action',
@@ -39,6 +76,7 @@ export default function UserList() {
             renderCell: (params)=>{
                 return(
                     <>
+                    
                     <Link to={"/user/"+params.row.id}>
                     <button className="userListEdit" >Edit</button>
                     </Link>
@@ -56,12 +94,18 @@ export default function UserList() {
 
     return (
         <>
-       
+      
         <div className="userList">
         <span className="userlistTitle">List of Users</span> 
-         <DataGrid rows={data} disableSelectionOnClick columns={columns} pageSize={5} checkboxSelection />
-  
+         <DataGrid rows={users} disableSelectionOnClick columns={columns} pageSize={5} checkboxSelection />
+          
         </div>
+       
         </>
     )
 }
+UserList.propTypes = {
+    users: PropTypes.array.isRequired,
+  };
+  
+export default UserList;

@@ -9,7 +9,7 @@ export default function Sidebar() {
                 <div className="sideBarMenu">
                     <h3 className="sideBarTitle">Dashboard</h3>
                     <ul className="sidebarList">
-                        <Link to="/" className="link">
+                        <Link to="/dashboard" className="link">
                         <li className="sidebarListItem active">
                          <LineStyle className="sidebarIcon" />
                          Home
@@ -30,19 +30,19 @@ export default function Sidebar() {
                 <div className="sideBarMenu">
                     <h3 className="sideBarTitle">Quick Menu</h3>
                     <ul className="sidebarList">
-                        <Link to="/users" className="link">
+                        <Link to="/dashboard/users" className="link">
                     <li className="sidebarListItem">
                          <Person  className="sidebarIcon"/>
                          Users
                         </li>
                         </Link>
-                        <Link to="/students" className="link">
+                        <Link to="/dashboard/students" className="link">
                         <li className="sidebarListItem">
                          <MonetizationOn  className="sidebarIcon" />
                          Students
                         </li>
                         </Link>
-                        <Link to="/school" className="link">
+                        <Link to="/dashboard/school" className="link">
                         <li className="sidebarListItem">
                          <Report  className="sidebarIcon" />
                          Schools
@@ -56,13 +56,13 @@ export default function Sidebar() {
                 <div className="sideBarMenu">
                     <h3 className="sideBarTitle">Exam Menu</h3>
                     <ul className="sidebarList">
-                    <Link to="/exam" className="link">
+                    <Link to="/dashboard/exams" className="link">
                         <li className="sidebarListItem active">
                          <LineStyle className="sidebarIcon" />
                          Exam
                         </li>
                         </Link>
-                        <Link to="/question" className="link">
+                        <Link to="/dashboard/questions" className="link">
                         <li className="sidebarListItem">
                          <Timeline  className="sidebarIcon" />
                          Questions
