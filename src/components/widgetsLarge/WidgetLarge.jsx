@@ -2,62 +2,52 @@ import React from 'react'
 import './widgetLarge.css';
 
 export default function WidgetLarge() {
-    const Button=({type})=>{
-        return <button className={"widgetLargeButton " + type}>{type}</button>
-    }
+    
     return (
         <div className="widgetLarge">
-            <h3 className="widgetLargeTitle">Latest Transactions</h3>
+            <h3 className="widgetLargeTitle">Top 10 Schools</h3>
             <table className="widgetLargeTable">
                 <tr className="widgetLargeTr">
-                    <th className="widgetLargeTh">Customer</th>
-                    <th className="widgetLargeTh">Date</th>
-                    <th className="widgetLargeTh">Amount</th>
-                    <th className="widgetLargeTh">Status</th>
+                    <th className="widgetLargeTh">Shoool Name</th>
+                    <th className="widgetLargeTh">District</th>
+                    <th className="widgetLargeTh">Level</th>
+                    <th className="widgetLargeTh">%</th>
                 </tr>
                 <tr className="widgetLargeTr">
                    <td className="widgetLargeUser">
-                       <img src="../../Assets/images/alf1.jpeg" alt=""
-                       className="widgetLargeImg"
-                       />
-                       <span className="widgetLargName">umutoni aime</span>
+                     
+                       <span className="widgetLargName">Saint Ignas</span>
                    </td>
-                   <td className="widgetLargeDate">1 Jun 2021</td>
-                   <td className="widgetLargeAmount">$ 100,2400</td>
-                   <td className="widgetLargeStatus"><Button type="Approved"/></td>
+                   <td className="widgetLargeDate">Gasabo</td>
+                   <td className="widgetLargeAmount">S3</td>
+                   <td className="widgetLargeAmount">90%</td>
                 </tr>
                 <tr className="widgetLargeTr">
                    <td className="widgetLargeUser">
-                       <img src="../../Assets/images/alf1.jpeg" alt=""
-                       className="widgetLargeImg"
-                       />
-                       <span className="widgetLargName">kalisa isaac</span>
+                   
+                       <span className="widgetLargName">Remara Catholic</span>
                    </td>
-                   <td className="widgetLargeDate">1 Jun 2021</td>
-                   <td className="widgetLargeAmount">$ 100,2400</td>
-                   <td className="widgetLargeStatus"><Button type="Declined"/></td>
+                   <td className="widgetLargeDate">Nyarugenge</td>
+                   <td className="widgetLargeAmount">S3</td>
+                   <td className="widgetLargeAmount">50%</td>
                 </tr>
                 <tr className="widgetLargeTr">
                    <td className="widgetLargeUser">
-                       <img src="../../Assets/images/alf1.jpeg" alt=""
-                       className="widgetLargeImg"
-                       />
-                       <span className="widgetLargName">Ange uwera</span>
+                      
+                       <span className="widgetLargName">GSU I</span>
                    </td>
-                   <td className="widgetLargeDate">1 Jun 2021</td>
-                   <td className="widgetLargeAmount">$ 100,2400</td>
-                   <td className="widgetLargeStatus"><Button type="Approved"/></td>
+                   <td className="widgetLargeDate">Rubavu</td>
+                   <td className="widgetLargeAmount">S3</td>
+                   <td className="widgetLargeAmount">70%</td>
                 </tr>
                 <tr className="widgetLargeTr">
                    <td className="widgetLargeUser">
-                       <img src="../../Assets/images/alf1.jpeg" alt=""
-                       className="widgetLargeImg"
-                       />
-                       <span className="widgetLargName">kagabo isa</span>
+                      
+                       <span className="widgetLargName">Saint Joseph</span>
                    </td>
-                   <td className="widgetLargeDate">1 Jun 2021</td>
-                   <td className="widgetLargeAmount">$ 100,2400</td>
-                   <td className="widgetLargeStatus"><Button type="Pending"/></td>
+                   <td className="widgetLargeDate">Rwamagana</td>
+                   <td className="widgetLargeAmount">S3</td>
+                   <td className="widgetLargeAmount">45%</td>
                 </tr>
 
             </table>

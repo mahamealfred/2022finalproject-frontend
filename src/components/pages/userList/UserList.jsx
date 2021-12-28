@@ -17,57 +17,40 @@ function UserList({ ...rest}) {
     const [users, setUsers] = useState([]);
    const [data,setData] = useState(userRows);
    
-   const [userId, setUserId] = useState(0);
-   const [fullname, setFullname] = useState("");
-   const [email, setEmail] = useState("");
-   const [password,setPassword]=useState("");
-   const [role,setRole]=useState("");
+  //  const [userId, setUserId] = useState(0);
+  //  const [fullname, setFullname] = useState("");
+  //  const [email, setEmail] = useState("");
+  //  const [password,setPassword]=useState("");
+  //  const [role,setRole]=useState("");
 
     useEffect(()=>{
+     
         if (!usersState.loading) {
             if (usersState.users) {
               setUsers(usersState.users);
+              dispatch(getUsersAction());
             }
           }
-        }, [usersState.users]);
+        }, [usersState.users,usersState.loading, dispatch]);
 
     const handleDelete=(id)=>{
      setData(data.filter((item)=>item.id !== id));
     };
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
-        { field: 'user', headerName: 'Username', width: 200, renderCell: (params)=>{
-            return(
-                <div className="userListUser">
-                   <img className="userListImg" src={params.row.avatar} alt="" />
-                   {params.user.fullname}
-                </div>
-            )
-        } },
+        { field: 'fullname', headerName: 'Fullname', width: 200, },
         { field: 'email', headerName: 'Email', width: 200 },
         {
-          field: 'status',
+          field: 'isActive',
           headerName: 'Status',
           width: 120,
-          renderCell: (params)=>{
-            return(
-                <div className="userListUser">
-                   {params.user.email}
-                </div>
-            )
-          }
+          
         },
         {
             field: 'role',
             headerName: 'Role',
             width: 160,
-            renderCell: (params)=>{
-                return(
-                    <div className="userListUser">
-                       {params.user.role}
-                    </div>
-                )
-              }
+           
           },
           {
             field: 'action',
@@ -96,7 +79,7 @@ function UserList({ ...rest}) {
         <>
       
         <div className="userList">
-        <span className="userlistTitle">List of Users</span> 
+        <span className="userlistTitle">List of Users </span> 
          <DataGrid rows={users} disableSelectionOnClick columns={columns} pageSize={5} checkboxSelection />
           
         </div>

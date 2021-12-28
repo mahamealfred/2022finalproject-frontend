@@ -1,0 +1,3 @@
+export const EXAMS_REQUEST = 'EXAMS_REQUEST';
+export const EXAMS_SUCCESS = 'EXAMS_SUCCESS';
+export const EXAMS_FAILURE = 'EXAMS_FAILURE';

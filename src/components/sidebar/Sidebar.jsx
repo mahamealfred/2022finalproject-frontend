@@ -68,10 +68,12 @@ export default function Sidebar() {
                          Questions
                         </li>
                         </Link>
+                        <Link to="/dashboard/results" className="link">
                         <li className="sidebarListItem">
                          <TrendingUp  className="sidebarIcon" />
-                        Answers
+                        Results
                         </li>
+                        </Link>
 
                     </ul>
                 </div>

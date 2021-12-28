@@ -9,22 +9,23 @@ import {
 export  const getUsersAction = () => async (dispatch) => {
   try {
     dispatch(usersRequest());
-    // const token = await localStorage.getItem("token");
-    // let headers;
-    // if (token) {
-    //   headers = {
-    //     "Content-Type": "application/json",
-    //     "token": `${token}`,
-    //   };
-    // } else {
-    //   headers = {
-    //     "Content-Type": "application/json",
-    //   };
-    // }
-    // const res = await axios.get(`http://localhost:8000/auth`, {
-    //   headers: headers,
-    // });
-    const res = await axios.get(`http://localhost:8000/auth`)
+    const token = await localStorage.getItem("token");
+    let headers;
+    if (token) {
+      headers = {
+        "Content-Type": "application/json",
+        "token": `${token}`,
+      };
+    } else {
+      headers = {
+        "Content-Type": "application/json",
+      };
+    }
+  
+    const res = await axios.get(`http://localhost:8000/auth`,
+    {
+      headers: headers,
+    });
     const users = await res.data;
     dispatch(usersSuccess(users.data ));
     console.log(users);

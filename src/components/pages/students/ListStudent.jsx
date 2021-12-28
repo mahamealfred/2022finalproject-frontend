@@ -9,7 +9,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import MenuItem from "@mui/material/MenuItem";
+//import MenuItem from "@mui/material/MenuItem";
 
 import { DeleteOutline } from "@material-ui/icons";
 
@@ -20,50 +20,58 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import {Link} from "react-router-dom";
 
+import PropTypes from "prop-types"
+import { useSelector, useDispatch } from "react-redux";
+import {useState,useEffect} from "react";
+import { getAllStudent } from "../../../redux/actions/studentsAction";
+import { addStudentAction } from "../../../redux/actions/addStudentAction";
 
-const levels = [
-  {
-    value: "P6",
-    label: "P6",
-  },
-  {
-    value: "S3",
-    label: "S3",
-  }
-];
 
-const schools = [
-  {
-    value: "Remara Catholic",
-    label: "Remera Catholic",
-  },
-  {
-    value: "Saint Ignus",
-    label: "Saint Ignus",
-  }
-];
+
+
 
 const columns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "firstName", headerName: "First name", width: 160 },
-  { field: "lastName", headerName: "Last name", width: 160 },
+  { field: "lastname", headerName: "Last name", width: 160 },
+  { field: "firstname", headerName: "First name", width: 160 },
   {
-    field: "age",
+    field: "gender",
+    headerName: "Gender",
+    width: 160,
+   
+  },
+  {
+    field: "dob",
     headerName: "Age",
     type: "number",
-    width: 120,
+    width: 200,
+  },
+ 
+  {
+    field: "studentcode",
+    headerName: "Student Code",
+    width: 160,
+   
   },
   {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
+    field: "schoolId",
+    headerName: "Level",
     width: 160,
-    valueGetter: (params) =>
-      `${params.getValue(params.id, "firstName") || ""} ${
-        params.getValue(params.id, "lastName") || ""
-      }`,
+   
   },
+  {
+    field: "school.name",
+    headerName: "School Name",
+    width: 160,
+   
+  },
+  {
+    field: "createdAt",
+    headerName: "CreatedAT",
+    width: 200,
+   
+  },
+
   {
     field: "action",
     headerName: "Action",
@@ -76,6 +84,7 @@ const columns = [
           </Link>
          
           <DeleteOutline className="userListDelete" />
+         
           </>
 
       )
@@ -83,20 +92,23 @@ const columns = [
   },
 ];
 
-const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-];
 
-export default function ListStudent(openn) {
+
+export default function ListStudent({openn,...rest}) {
+
+  const dispatch = useDispatch();
+  const studentsState = useSelector((state) => state.students);
+  const [students, setStudents] = useState([]);
   const [open, setOpen] = React.useState(false);
+
+  const [firstname, setFirstname]=useState('');
+  const [lastname, setLastname]=useState('');
+  const [dob, setDob]=useState('');
+  const [gender, setGender]=useState('');
+  const [schoolId,setSchoolId]=useState('');
+
+  
+  const addStudent=useSelector((state) => state.addStudent)
   //const [value, setValue] = React.useState(new Date());
 
   const handleClickOpen = () => {
@@ -107,14 +119,34 @@ export default function ListStudent(openn) {
   };
 
   //select input field
-  const [school, setSchool] = React.useState("Shool");
-  const [level, setLevel] = React.useState("Shool");
 
-  const handleChange = (event) => {
-    setSchool(event.target.value);
-    setLevel(event.target.value);
-  };
 
+  // const handleChange = (event) => {
+  //   setSchool(event.target.value);
+  //   setLevel(event.target.value);
+  // };
+
+const handleAdd=async ()=>{
+  await dispatch(addStudentAction({firstname,lastname,dob,gender,schoolId}));
+  setOpen(false);
+  setFirstname('');
+  setLastname('');
+  setDob('');
+  setGender('');
+  setSchoolId('');
+  await dispatch(getAllStudent())
+  console.log("added")
+}
+
+  useEffect(()=>{
+     
+    if (!studentsState.loading) {
+        if (studentsState.students) {
+          setStudents(studentsState.students);
+          dispatch(getAllStudent());
+        }
+      }
+    }, [studentsState.students,studentsState.loading, dispatch]);
   return (
     <div
       style={{ flex: 4, height: "auto", width: "400px", margin: "80px 0px" }}
@@ -129,15 +161,7 @@ export default function ListStudent(openn) {
           <DialogContentText>
             Please enter student information here.
           </DialogContentText>
-          {/* <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          /> */}
+      
           <Box
             component="form"
             sx={{
@@ -149,17 +173,26 @@ export default function ListStudent(openn) {
             <TextField
               id="outlined-basic"
               label="First Name"
+              name="firstname"
+              onChange={(e)=> setFirstname(e.target.value)}
+              value={firstname}
               variant="outlined"
             />
             <TextField
               id="outlined-basic"
               label="Last Name"
+              name="lastname"
+              onChange={(e)=>setLastname(e.target.value)}
+              value={lastname}
               variant="outlined"
             />
             <TextField
         id="date"
         label="Birthday"
         type="date"
+        name="dob"
+        onChange={(e)=>setDob(e.target.value)}
+        value={dob}
         defaultValue="2017-05-24"
         sx={{ width: 220 }}
         InputLabelProps={{
@@ -172,54 +205,62 @@ export default function ListStudent(openn) {
         aria-label="gender"
         defaultValue="female"
         name="radio-buttons-group"
+        onChange={(e)=>{setGender(e.target.value)}}
       >
-        <FormControlLabel value="female" control={<Radio />} label="Female" />
-        <FormControlLabel value="male" control={<Radio />} label="Male" />
+        <FormControlLabel value="Female" control={<Radio />} label="Female" />
+        <FormControlLabel value="Male" control={<Radio />} label="Male" />
       </RadioGroup>
     </FormControl>
           
             <TextField
               id="outlined-select-currency"
-              select
+              
               label="School"
-              value={school}
-              onChange={handleChange}
-              helperText="Please select your School"
+              value={schoolId}
+              name="schoolId"
+              onChange={(e)=>setSchoolId(e.target.value)}
+             // helperText="Please select your School"
             >
-              {schools.map((option) => (
+              {/* {schools.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
-              ))}
+              ))} */}
             </TextField>
             <TextField
               id="outlined-select-currency"
               select
               label="level"
-              value={level}
-              onChange={handleChange}
-              helperText="Please select your Level"
+             // helperText="Please select your Level"
             >
-              {levels.map((option) => (
+              {/* {levels.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
-              ))}
+              ))} */}
             </TextField>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Add new Student</Button>
+          <Button onClick={handleAdd} color="primary" autoFocus>
+       {addStudent.loading ? "Loading..." : "Add new Student"}
+       </Button>
         </DialogActions>
       </Dialog>
       <DataGrid
-        rows={rows}
+        rows={students}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
         checkboxSelection
       />
+      
     </div>
   );
 }
+ListStudent.propTypes = {
+  students: PropTypes.array.isRequired,
+};
+
+

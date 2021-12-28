@@ -12,6 +12,12 @@ import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import {Link} from "react-router-dom";
 
+
+import PropTypes from "prop-types"
+import { useSelector, useDispatch } from "react-redux";
+import {useState,useEffect} from "react";
+import { getAllSchool } from "../../../redux/actions/schoolsAction";
+
 import { DeleteOutline } from "@material-ui/icons";
 
 const levels = [
@@ -25,37 +31,41 @@ const levels = [
   },
 ];
 
-const schools = [
-  {
-    value: "Remara Catholic",
-    label: "Remera Catholic",
-  },
-  {
-    value: "Saint Ignus",
-    label: "Saint Ignus",
-  },
-];
 
 const columns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "firstName", headerName: "First name", width: 160 },
-  { field: "lastName", headerName: "Last name", width: 160 },
+  { field: "name", headerName: "School name", width: 160 },
+  { field: "province", headerName: "Province", width: 160 },
   {
-    field: "age",
-    headerName: "Age",
-    type: "number",
+    field: "district",
+    headerName: "District",
     width: 120,
   },
   {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
+    field: "sector",
+    headerName: "Sector",
     width: 160,
-    valueGetter: (params) =>
-      `${params.getValue(params.id, "firstName") || ""} ${
-        params.getValue(params.id, "lastName") || ""
-      }`,
+    
+  },
+  {
+    field: "cell",
+    headerName: "Cell",
+    width: 160,
+    
+  },
+  {
+    field: "level",
+    headerName: "Level",
+    width: 160,
+    renderCell: (params)=>{
+      return(
+          <>
+          {console.log(params.row.level)}
+          </>
+
+      )
+  }
+    
   },
   {
     field: "action",
@@ -76,24 +86,29 @@ const columns = [
   },
 ];
 
-const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-];
 
  
 
-export default function ListStudent(openn) {
+export default function School({openn,...rest}) {
+
+  const dispatch = useDispatch();
+  const schoolsState = useSelector((state) => state.schools);
+  const [schools, setSchools] = useState([]);
+
   const [open, setOpen] = React.useState(false);
   //const [value, setValue] = React.useState(new Date());
  
+  useEffect(()=>{
+    dispatch(getAllSchool());
+  })
+  useEffect(()=>{
+     
+    if (!schoolsState.loading) {
+        if (schoolsState.schools) {
+          setSchools(schoolsState.schools);
+        }
+      }
+    }, [schoolsState.schools,schoolsState.loading, dispatch]);
 
  
   const handleClickOpen = () => {
@@ -227,7 +242,7 @@ export default function ListStudent(openn) {
         </DialogActions>
       </Dialog>
       <DataGrid
-        rows={rows}
+        rows={schools}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
@@ -236,3 +251,6 @@ export default function ListStudent(openn) {
     </div>
   );
 }
+School.propTypes = {
+  schools: PropTypes.array.isRequired,
+};

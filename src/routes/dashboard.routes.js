@@ -10,6 +10,7 @@ import Exam from "../components/pages/exam/Exam";
 import Question from "../components/pages/question/Question";
 import Dashboard from '../Views/Dashboard';
 import PrivateRoute from './PrivateRoute';
+import Result from "../components/pages/result/Result";
 
 
 
@@ -63,6 +64,11 @@ function App() {
                       exact
                       path={`${path}/questions`}
                       component={Question}
+                      /> 
+                         <PrivateRoute
+                      exact
+                      path={`${path}/results`}
+                      component={Result}
                       /> 
                   </>
               )}
