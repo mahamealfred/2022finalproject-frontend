@@ -14,8 +14,15 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import HomeTopbar from "../../homeTopbar/HomeTopbar";
+import { loginAction } from "../../../redux/actions/userLoginAction";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 export default function Login() {
+  const dispatch = useDispatch();
+  const userLogin = useSelector((state) => state.userLogin);
+  const history = useHistory();
+
   const paperStyle = {
     padding: 20,
     height: "60vh",
@@ -46,14 +53,11 @@ export default function Login() {
   });
   const onSubmit = (values, props) => {
     console.log(values);
-    setTimeout(() => {
-      props.resetForm();
-      props.setSubmitting(false);
-    }, 2000);
+    dispatch(loginAction(values, history));
   };
   return (
     <Grid>
-     <HomeTopbar/>
+      <HomeTopbar />
       <Paper elevation={10} style={paperStyle}>
         <Grid align="center">
           <Avatar style={avatarStyle}>
@@ -69,7 +73,6 @@ export default function Login() {
           >
             {(props) => (
               <Form>
-                {console.log(props)}
                 <Field
                   as={TextField}
                   label="Email"
@@ -96,6 +99,7 @@ export default function Login() {
                   control={<Checkbox color="primary" />}
                   label="Remember me"
                 />
+                <p>{userLogin.error}</p>
                 <Button
                   type="submit"
                   color="primary"
@@ -104,7 +108,7 @@ export default function Login() {
                   style={btnStyle}
                   disabled={props.isSubmitting}
                 >
-                  {props.isSubmitting ? "Loading" : "Sign in"}
+                  {userLogin.loading ? "Loading" : "Sign in"}
                 </Button>
               </Form>
             )}
