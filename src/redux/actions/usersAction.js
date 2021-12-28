@@ -6,7 +6,7 @@ import {
   USERS_FAILURE,
 } from "../types/usersTypes";
 
-export  const getUsersAction = () => async (dispatch) => {
+export const getUsersAction = () => async (dispatch) => {
   try {
     dispatch(usersRequest());
     const token = await localStorage.getItem("token");
@@ -14,22 +14,20 @@ export  const getUsersAction = () => async (dispatch) => {
     if (token) {
       headers = {
         "Content-Type": "application/json",
-        "token": `${token}`,
+        token: `${token}`,
       };
     } else {
       headers = {
         "Content-Type": "application/json",
       };
     }
-  
-    const res = await axios.get(`http://localhost:8000/auth`,
-    {
+
+    const res = await axios.get(`http://localhost:8000/auth`, {
       headers: headers,
     });
     const users = await res.data;
-    dispatch(usersSuccess(users.data ));
+    dispatch(usersSuccess(users.data));
     console.log(users);
-
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;

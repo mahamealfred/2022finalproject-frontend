@@ -1,8 +1,12 @@
 import axios from "axios";
 
-import { RESULTS_REQUEST, RESULTS_SUCCESS, RESULTS_FAILURE } from '../types/resultsTypes';
+import {
+  RESULTS_REQUEST,
+  RESULTS_SUCCESS,
+  RESULTS_FAILURE,
+} from "../types/resultsTypes";
 
-export  const getAllResult = () => async (dispatch) => {
+export const getAllResult = () => async (dispatch) => {
   try {
     dispatch(resultsRequest());
     const token = await localStorage.getItem("token");
@@ -10,22 +14,20 @@ export  const getAllResult = () => async (dispatch) => {
     if (token) {
       headers = {
         "Content-Type": "application/json",
-        "token": `${token}`,
+        token: `${token}`,
       };
     } else {
       headers = {
         "Content-Type": "application/json",
       };
     }
-  
-    const res = await axios.get(`http://localhost:8000/results`,
-    {
+
+    const res = await axios.get(`http://localhost:8000/results`, {
       headers: headers,
     });
     const results = await res.data;
-    dispatch(resultsSuccess(results.data ));
-    console.log(results)
-
+    dispatch(resultsSuccess(results.data));
+    console.log(results);
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;

@@ -6,7 +6,7 @@ import {
   EXAMS_FAILURE,
 } from "../types/examsTypes";
 
-export  const getAllExam = () => async (dispatch) => {
+export const getAllExam = () => async (dispatch) => {
   try {
     dispatch(examsRequest());
     const token = await localStorage.getItem("token");
@@ -14,22 +14,20 @@ export  const getAllExam = () => async (dispatch) => {
     if (token) {
       headers = {
         "Content-Type": "application/json",
-        "token": `${token}`,
+        token: `${token}`,
       };
     } else {
       headers = {
         "Content-Type": "application/json",
       };
     }
-  
-    const res = await axios.get(`http://localhost:8000/exams`,
-    {
+
+    const res = await axios.get(`http://localhost:8000/exams`, {
       headers: headers,
     });
     const exams = await res.data;
-    dispatch(examsSuccess(exams.data ));
-    console.log(exams)
-
+    dispatch(examsSuccess(exams.data));
+    console.log(exams);
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;

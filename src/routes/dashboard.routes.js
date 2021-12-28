@@ -8,74 +8,50 @@ import ListStudent from "../components/pages/students/ListStudent";
 import School from "../components/pages/school/School";
 import Exam from "../components/pages/exam/Exam";
 import Question from "../components/pages/question/Question";
-import Dashboard from '../Views/Dashboard';
-import PrivateRoute from './PrivateRoute';
+import Dashboard from "../Views/Dashboard";
+import PrivateRoute from "./PrivateRoute";
 import Result from "../components/pages/result/Result";
 
-
-
 function App() {
-    const { path } = useRouteMatch()
+  const { path } = useRouteMatch();
   return (
-        <Switch>
-            <Dashboard>
+    <Switch>
+      <Dashboard>
+        <Route
+          component={({ match }) => (
+            <>
+              <PrivateRoute exact path={path} component={Home} />
 
-          <Route
-              component = {({match}) =>(
-                  <>
-                    <PrivateRoute
-                      exact
-                      path={path}
-                      component={Home}
-                      />
+              <PrivateRoute exact path={`${path}/users`} component={UserList} />
 
-                      <PrivateRoute
-                      exact
-                      path={`${path}/users`}
-                      component={UserList}
-                      /> 
-                      
-                      <PrivateRoute
-                      exact
-                      path={`${path}/students`}
-                      component={ListStudent}
-                      /> 
-                       <PrivateRoute
-                      exact
-                      path={`${path}/user/:userId`}
-                      component={User}
-                      /> 
-                       <PrivateRoute
-                      exact
-                      path={`${path}/newUser`}
-                      component={NewUser}
-                      /> 
-                       <PrivateRoute
-                      exact
-                      path={`${path}/school`}
-                      component={School}
-                      /> 
-                       <PrivateRoute
-                      exact
-                      path={`${path}/exams`}
-                      component={Exam}
-                      /> 
-                       <PrivateRoute
-                      exact
-                      path={`${path}/questions`}
-                      component={Question}
-                      /> 
-                         <PrivateRoute
-                      exact
-                      path={`${path}/results`}
-                      component={Result}
-                      /> 
-                  </>
-              )}
-          />
-        
-          </Dashboard>
-        </Switch>
+              <PrivateRoute
+                exact
+                path={`${path}/students`}
+                component={ListStudent}
+              />
+              <PrivateRoute
+                exact
+                path={`${path}/user/:userId`}
+                component={User}
+              />
+              <PrivateRoute
+                exact
+                path={`${path}/newUser`}
+                component={NewUser}
+              />
+              <PrivateRoute exact path={`${path}/school`} component={School} />
+              <PrivateRoute exact path={`${path}/exams`} component={Exam} />
+              <PrivateRoute
+                exact
+                path={`${path}/questions`}
+                component={Question}
+              />
+              <PrivateRoute exact path={`${path}/results`} component={Result} />
+            </>
+          )}
+        />
+      </Dashboard>
+    </Switch>
   );
 }
 

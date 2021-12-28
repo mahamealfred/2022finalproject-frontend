@@ -6,7 +6,7 @@ import {
   SCHOOLS_FAILURE,
 } from "../types/schoolsTypes";
 
-export  const getAllSchool = () => async (dispatch) => {
+export const getAllSchool = () => async (dispatch) => {
   try {
     dispatch(schoolsRequest());
     const token = await localStorage.getItem("token");
@@ -14,22 +14,20 @@ export  const getAllSchool = () => async (dispatch) => {
     if (token) {
       headers = {
         "Content-Type": "application/json",
-        "token": `${token}`,
+        token: `${token}`,
       };
     } else {
       headers = {
         "Content-Type": "application/json",
       };
     }
-  
-    const res = await axios.get(`http://localhost:8000/schools`,
-    {
+
+    const res = await axios.get(`http://localhost:8000/schools`, {
       headers: headers,
     });
     const schools = await res.data;
-    dispatch(schoolsSuccess(schools.data ));
-    console.log(schools)
-
+    dispatch(schoolsSuccess(schools.data));
+    console.log(schools);
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;
@@ -42,19 +40,19 @@ export  const getAllSchool = () => async (dispatch) => {
 
 export const schoolsRequest = () => {
   return {
-    type:  SCHOOLS_REQUEST,
+    type: SCHOOLS_REQUEST,
   };
 };
 
 export const schoolsSuccess = (schools) => {
   return {
-    type:  SCHOOLS_SUCCESS,
+    type: SCHOOLS_SUCCESS,
     payload: schools,
   };
 };
 export const schoolsFailure = (error) => {
   return {
-    type:  SCHOOLS_FAILURE,
+    type: SCHOOLS_FAILURE,
     payload: error,
   };
 };

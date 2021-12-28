@@ -6,7 +6,7 @@ import {
   STUDENTS_FAILURE,
 } from "../types/studentsTypes";
 
-export  const getAllStudent = () => async (dispatch) => {
+export const getAllStudent = () => async (dispatch) => {
   try {
     dispatch(studentsRequest());
     const token = await localStorage.getItem("token");
@@ -14,22 +14,20 @@ export  const getAllStudent = () => async (dispatch) => {
     if (token) {
       headers = {
         "Content-Type": "application/json",
-        "token": `${token}`,
+        token: `${token}`,
       };
     } else {
       headers = {
         "Content-Type": "application/json",
       };
     }
-  
-    const res = await axios.get(`http://localhost:8000/students`,
-    {
+
+    const res = await axios.get(`http://localhost:8000/students`, {
       headers: headers,
     });
     const students = await res.data;
-    dispatch(studentsSuccess(students.data ));
-    console.log(students)
-
+    dispatch(studentsSuccess(students.data));
+    console.log(students);
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;
