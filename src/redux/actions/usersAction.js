@@ -6,7 +6,7 @@ import {
   USERS_FAILURE,
 } from "../types/usersTypes";
 
-export const getUsersAction = () => async (dispatch) => {
+export const getAllUser = () => async (dispatch) => {
   try {
     dispatch(usersRequest());
     const token = await localStorage.getItem("token");
