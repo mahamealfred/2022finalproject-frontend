@@ -21,7 +21,7 @@ export const addStudentAction = (data, navigate) => async (dispatch) => {
       };
     }
     const res = await axios.post(
-      `http://localhost:8000/students/newStudent`,
+      `http://localhost:8000/students/newStudent/`,
       data,
       {
         headers: headers,
@@ -29,6 +29,7 @@ export const addStudentAction = (data, navigate) => async (dispatch) => {
     );
 
     const students = await res.data;
+    console.log(students)
     //localStorage.setItem('token', user.data.token);
     localStorage.setItem("students-data", JSON.stringify(students.data));
     //dispatch(loginUserSuccess({ data: students.data }));

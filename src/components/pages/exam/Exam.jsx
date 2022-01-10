@@ -1,4 +1,4 @@
-import { DataGrid } from "@material-ui/data-grid";
+
 import Button from "@mui/material/Button";
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -24,7 +24,7 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { getAllExam } from "../../../redux/actions/examsAction";
-import { addStudentAction } from "../../../redux/actions/addStudentAction";
+import { addExamAction } from "../../../redux/actions/addExamAction";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -53,13 +53,14 @@ export default function Exam({ openn, ...rest }) {
   const [exams, setExams] = useState([]);
   const [open, setOpen] = React.useState(false);
 
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [dob, setDob] = useState("");
-  const [gender, setGender] = useState("");
-  const [schoolId, setSchoolId] = useState("");
+  const [subject, setSubject] = useState("");
+  const [name, setName] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [question, setQuestion] = useState("");
+  const [correct_answer, setCorrect_answer] = useState("");
+  const [incorrect_answer, setIncorrect_answer] = useState("");
 
-  const addStudent = useSelector((state) => state.addStudent);
+  const addExam = useSelector((state) => state.addExam);
   //const [value, setValue] = React.useState(new Date());
   const [results, setResults] = useState({});
   const [selectedExamIds, setSelectedExamIds] = useState([]);
@@ -85,15 +86,17 @@ export default function Exam({ openn, ...rest }) {
   };
 
   const handleAdd = async () => {
+    console.log(subject,name,startDate)
     await dispatch(
-      addStudentAction({ firstname, lastname, dob, gender, schoolId })
+      addExamAction({ name,subject, startDate,question,correct_answer,incorrect_answer})
     );
     setOpen(false);
-    setFirstname("");
-    setLastname("");
-    setDob("");
-    setGender("");
-    setSchoolId("");
+    setSubject("");
+    setName("");
+    setStartDate("");
+    setQuestion("");
+    setCorrect_answer("");
+    setIncorrect_answer("");
     await dispatch(getAllExam());
     console.log("added");
   };
@@ -192,95 +195,72 @@ export default function Exam({ openn, ...rest }) {
           <Box
             component="form"
             sx={{
-              "& > :not(style)": { m: 1, width: "25ch" },
+              "& > :not(style)": { m: 1, width: "30ch" },
             }}
             noValidate
             autoComplete="off"
           >
             <TextField
               id="outlined-basic"
-              label="First Name"
-              name="firstname"
-              onChange={(e) => setFirstname(e.target.value)}
-              value={firstname}
+              label="Subject"
+              name="subject"
+              onChange={(e) => setSubject(e.target.value)}
+              value={subject}
               variant="outlined"
             />
             <TextField
               id="outlined-basic"
-              label="Last Name"
-              name="lastname"
-              onChange={(e) => setLastname(e.target.value)}
-              value={lastname}
+              label="Description"
+              name="name"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
               variant="outlined"
             />
             <TextField
               id="date"
-              label="Birthday"
+              label="Start Date"
               type="date"
-              name="dob"
-              onChange={(e) => setDob(e.target.value)}
-              value={dob}
+              name="startDate"
+              onChange={(e) => setStartDate(e.target.value)}
+              value={startDate}
               defaultValue="2017-05-24"
               sx={{ width: 220 }}
               InputLabelProps={{
                 shrink: true,
               }}
             />
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Gender</FormLabel>
-              <RadioGroup
-                aria-label="gender"
-                defaultValue="female"
-                name="radio-buttons-group"
-                onChange={(e) => {
-                  setGender(e.target.value);
-                }}
-              >
-                <FormControlLabel
-                  value="Female"
-                  control={<Radio />}
-                  label="Female"
-                />
-                <FormControlLabel
-                  value="Male"
-                  control={<Radio />}
-                  label="Male"
-                />
-              </RadioGroup>
-            </FormControl>
-
             <TextField
-              id="outlined-select-currency"
-              label="School"
-              value={schoolId}
-              name="schoolId"
-              onChange={(e) => setSchoolId(e.target.value)}
-              // helperText="Please select your School"
-            >
-              {/* {schools.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))} */}
-            </TextField>
+              id="outlined-basic"
+              label="Question"
+              name="question"
+              onChange={(e) => setQuestion(e.target.value)}
+              value={question}
+              variant="outlined"
+            />
             <TextField
-              id="outlined-select-currency"
-              select
-              label="level"
-              // helperText="Please select your Level"
-            >
-              {/* {levels.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))} */}
-            </TextField>
+              id="outlined-basic"
+              label="Correct Answer"
+              name="correct_answer"
+              onChange={(e) => setCorrect_answer(e.target.value)}
+              value={correct_answer}
+              variant="outlined"
+            />
+           
+           <TextField
+              id="outlined-basic"
+              label="Incorrect answer"
+              name="incorrect_answer"
+              onChange={(e) => setIncorrect_answer(e.target.value)}
+              value={incorrect_answer}
+              variant="outlined"
+            />
+          
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleAdd} color="primary" autoFocus>
-            {addStudent.loading ? "Loading..." : "Add new Exam"}
+            {addExam.loading ? "Loading..." : "Add new Exam"}
           </Button>
         </DialogActions>
       </Dialog>

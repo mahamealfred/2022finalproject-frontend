@@ -21,14 +21,17 @@ export const addSchoolAction = (data, navigate) => async (dispatch) => {
       };
     }
     const res = await axios.post(
-      `http://localhost:8000/schools/newSchool`,
+      `http://localhost:8000/schools/newSchool/`,
       data,
       {
         headers: headers,
       }
     );
 
-    await res.data;
+    const school=await res.data;
+    
+    localStorage.setItem('school-data', JSON.stringify(school.data));
+    dispatch(schoolsSuccess ({ data: school.data }));
     navigate("/dashboard", { replace: true });
   } catch (err) {
     if (err.response) {

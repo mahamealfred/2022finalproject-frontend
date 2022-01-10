@@ -8,6 +8,7 @@ import resultsReducer from "./resultsReducer";
 import addSchoolReducer from "./addSchoolReducer";
 import addStudentReducer from "./addStudentReducer";
 import userLoginReducer from "./userLoginReducer";
+import addExamReducer from "./addExamReducer";
 
 const allReducers = combineReducers({
   users: usersReducer,
@@ -18,6 +19,7 @@ const allReducers = combineReducers({
   addSchool: addSchoolReducer,
   addStudent: addStudentReducer,
   userLogin: userLoginReducer,
+  addExam: addExamReducer,
 });
 
 export default allReducers;

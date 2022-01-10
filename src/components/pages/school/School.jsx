@@ -13,18 +13,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import { DeleteOutline } from "@material-ui/icons";
 
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import { Link } from "react-router-dom";
+
 
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { getAllSchool } from "../../../redux/actions/schoolsAction";
-import { addStudentAction } from "../../../redux/actions/addStudentAction";
+import { addSchoolAction } from "../../../redux/actions/addSchoolAction";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -53,13 +48,18 @@ export default function School({ openn, ...rest }) {
   const [schools, setSchools] = useState([]);
   const [open, setOpen] = React.useState(false);
 
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [dob, setDob] = useState("");
-  const [gender, setGender] = useState("");
-  const [schoolId, setSchoolId] = useState("");
+  const [name, setName] = useState("");
+  const [province, setProvince] = useState("");
+  const [district, setDistrict] = useState("");
+  const [sector, setSector] = useState("");
+  const [cell, setCell] = useState("");
+  const [level,setLevel]=useState("");
+  const [fullname,setFullname]=useState("");
+  const [email,setEmail]=useState("");
 
-  const addStudent = useSelector((state) => state.addStudent);
+
+
+  const addSchool = useSelector((state) => state.addSchool);
   //const [value, setValue] = React.useState(new Date());
   const [results, setResults] = useState({});
   const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
@@ -86,26 +86,34 @@ export default function School({ openn, ...rest }) {
 
   const handleAdd = async () => {
     await dispatch(
-      addStudentAction({ firstname, lastname, dob, gender, schoolId })
+      addSchoolAction({ province, district,sector,cell,fullname,email,level })
     );
     setOpen(false);
-    setFirstname("");
-    setLastname("");
-    setDob("");
-    setGender("");
-    setSchoolId("");
+   
+    setName("");
+    setProvince("");
+    setDistrict("");
+    setSector("");
+    setCell("");
+    setLevel("");
+    setFullname("");
+    setEmail("");
     await dispatch(getAllSchool());
     console.log("added");
   };
+  console.log(name);
 
-  useEffect( async() => {
-   
+  useEffect( () => {
+   async function fetchData(){
     if (!schoolsState.loading) {
       if (schoolsState.schools) {
         setSchools(schoolsState.schools);
         await dispatch(getAllSchool());
       }
     }
+    
+   }
+   fetchData();
   }, [schoolsState.schools]);
   const trimString = (s) => {
     var l = 0,
@@ -127,20 +135,20 @@ export default function School({ openn, ...rest }) {
   };
   const searchHandle = async (e) => {
     setSearch(true);
-    const products = 0;
+    const schools = 0;
     const searchKey = e.target.value;
     console.log(e.target.value);
 
     try {
       var results = [];
       const toSearch = trimString(searchKey); // trim it
-      for (var i = 0; i < products.length; i++) {
-        for (var key in products[i]) {
-          if (products[i][key] != null) {
+      for (var i = 0; i < schools.length; i++) {
+        for (var key in schools[i]) {
+          if (schools[i][key] != null) {
             if (
-              products[i][key].toString().toLowerCase().indexOf(toSearch) != -1
+              schools[i][key].toString().toLowerCase().indexOf(toSearch) != -1
             ) {
-              if (!itemExists(results, products[i])) results.push(products[i]);
+              if (!itemExists(results, schools[i])) results.push(schools[i]);
             }
           }
         }
@@ -191,95 +199,83 @@ export default function School({ openn, ...rest }) {
           <Box
             component="form"
             sx={{
-              "& > :not(style)": { m: 1, width: "25ch" },
+              "& > :not(style)": { m: 1, width: "30ch" },
             }}
             noValidate
             autoComplete="off"
           >
             <TextField
               id="outlined-basic"
-              label="First Name"
-              name="firstname"
-              onChange={(e) => setFirstname(e.target.value)}
-              value={firstname}
+              label="School Name"
+              name="name"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
               variant="outlined"
             />
             <TextField
               id="outlined-basic"
-              label="Last Name"
-              name="lastname"
-              onChange={(e) => setLastname(e.target.value)}
-              value={lastname}
+              label="Province"
+              name="province"
+              onChange={(e) => setProvince(e.target.value)}
+              value={province}
               variant="outlined"
             />
             <TextField
-              id="date"
-              label="Birthday"
-              type="date"
-              name="dob"
-              onChange={(e) => setDob(e.target.value)}
-              value={dob}
-              defaultValue="2017-05-24"
-              sx={{ width: 220 }}
-              InputLabelProps={{
-                shrink: true,
-              }}
+              id="outlined-basic"
+              label="District"
+              name="district"
+              onChange={(e) => setDistrict(e.target.value)}
+              value={district}
+              variant="outlined"
             />
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Gender</FormLabel>
-              <RadioGroup
-                aria-label="gender"
-                defaultValue="female"
-                name="radio-buttons-group"
-                onChange={(e) => {
-                  setGender(e.target.value);
-                }}
-              >
-                <FormControlLabel
-                  value="Female"
-                  control={<Radio />}
-                  label="Female"
-                />
-                <FormControlLabel
-                  value="Male"
-                  control={<Radio />}
-                  label="Male"
-                />
-              </RadioGroup>
-            </FormControl>
-
-            <TextField
-              id="outlined-select-currency"
-              label="School"
-              value={schoolId}
-              name="schoolId"
-              onChange={(e) => setSchoolId(e.target.value)}
-              // helperText="Please select your School"
-            >
-              {/* {schools.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))} */}
-            </TextField>
-            <TextField
-              id="outlined-select-currency"
-              select
+             <TextField
+              id="outlined-basic"
+              label="Sector"
+              name="sector"
+              onChange={(e) => setSector(e.target.value)}
+              value={sector}
+              variant="outlined"
+            />
+           <TextField
+              id="outlined-basic"
+              label="Cell"
+              name="cell"
+              onChange={(e) => setCell(e.target.value)}
+              value={cell}
+              variant="outlined"
+            />
+              <TextField
+              id="outlined-basic"
               label="level"
-              // helperText="Please select your Level"
-            >
-              {/* {levels.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))} */}
-            </TextField>
+              name="level"
+              onChange={(e) => setLevel(e.target.value)}
+              value={level}
+              variant="outlined"
+            /> 
+             <TextField
+              id="outlined-basic"
+              label="Full Name"
+              name="fullname"
+              onChange={(e) => setFullname(e.target.value)}
+              value={fullname}
+              variant="outlined"
+            /> 
+             <TextField
+              id="outlined-basic"
+              label="Email"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              variant="outlined"
+            /> 
+
+          
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleAdd} color="primary" autoFocus>
-            {addStudent.loading ? "Loading..." : "Add new School"}
+            {addSchool.loading ? "Loading..." : "Add new School"}
           </Button>
         </DialogActions>
       </Dialog>
