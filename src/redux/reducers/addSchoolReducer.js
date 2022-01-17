@@ -1,7 +1,7 @@
 import {
-  ADD_SCHOOLS_REQUEST,
-  ADD_SCHOOLS_SUCCESS,
-  ADD_SCHOOLS_FAILURE,
+  ADD_SCHOOL_REQUEST,
+  ADD_SCHOOL_SUCCESS,
+  ADD_SCHOOL_FAILURE,
 } from "../types/addSchoolTypes";
 
 const initialState = {
@@ -12,18 +12,18 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_SCHOOLS_REQUEST:
+    case ADD_SCHOOL_REQUEST:
       return {
         ...state, //spredding
         loading: true,
       };
-    case ADD_SCHOOLS_SUCCESS:
+    case ADD_SCHOOL_SUCCESS:
       return {
         loading: false,
         schools: action.payload,
         error: "",
       };
-    case ADD_SCHOOLS_FAILURE:
+    case ADD_SCHOOL_FAILURE:
       return {
         loading: false,
         schools: [],

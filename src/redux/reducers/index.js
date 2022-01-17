@@ -9,6 +9,13 @@ import addSchoolReducer from "./addSchoolReducer";
 import addStudentReducer from "./addStudentReducer";
 import userLoginReducer from "./userLoginReducer";
 import addExamReducer from "./addExamReducer";
+import updateSchoolReducer from "./updateSchoolReducer";
+import deleteSchoolReducer  from "./deleteSchoolReducer";
+import addUserReducer from "./addUserReduser";
+import deleteUserReducer from "./deleteUserReducer";
+import deleteStudentReducer from "./deleteStudentReducer";
+import updateStudentReducer from "./updateStudentReducer";
+import deleteExamReducer from "./deleteExamReducer";
 
 const allReducers = combineReducers({
   users: usersReducer,
@@ -20,6 +27,13 @@ const allReducers = combineReducers({
   addStudent: addStudentReducer,
   userLogin: userLoginReducer,
   addExam: addExamReducer,
+  updateSchool: updateSchoolReducer,
+  deleteSchool: deleteSchoolReducer,
+  addUser: addUserReducer,
+  deleteUser: deleteUserReducer,
+  deleteStudent: deleteStudentReducer,
+  updateStudent: updateStudentReducer,
+  deleteExam: deleteExamReducer,
 });
 
 export default allReducers;

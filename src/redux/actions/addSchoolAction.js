@@ -1,63 +1,64 @@
 import axios from "axios";
-import {
-  ADD_SCHOOLS_REQUEST,
-  ADD_SCHOOLS_SUCCESS,
-  ADD_SCHOOLS_FAILURE,
-} from "../types/addSchoolTypes";
 
-export const addSchoolAction = (data, navigate) => async (dispatch) => {
+import {
+  ADD_SCHOOL_REQUEST,
+  ADD_SCHOOL_SUCCESS,
+  ADD_SCHOOL_FAILURE,
+} from "../types/addSchoolTypes";
+  
+
+export const addSchoolAction = (data, history) => async (dispatch) => {
   try {
-    dispatch(schoolsRequest());
+    dispatch(addSchoolRequest());
     const token = await localStorage.getItem("token");
     let headers;
     if (token) {
       headers = {
         "Content-Type": "application/json",
-        token: `${token}`,
+        "my-token": `${token}`,
       };
     } else {
       headers = {
         "Content-Type": "application/json",
       };
     }
+
+    console.log(headers);
     const res = await axios.post(
-      `http://localhost:8000/schools/newSchool/`,
+      `http://localhost:8000/schools/newSchool`,
       data,
       {
         headers: headers,
       }
     );
-
-    const school=await res.data;
-    
-    localStorage.setItem('school-data', JSON.stringify(school.data));
-    dispatch(schoolsSuccess ({ data: school.data }));
-    navigate("/dashboard", { replace: true });
+    const school = await res.data;
+    dispatch(addSchoolSuccess({ data: school.data }));
+    alert("Your school has been added successfully");
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;
-      dispatch(schoolsFailure(errorMessage));
+      dispatch(addSchoolFailure(errorMessage));
     } else {
-      dispatch(schoolsFailure("Network n Error"));
+      dispatch(addSchoolFailure("Network  Error"));
     }
   }
 };
 
-export const schoolsRequest = () => {
+export const addSchoolRequest = () => {
   return {
-    type: ADD_SCHOOLS_REQUEST,
+    type:  ADD_SCHOOL_REQUEST,
   };
 };
 
-export const schoolsSuccess = (schools) => {
+export const addSchoolSuccess = (school) => {
   return {
-    type: ADD_SCHOOLS_SUCCESS,
-    payload: schools,
+    type:  ADD_SCHOOL_SUCCESS,
+    payload: school,
   };
 };
-export const schoolsFailure = (error) => {
+export const addSchoolFailure = (error) => {
   return {
-    type: ADD_SCHOOLS_FAILURE,
+    type:  ADD_SCHOOL_FAILURE,
     payload: error,
   };
 };

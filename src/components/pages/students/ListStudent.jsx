@@ -25,12 +25,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { getAllStudent } from "../../../redux/actions/studentsAction";
 import { addStudentAction } from "../../../redux/actions/addStudentAction";
+import { deleteStudentAction } from "../../../redux/actions/deleteStudentAction";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
 import IconButton from "@material-ui/core/IconButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import moment from "moment";
+import {MenuItem} from "@material-ui/core";
 
 import { Search as SearchIcon } from "react-feather";
 import {
@@ -57,19 +59,36 @@ export default function ListStudent({ openn, ...rest }) {
 
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
+  const [email,setEmail] =useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
+  const [level, setLevel] = useState("");
   const [schoolId, setSchoolId] = useState("");
+  const [studentId, setStudentId] = useState("");
+  const [openDelete, setOpenDelete] = useState(false);
 
   const addStudent = useSelector((state) => state.addStudent);
+  const deleteStudent=useSelector((state)=> state.deleteStudent);
   //const [value, setValue] = React.useState(new Date());
   const [results, setResults] = useState({});
  
   const [search, setSearch] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
 
+
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+
+  const levels=[
+    {
+      value:"P6",
+      label:"primary 6"
+    },
+    {
+      value:"S3",
+      label:"Ordinary 3"
+    }
+  ]
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -94,14 +113,17 @@ export default function ListStudent({ openn, ...rest }) {
   // };
 
   const handleAdd = async () => {
+
     await dispatch(
-      addStudentAction({ firstname, lastname, dob, gender, schoolId })
+      addStudentAction({ firstname, lastname, email,dob, gender,level,schoolId })
     );
     setOpen(false);
     setFirstname("");
     setLastname("");
+    setEmail("");
     setDob("");
     setGender("");
+    setLevel("");
     setSchoolId("");
     await dispatch(getAllStudent());
     console.log("added");
@@ -116,6 +138,18 @@ export default function ListStudent({ openn, ...rest }) {
       }
     }
   }, [studentsState.students]);
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+
+  const handleDelete = async () =>{
+    await dispatch(deleteStudentAction(studentId))
+    setOpenDelete(false);
+    window.location.reload();
+  }
+
+
   const trimString = (s) => {
     var l = 0,
       r = s.length - 1;
@@ -221,6 +255,14 @@ export default function ListStudent({ openn, ...rest }) {
               value={lastname}
               variant="outlined"
             />
+             <TextField
+              id="outlined-basic"
+              label="Email"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              variant="outlined"
+            />
             <TextField
               id="date"
               label="Birthday"
@@ -245,12 +287,12 @@ export default function ListStudent({ openn, ...rest }) {
                 }}
               >
                 <FormControlLabel
-                  value="Female"
+                  value="female"
                   control={<Radio />}
                   label="Female"
                 />
                 <FormControlLabel
-                  value="Male"
+                  value="male"
                   control={<Radio />}
                   label="Male"
                 />
@@ -261,34 +303,56 @@ export default function ListStudent({ openn, ...rest }) {
               id="outlined-select-currency"
               label="School"
               value={schoolId}
+              select
               name="schoolId"
               onChange={(e) => setSchoolId(e.target.value)}
               // helperText="Please select your School"
             >
-              {/* {schools.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))} */}
+             
             </TextField>
             <TextField
               id="outlined-select-currency"
               select
+              onChange={(e) => setLevel(e.target.value)}
               label="level"
-              // helperText="Please select your Level"
+               helperText="Please select your Level"
             >
-              {/* {levels.map((option) => (
+              {levels.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
-              ))} */}
+              ))}
             </TextField>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleAdd} color="primary" autoFocus>
+           
             {addStudent.loading ? "Loading..." : "Add new Student"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+      <Dialog
+        open={openDelete}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete the Student below "{lastname}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            {deleteStudent.loading? "Loading..." : "Delete"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -401,7 +465,7 @@ export default function ListStudent({ openn, ...rest }) {
                           }}
                         >
                           <Typography color="textPrimary" variant="body1">
-                            {student.schoolId.level}
+                            {student.level}
                           </Typography>
                         </Box>
                       </TableCell>
@@ -526,7 +590,7 @@ export default function ListStudent({ openn, ...rest }) {
                           }}
                         >
                           <Typography color="textPrimary" variant="body1">
-                            {student.school.level}
+                            {student.level}
                           </Typography>
                         </Box>
                       </TableCell>
@@ -556,9 +620,10 @@ export default function ListStudent({ openn, ...rest }) {
                         aria-label="delete"
                         color="secondary"
                         onClick={() => {
-                          // setproductId(product.id)
-                          // setproductName(product.name)
-                          setOpen(true);
+                          setStudentId(student.id)
+                          setFirstname(student.firstname)
+                          setLastname(student.lastname)
+                          setOpenDelete(true);
                         }}
                       >
                         <DeleteIcon />

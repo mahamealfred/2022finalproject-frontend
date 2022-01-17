@@ -20,6 +20,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { getAllSchool } from "../../../redux/actions/schoolsAction";
 import { addSchoolAction } from "../../../redux/actions/addSchoolAction";
+import { updateSchoolAction} from "../../../redux/actions/updateSchoolAction";
+import { deleteSchoolAction } from "../../../redux/actions/deleteSchoolAction";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -53,18 +55,24 @@ export default function School({ openn, ...rest }) {
   const [district, setDistrict] = useState("");
   const [sector, setSector] = useState("");
   const [cell, setCell] = useState("");
-  const [level,setLevel]=useState("");
+  const [level,setLevel]=useState([]);
   const [fullname,setFullname]=useState("");
   const [email,setEmail]=useState("");
+  const [schoolId,setSchoolId]=useState("");
+
+
 
 
 
   const addSchool = useSelector((state) => state.addSchool);
+  const updateSchool = useSelector((state) => state.updateSchool);
+  const deleteSchool=useSelector((state)=>state.deleteSchool)
   //const [value, setValue] = React.useState(new Date());
   const [results, setResults] = useState({});
   const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
   const [search, setSearch] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -76,26 +84,37 @@ export default function School({ openn, ...rest }) {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-
+const handleCloseUpdate=()=>{
+  setName("");
+  setProvince("");
+  setDistrict("");
+  setSector("");
+  setCell("");
+  setFullname("");
+  setEmail("");
+  setOpenUpdate(false);
+}
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+
 
   const handleAdd = async () => {
     await dispatch(
-      addSchoolAction({ province, district,sector,cell,fullname,email,level })
+      addSchoolAction({ name,province, district,sector,cell,fullname,email})
     );
     setOpen(false);
-   
     setName("");
     setProvince("");
     setDistrict("");
     setSector("");
     setCell("");
-    setLevel("");
     setFullname("");
     setEmail("");
     await dispatch(getAllSchool());
@@ -115,6 +134,33 @@ export default function School({ openn, ...rest }) {
    }
    fetchData();
   }, [schoolsState.schools]);
+
+
+  const handleUpdate = async () => {
+    if (!name) {
+      return alert("name is required");
+    }
+    console.log(schoolId);
+    await dispatch(updateSchoolAction({ name,province,district,sector,cell,id: schoolId }));
+    setOpenUpdate(false);
+   
+    setName("");
+    setProvince("");
+    setDistrict("");
+    setSector("");
+    setCell("");
+   
+    setSearch(false)
+    await dispatch(getAllSchool());
+  };
+
+  const handleDelete = async () =>{
+    await dispatch(deleteSchoolAction(schoolId))
+    setOpenDelete(false);
+    window.location.reload();
+  }
+ 
+
   const trimString = (s) => {
     var l = 0,
       r = s.length - 1;
@@ -244,14 +290,7 @@ export default function School({ openn, ...rest }) {
               value={cell}
               variant="outlined"
             />
-              <TextField
-              id="outlined-basic"
-              label="level"
-              name="level"
-              onChange={(e) => setLevel(e.target.value)}
-              value={level}
-              variant="outlined"
-            /> 
+             
              <TextField
               id="outlined-basic"
               label="Full Name"
@@ -280,6 +319,98 @@ export default function School({ openn, ...rest }) {
         </DialogActions>
       </Dialog>
 
+
+      <Dialog open={openUpdate} onClose={handleCloseUpdate}>
+        <DialogTitle>Update School Information</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please enter school information here.
+          </DialogContentText>
+
+          <Box
+            component="form"
+            sx={{
+              "& > :not(style)": { m: 1, width: "30ch" },
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              id="outlined-basic"
+              label="School Name"
+              name="name"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Province"
+              name="province"
+              onChange={(e) => setProvince(e.target.value)}
+              value={province}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="District"
+              name="district"
+              onChange={(e) => setDistrict(e.target.value)}
+              value={district}
+              variant="outlined"
+            />
+             <TextField
+              id="outlined-basic"
+              label="Sector"
+              name="sector"
+              onChange={(e) => setSector(e.target.value)}
+              value={sector}
+              variant="outlined"
+            />
+           <TextField
+              id="outlined-basic"
+              label="Cell"
+              name="cell"
+              onChange={(e) => setCell(e.target.value)}
+              value={cell}
+              variant="outlined"
+            />
+
+          
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseUpdate}>Cancel</Button>
+          <Button onClick={handleUpdate} color="primary" autoFocus>
+            {updateSchool.loading ? "Loading..." : "Update School"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openDelete}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete the School below "{name}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            {deleteSchool.loading? "Loading..." : "Delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      
+
+
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
           <Table>
@@ -290,7 +421,6 @@ export default function School({ openn, ...rest }) {
                 <TableCell>District</TableCell>
                 <TableCell>Sector</TableCell>
                 <TableCell>Cell</TableCell>
-                <TableCell>Level</TableCell>
                 <TableCell>Created Date</TableCell>
                 <TableCell>Update Date</TableCell>
                 <TableCell>Action</TableCell>
@@ -302,7 +432,7 @@ export default function School({ openn, ...rest }) {
                   {results.slice(0, limit).map((school) => (
                     <TableRow
                       hover
-                      //key={product.id}
+                      key={school.id}
                       selected={selectedSchoolIds.indexOf(school.id) !== -1}
                     >
                       <TableCell>
@@ -365,18 +495,7 @@ export default function School({ openn, ...rest }) {
                           </Typography>
                         </Box>
                       </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                           {school.level}
-                          </Typography>
-                        </Box>
-                      </TableCell>
+                     
                       <TableCell>
                         {moment(school.createdAt).format("DD/MM/YYYY")}
                       </TableCell>
@@ -387,8 +506,13 @@ export default function School({ openn, ...rest }) {
                         <IconButton
                           aria-label="update"
                           onClick={() => {
-                            //  setcategoryId(product.id);
-                            //  setName(product.name);
+                              setSchoolId(school.id);
+                             setName(school.name);
+                             setProvince(school.province);
+                             setDistrict(school.district);
+                             setSector(school.sector);
+                             setCell(school.cell);
+                           
                             setOpenUpdate(true);
                           }}
                         >
@@ -398,9 +522,14 @@ export default function School({ openn, ...rest }) {
                           aria-label="delete"
                           color="secondary"
                           onClick={() => {
-                            //  setcategoryId(category.id);
-                            //  setcategoryName(category.name);
-                            setOpen(true);
+                            setSchoolId(school.id);
+                            setName(school.name);
+                            setProvince(school.province);
+                            setDistrict(school.district);
+                            setSector(school.sector);
+                            setCell(school.cell);
+                           
+                            setOpenDelete(true);
                           }}
                         >
                           <DeleteIcon />
@@ -478,18 +607,7 @@ export default function School({ openn, ...rest }) {
                         </Typography>
                       </Box>
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          alignItems: "center",
-                          display: "flex",
-                        }}
-                      >
-                        <Typography color="textPrimary" variant="body1">
-                      {school.level}
-                        </Typography>
-                      </Box>
-                    </TableCell>
+                    
                     <TableCell>
                       {moment(school.createdAt).format("DD/MM/YYYY")}
                     </TableCell>
@@ -500,13 +618,14 @@ export default function School({ openn, ...rest }) {
                       <IconButton
                         aria-label="update"
                         onClick={() => {
-                          // setproductId(product.id);
-                          // setName(product.name);
-                          // setcategoryId(product.categoryId);
-                          // setPrice(product.price);
-                          // setImageUrl(product.imageUrl);
-                          // setDescription(product.description)
-                          // setQuantity(product.quantity);
+                          setSchoolId(school.id);
+                          setName(school.name);
+                          setProvince(school.province);
+                          setDistrict(school.district);
+                          setSector(school.sector);
+                          setCell(school.cell);
+                        
+                         setOpenUpdate(true);
                           setOpenUpdate(true);
                         }}
                       >
@@ -516,9 +635,15 @@ export default function School({ openn, ...rest }) {
                         aria-label="delete"
                         color="secondary"
                         onClick={() => {
-                          // setproductId(product.id)
-                          // setproductName(product.name)
-                          setOpen(true);
+                          setSchoolId(school.id);
+                          setName(school.name);
+                          setProvince(school.province);
+                          setDistrict(school.district);
+                          setSector(school.sector);
+                          setCell(school.cell);
+                         
+            
+                          setOpenDelete(true);
                         }}
                       >
                         <DeleteIcon />

@@ -18,6 +18,10 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
+import FormHelperText from '@mui/material/FormHelperText';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+
 
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
@@ -29,6 +33,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
 import IconButton from "@material-ui/core/IconButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import {addUserAction} from "../../../redux/actions/addUserAction";
+import {deleteUserAction} from "../../../redux/actions/deleteUserAction";
 
 import { Search as SearchIcon } from "react-feather";
 import {
@@ -44,6 +50,7 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import MenuItem from '@mui/material/MenuItem';
 
 export default function UserList({ openn, ...rest }) {
   const [selectedUserIds, setSelectedUserIds] = useState([]);
@@ -53,25 +60,59 @@ export default function UserList({ openn, ...rest }) {
 
   const [open, setOpen] = React.useState(false);
 
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [dob, setDob] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
   const [gender, setGender] = useState("");
   const [schoolId, setSchoolId] = useState("");
 
-  const addStudent = useSelector((state) => state.addStudent);
+  const addUser = useSelector((state) => state.addUser);
+  const deleteUser= useSelector((state)=>state.deleteUser);
   //const [value, setValue] = React.useState(new Date());
   const [results, setResults] = useState({});
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [search, setSearch] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [userId,setUserId]=useState("");
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
-  };
+  
+const roles=[
+  {
+  value:"DistrictUser",
+  label:"District User"
+  },{
+    value:"SectorUser",
+    label:"Sector User"
+  }
+];
+
+const handleAddUser= async()=>{
+  console.log(fullname)
+  await dispatch(
+    addUserAction({ fullname,email,role})
+  );
+  setOpen(false);
+  setFullname("");
+  setEmail("");
+  setRole("");
+  
+  await dispatch(getAllUser());
+  console.log("added");
+}
+const handleCloseDelete = () => {
+  setOpenDelete(false);
+};
+
+
+
+const handleLimitChange = (event) => {
+  setLimit(event.target.value);
+};
+
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -84,19 +125,11 @@ export default function UserList({ openn, ...rest }) {
     setOpen(false);
   };
 
-  const handleAdd = async () => {
-    // await dispatch(
-    //   addStudentAction({ firstname, lastname, dob, gender, schoolId })
-    // );
-    // setOpen(false);
-    // setFirstname("");
-    // setLastname("");
-    // setDob("");
-    // setGender("");
-    // setSchoolId("");
-    // await dispatch(getAllStudent());
-    // console.log("added");
-  };
+  const handleDelete = async () =>{
+    await dispatch(deleteUserAction(userId))
+    setOpenDelete(false);
+    window.location.reload();
+  }
 
   useEffect( async() => {
    
@@ -190,7 +223,7 @@ export default function UserList({ openn, ...rest }) {
               variant="contained"
               onClick={() => {
                 setOpen(true);
-                handleAdd();
+              
               }}
             >
               Add User
@@ -215,89 +248,65 @@ export default function UserList({ openn, ...rest }) {
           >
             <TextField
               id="outlined-basic"
-              label="First Name"
-              name="firstname"
-              onChange={(e) => setFirstname(e.target.value)}
-              value={firstname}
+              label="Full Name"
+              name="fullname"
+              onChange={(e) => setFullname(e.target.value)}
+              value={fullname}
               variant="outlined"
             />
-            <TextField
+              <TextField
               id="outlined-basic"
-              label="Last Name"
-              name="lastname"
-              onChange={(e) => setLastname(e.target.value)}
-              value={lastname}
+              label="Email"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
               variant="outlined"
             />
-            <TextField
-              id="date"
-              label="Birthday"
-              type="date"
-              name="dob"
-              onChange={(e) => setDob(e.target.value)}
-              value={dob}
-              defaultValue="2017-05-24"
-              sx={{ width: 220 }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Gender</FormLabel>
-              <RadioGroup
-                aria-label="gender"
-                defaultValue="female"
-                name="radio-buttons-group"
-                onChange={(e) => {
-                  setGender(e.target.value);
-                }}
-              >
-                <FormControlLabel
-                  value="Female"
-                  control={<Radio />}
-                  label="Female"
-                />
-                <FormControlLabel
-                  value="Male"
-                  control={<Radio />}
-                  label="Male"
-                />
-              </RadioGroup>
-            </FormControl>
-
-            <TextField
+          
+         <TextField
               id="outlined-select-currency"
-              label="School"
-              value={schoolId}
-              name="schoolId"
-              onChange={(e) => setSchoolId(e.target.value)}
-              // helperText="Please select your School"
-            >
-              {/* {schools.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))} */}
-            </TextField>
-            <TextField
-              id="outlined-select-currency"
+              label="Role"
               select
-              label="level"
-              // helperText="Please select your Level"
+              value={role}
+              name="role"
+              onChange={(e) => setRole(e.target.value)}
+              helperText="Please select your Role"
             >
-              {/* {levels.map((option) => (
+              {roles.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
-              ))} */}
+              ))}
             </TextField>
+           
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAdd} color="primary" autoFocus>
-            Add User
-            {/* {addStudent.loading ? "Loading..." : "Add new School"} */}
+          <Button onClick={handleAddUser} color="primary" autoFocus>
+          {addUser.loading ? "Loading..." : "Add new User"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openDelete}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete the User below "{fullname}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            {deleteUser.loading? "Loading..." : "Delete"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -396,8 +405,10 @@ export default function UserList({ openn, ...rest }) {
                           aria-label="delete"
                           color="secondary"
                           onClick={() => {
-                            //  setcategoryId(category.id);
-                            //  setcategoryName(category.name);
+                             setUserId(user.id);
+                             setFullname(user.fullname);
+                             setEmail(user.email);
+                             setRole(user.role);
                             setOpen(true);
                           }}
                         >
@@ -476,13 +487,10 @@ export default function UserList({ openn, ...rest }) {
                       <IconButton
                         aria-label="update"
                         onClick={() => {
-                          // setproductId(product.id);
-                          // setName(product.name);
-                          // setcategoryId(product.categoryId);
-                          // setPrice(product.price);
-                          // setImageUrl(product.imageUrl);
-                          // setDescription(product.description)
-                          // setQuantity(product.quantity);
+                          setUserId(user.id);
+                          setFullname(user.fullname);
+                          setEmail(user.email);
+                          setRole(user.role);
                           setOpenUpdate(true);
                         }}
                       >
@@ -492,9 +500,11 @@ export default function UserList({ openn, ...rest }) {
                         aria-label="delete"
                         color="secondary"
                         onClick={() => {
-                          // setproductId(product.id)
-                          // setproductName(product.name)
-                          setOpen(true);
+                          setUserId(user.id);
+                             setFullname(user.fullname);
+                             setEmail(user.email);
+                             setRole(user.role);
+                             setOpenDelete(true);
                         }}
                       >
                         <DeleteIcon />

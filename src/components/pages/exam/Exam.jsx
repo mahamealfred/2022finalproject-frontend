@@ -25,6 +25,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { getAllExam } from "../../../redux/actions/examsAction";
 import { addExamAction } from "../../../redux/actions/addExamAction";
+import { deleteExamAction } from "../../../redux/actions/deleteExamAction";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -55,17 +56,21 @@ export default function Exam({ openn, ...rest }) {
 
   const [subject, setSubject] = useState("");
   const [name, setName] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState("");
   const [question, setQuestion] = useState("");
   const [correct_answer, setCorrect_answer] = useState("");
-  const [incorrect_answer, setIncorrect_answer] = useState("");
+  const [incorrect_answer, setIncorrect_answer] = useState([]);
 
   const addExam = useSelector((state) => state.addExam);
+  const deleteExam =useSelector((state)=>state.deleteExam);
   //const [value, setValue] = React.useState(new Date());
   const [results, setResults] = useState({});
   const [selectedExamIds, setSelectedExamIds] = useState([]);
   const [search, setSearch] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [examId,setExamId]=useState("");
+
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -78,11 +83,21 @@ export default function Exam({ openn, ...rest }) {
     setPage(newPage);
   };
 
+  const handleDelete = async () =>{
+    await dispatch(deleteExamAction(examId))
+    setOpenDelete(false);
+    window.location.reload();
+  }
+ 
+
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
   };
 
   const handleAdd = async () => {
@@ -265,6 +280,30 @@ export default function Exam({ openn, ...rest }) {
         </DialogActions>
       </Dialog>
 
+      <Dialog
+        open={openDelete}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete the Exam below "{subject}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            {deleteExam.loading? "Loading..." : "Delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      
+
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
           <Table>
@@ -334,8 +373,10 @@ export default function Exam({ openn, ...rest }) {
                         <IconButton
                           aria-label="update"
                           onClick={() => {
-                            //  setcategoryId(product.id);
-                            //  setName(product.name);
+                             setExamId(exam.id);
+                             setName(exam.name);
+                             setSubject(exam.subject);
+                             setStartDate(exam.startDate);
                             setOpenUpdate(true);
                           }}
                         >
@@ -345,9 +386,11 @@ export default function Exam({ openn, ...rest }) {
                           aria-label="delete"
                           color="secondary"
                           onClick={() => {
-                            //  setcategoryId(category.id);
-                            //  setcategoryName(category.name);
-                            setOpen(true);
+                            setExamId(exam.id);
+                            setName(exam.name);
+                            setSubject(exam.subject);
+                            setStartDate(exam.startDate);
+                           setOpenDelete(true);
                           }}
                         >
                           <DeleteIcon />
@@ -412,13 +455,11 @@ export default function Exam({ openn, ...rest }) {
                       <IconButton
                         aria-label="update"
                         onClick={() => {
-                          // setproductId(product.id);
-                          // setName(product.name);
-                          // setcategoryId(product.categoryId);
-                          // setPrice(product.price);
-                          // setImageUrl(product.imageUrl);
-                          // setDescription(product.description)
-                          // setQuantity(product.quantity);
+                          setExamId(exam.id);
+                             setName(exam.name);
+                             setSubject(exam.subject);
+                             setStartDate(exam.startDate);
+                           
                           setOpenUpdate(true);
                         }}
                       >
@@ -428,9 +469,11 @@ export default function Exam({ openn, ...rest }) {
                         aria-label="delete"
                         color="secondary"
                         onClick={() => {
-                          // setproductId(product.id)
-                          // setproductName(product.name)
-                          setOpen(true);
+                          setExamId(exam.id);
+                          setName(exam.name);
+                          setSubject(exam.subject);
+                          setStartDate(exam.startDate);
+                         setOpenDelete(true);
                         }}
                       >
                         <DeleteIcon />
