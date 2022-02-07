@@ -1,4 +1,4 @@
-import { DataGrid } from "@material-ui/data-grid";
+
 import Button from "@mui/material/Button";
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -11,7 +11,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 //import MenuItem from "@mui/material/MenuItem";
 
-import { DeleteOutline } from "@material-ui/icons";
+
 
 
 
@@ -55,7 +55,6 @@ export default function School({ openn, ...rest }) {
   const [district, setDistrict] = useState("");
   const [sector, setSector] = useState("");
   const [cell, setCell] = useState("");
-  const [level,setLevel]=useState([]);
   const [fullname,setFullname]=useState("");
   const [email,setEmail]=useState("");
   const [schoolId,setSchoolId]=useState("");
@@ -164,14 +163,14 @@ const handleCloseUpdate=()=>{
   const trimString = (s) => {
     var l = 0,
       r = s.length - 1;
-    while (l < s.length && s[l] == " ") l++;
-    while (r > l && s[r] == " ") r -= 1;
+    while (l < s.length && s[l] === " ") l++;
+    while (r > l && s[r] === " ") r -= 1;
     return s.substring(l, r + 1);
   };
   const compareObjects = (o1, o2) => {
     var k = "";
-    for (k in o1) if (o1[k] != o2[k]) return false;
-    for (k in o2) if (o1[k] != o2[k]) return false;
+    for (k in o1) if (o1[k] !== o2[k]) return false;
+    for (k in o2) if (o1[k] !== o2[k]) return false;
     return true;
   };
   const itemExists = (haystack, needle) => {
@@ -190,9 +189,9 @@ const handleCloseUpdate=()=>{
       const toSearch = trimString(searchKey); // trim it
       for (var i = 0; i < schools.length; i++) {
         for (var key in schools[i]) {
-          if (schools[i][key] != null) {
+          if (schools[i][key] !== null) {
             if (
-              schools[i][key].toString().toLowerCase().indexOf(toSearch) != -1
+              schools[i][key].toString().toLowerCase().indexOf(toSearch) !== -1
             ) {
               if (!itemExists(results, schools[i])) results.push(schools[i]);
             }
@@ -223,7 +222,7 @@ const handleCloseUpdate=()=>{
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search products"
+                placeholder="Search School"
                 variant="outlined"
               />
             </Box>

@@ -20,7 +20,7 @@ export const addExamAction = (data, history) => async (dispatch) => {
         "Content-Type": "application/json",
       };
     }
-    const res = await axios.post(`http://localhost:8000/exams/`,
+    const res = await axios.post(`http://localhost:8000/exams`,
     data,
      {
       headers: headers,

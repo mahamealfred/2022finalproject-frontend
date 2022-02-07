@@ -10,19 +10,6 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 //import MenuItem from "@mui/material/MenuItem";
 
-
-
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-
-import FormHelperText from '@mui/material/FormHelperText';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-
-
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
@@ -63,14 +50,12 @@ export default function UserList({ openn, ...rest }) {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
-  const [gender, setGender] = useState("");
-  const [schoolId, setSchoolId] = useState("");
 
   const addUser = useSelector((state) => state.addUser);
   const deleteUser= useSelector((state)=>state.deleteUser);
   //const [value, setValue] = React.useState(new Date());
   const [results, setResults] = useState({});
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
+
   const [search, setSearch] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -94,16 +79,22 @@ const handleAddUser= async()=>{
   console.log(fullname)
   await dispatch(
     addUserAction({ fullname,email,role})
-  );
+  ); 
   setOpen(false);
   setFullname("");
   setEmail("");
   setRole("");
+ 
+  
   
   await dispatch(getAllUser());
   console.log("added");
 }
 const handleCloseDelete = () => {
+  setFullname("");
+  setEmail("");
+  setRole("");
+ 
   setOpenDelete(false);
 };
 
@@ -118,9 +109,7 @@ const handleLimitChange = (event) => {
     setPage(newPage);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+ 
   const handleClose = () => {
     setOpen(false);
   };
@@ -128,30 +117,32 @@ const handleLimitChange = (event) => {
   const handleDelete = async () =>{
     await dispatch(deleteUserAction(userId))
     setOpenDelete(false);
-    window.location.reload();
+    // window.location.reload();
   }
 
-  useEffect( async() => {
-   
+  useEffect( () => {
+   async function fecthData(){
     if (!usersState.loading) {
       if (usersState.users) {
         setUsers(usersState.users);
         await dispatch(getAllUser());
       }
     }
+   }
+   fecthData();
   }, [usersState.users]);
 
   const trimString = (s) => {
     var l = 0,
       r = s.length - 1;
-    while (l < s.length && s[l] == " ") l++;
-    while (r > l && s[r] == " ") r -= 1;
+    while (l < s.length && s[l] === " ") l++;
+    while (r > l && s[r] === " ") r -= 1;
     return s.substring(l, r + 1);
   };
   const compareObjects = (o1, o2) => {
     var k = "";
-    for (k in o1) if (o1[k] != o2[k]) return false;
-    for (k in o2) if (o1[k] != o2[k]) return false;
+    for (k in o1) if (o1[k] !== o2[k]) return false;
+    for (k in o2) if (o1[k] !== o2[k]) return false;
     return true;
   };
   const itemExists = (haystack, needle) => {
@@ -170,9 +161,9 @@ const handleLimitChange = (event) => {
       const toSearch = trimString(searchKey); // trim it
       for (var i = 0; i < users.length; i++) {
         for (var key in users[i]) {
-          if (users[i][key] != null) {
+          if (users[i][key] !== null) {
             if (
-              users[i][key].toString().toLowerCase().indexOf(toSearch) != -1
+              users[i][key].toString().toLowerCase().indexOf(toSearch) !== -1
             ) {
               if (!itemExists(results, users[i])) results.push(users[i]);
             }
@@ -332,7 +323,7 @@ const handleLimitChange = (event) => {
                     <TableRow
                       hover
                       key={user.id}
-                      selected={selectedCustomerIds.indexOf(user.id) !== -1}
+                      selected={selectedUserIds.indexOf(user.id) !== -1}
                     >
                     
                       <TableCell>

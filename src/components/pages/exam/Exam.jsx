@@ -26,6 +26,7 @@ import { useState, useEffect } from "react";
 import { getAllExam } from "../../../redux/actions/examsAction";
 import { addExamAction } from "../../../redux/actions/addExamAction";
 import { deleteExamAction } from "../../../redux/actions/deleteExamAction";
+import { updateExamAction } from "../../../redux/actions/updateExamAction";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -63,6 +64,7 @@ export default function Exam({ openn, ...rest }) {
 
   const addExam = useSelector((state) => state.addExam);
   const deleteExam =useSelector((state)=>state.deleteExam);
+  const updateExam =useSelector((state)=> state.updateExam);
   //const [value, setValue] = React.useState(new Date());
   const [results, setResults] = useState({});
   const [selectedExamIds, setSelectedExamIds] = useState([]);
@@ -74,6 +76,13 @@ export default function Exam({ openn, ...rest }) {
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+
+  const handleCloseUpdate=()=>{
+    setName("");
+    setSubject("");
+    setStartDate("");
+    setOpenUpdate(false);
+  }
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -114,6 +123,23 @@ export default function Exam({ openn, ...rest }) {
     setIncorrect_answer("");
     await dispatch(getAllExam());
     console.log("added");
+  };
+
+
+
+  const handleUpdate = async () => {
+    if (!name) {
+      return alert("name is required");
+    }
+    console.log(examId);
+    await dispatch(updateExamAction({ name,subject,startDate,id: examId }));
+    setOpenUpdate(false);
+   
+    setName("");
+    setSubject("");
+    setStartDate("");
+    setSearch(false)
+    await dispatch(getAllExam());
   };
 
   useEffect( async() => {
@@ -188,7 +214,7 @@ export default function Exam({ openn, ...rest }) {
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search products"
+                placeholder="Search an Exam"
                 variant="outlined"
               />
             </Box>
@@ -279,6 +305,62 @@ export default function Exam({ openn, ...rest }) {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog open={openUpdate} onClose={handleClose}>
+        <DialogTitle>Update Exam Details</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please Edit Exam information here.
+          </DialogContentText>
+
+          <Box
+            component="form"
+            sx={{
+              "& > :not(style)": { m: 1, width: "30ch" },
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              id="outlined-basic"
+              label="Subject"
+              name="subject"
+              onChange={(e) => setSubject(e.target.value)}
+              value={subject}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Description"
+              name="name"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              variant="outlined"
+            />
+            <TextField
+              id="date"
+              label="Start Date"
+              type="date"
+              name="startDate"
+              onChange={(e) => setStartDate(e.target.value)}
+              value={startDate}
+              defaultValue="2017-05-24"
+              sx={{ width: 220 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseUpdate}>Cancel</Button>
+          <Button onClick={handleUpdate} color="primary" autoFocus>
+            {updateExam.loading ? "Loading..." : "Update Exam"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
 
       <Dialog
         open={openDelete}

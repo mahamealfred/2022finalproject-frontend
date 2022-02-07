@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import PropTypes from "prop-types";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Button from "@material-ui/core/Button";
@@ -18,7 +18,9 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { useDispatch } from "react-redux";
+
+import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 import { Search as SearchIcon } from "react-feather";
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -29,12 +31,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
-
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
+import moment from "moment";
+import { getAllQuestion } from "../../../redux/actions/questionsAction";
+import { deleteQuestionAction } from "../../../redux/actions/deleteQuestionAction";
+import { updateQuestionAction } from "../../../redux/actions/updateQuestionAction";
 
 const Question = ({ ...rest }) => {
   const [open, setOpen] = useState(false);
@@ -43,11 +43,19 @@ const Question = ({ ...rest }) => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [search, setSearch] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [dob, setDob] = useState("");
-  const [gender, setGender] = useState("");
-  const [schoolId, setSchoolId] = useState("");
+  const [question, setQuestion] = useState("");
+  const [correct_answer, setCorrect_answer] = useState("");
+  const [incorrect_answer, setIncorrect_answer] = useState("");
+  const [questions, setQuestions] = useState([]);
+  const [openDelete, setOpenDelete] = useState(false);
+
+  const [questionId, setQuestionId] = useState("");
+
+  const dispatch = useDispatch();
+  const questionsState = useSelector((state) => state.questions);
+  const deleteQuestion=useSelector((state)=>state.deleteQuestion);
+  const updateQuestion = useSelector((state)=>state.updateQuestion);
+  
 
   const handleAdd = async () => {
     setOpen(true);
@@ -62,9 +70,28 @@ const Question = ({ ...rest }) => {
     setOpen(true);
   };
 
-  const handleUpdate = async () => {};
-  const handleCloseUpdate = () => {
+  const handleUpdate = async () => {
+    if (!question) {
+      return alert("Question is required");
+    }
+    console.log(questionId);
+    await dispatch(updateQuestionAction({ question,correct_answer,incorrect_answer,id: questionId }));
     setOpenUpdate(false);
+   
+    setQuestion("");
+    setCorrect_answer("");
+    setIncorrect_answer("");
+    setSearch(false)
+    await dispatch(getAllQuestion());
+
+  };
+
+  const handleCloseUpdate = () => {
+    setQuestion("");
+    setCorrect_answer("");
+    setIncorrect_answer("");
+    setOpenUpdate(false);
+
   };
 
   const handleClose = () => {
@@ -82,11 +109,30 @@ const Question = ({ ...rest }) => {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-
-  const handleDelete = async () => {
-    setOpen(false);
-    window.location.reload();
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
   };
+
+
+  const handleDelete = async () =>{
+    await dispatch(deleteQuestionAction(questionId))
+    setOpenDelete(false);
+    window.location.reload();
+  }
+
+
+
+  useEffect( async() => {
+   
+    if (!questionsState.loading) {
+      if (questionsState.questions) {
+        setQuestions(questionsState.questions);
+        await dispatch(getAllQuestion());
+      }
+    }
+  }, [questionsState.questions]);
+
+
   const trimString = (s) => {
     var l = 0,
       r = s.length - 1;
@@ -107,20 +153,20 @@ const Question = ({ ...rest }) => {
   };
   const searchHandle = async (e) => {
     setSearch(true);
-    const products = 0;
+    const questions = 0;
     const searchKey = e.target.value;
     console.log(e.target.value);
 
     try {
       var results = [];
       const toSearch = trimString(searchKey); // trim it
-      for (var i = 0; i < products.length; i++) {
-        for (var key in products[i]) {
-          if (products[i][key] != null) {
+      for (var i = 0; i < questions.length; i++) {
+        for (var key in questions[i]) {
+          if (questions[i][key] != null) {
             if (
-              products[i][key].toString().toLowerCase().indexOf(toSearch) != -1
+              questions[i][key].toString().toLowerCase().indexOf(toSearch) != -1
             ) {
-              if (!itemExists(results, products[i])) results.push(products[i]);
+              if (!itemExists(results, questions[i])) results.push(questions[i]);
             }
           }
         }
@@ -134,108 +180,58 @@ const Question = ({ ...rest }) => {
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
       <Card {...rest}>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{"Confirm"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Are you sure you want to delete the product below ""?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleDelete} color="primary" autoFocus>
-              {/* {? "Loading..." : "Delete"} */}
-            </Button>
-          </DialogActions>
-        </Dialog>
-
+      
         <Dialog
           open={openUpdate}
           onClose={handleCloseUpdate}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Update Product"}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">{"Update  Question"}</DialogTitle>
           <DialogContent>
+          <Box
+            component="form"
+            sx={{
+              "& > :not(style)": { m: 1, width: "25ch" },
+            }}
+            noValidate
+            autoComplete="off"
+          >
+           
             <TextField
-              fullWidth
-              label="Product Name"
-              margin="normal"
-              name="name"
-              // onChange={(e)=> setName(e.target.value)}
-              type="text"
-              // value={name}
+              id="outlined-basic"
+              label="Question"
+              name="question"
+              onChange={(e) => setQuestion(e.target.value)}
+              value={question}
               variant="outlined"
             />
+            <TextField
+              id="outlined-basic"
+              label="Correct Answer"
+              name="correct_answer"
+              onChange={(e) => setCorrect_answer(e.target.value)}
+              value={correct_answer}
+              variant="outlined"
+            />
+             <TextField
+              id="outlined-basic"
+              label="Incorrect Answer"
+              name="incorrect_answer"
+              onChange={(e) => setIncorrect_answer(e.target.value)}
+              value={incorrect_answer}
+              variant="outlined"
+            />
+           
 
-            <TextField
-              fullWidth
-              label="Category Id"
-              margin="normal"
-              name="categoryId"
-              // onChange={(e)=> setcategoryId(e.target.value)}
-              type="text"
-              // value={categoryId}
-              variant="outlined"
-            />
-
-            <TextField
-              fullWidth
-              label="Price"
-              margin="normal"
-              name="price"
-              // onChange={(e)=> setPrice(e.target.value)}
-              type="text"
-              // value={price}
-              variant="outlined"
-            />
-
-            <TextField
-              fullWidth
-              label="Quantity"
-              margin="normal"
-              name="quantity"
-              //onChange={(e)=> setQuantity(e.target.value)}
-              type="text"
-              // value={quantity}
-              variant="outlined"
-            />
-
-            <TextField
-              fullWidth
-              label="Image"
-              margin="normal"
-              name="imageUrl"
-              //  onChange={(e)=> setImageUrl(e.target.value)}
-              type="text"
-              // value={imageUrl}
-              variant="outlined"
-            />
-
-            <TextField
-              fullWidth
-              label="Description"
-              margin="normal"
-              name="description"
-              //  onChange={(e)=> setDescription(e.target.value)}
-              type="text"
-              // value={description}
-              variant="outlined"
-            />
+          </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseUpdate} color="primary">
               Cancel
             </Button>
             <Button onClick={handleUpdate} color="primary" autoFocus>
-              {/* { updateProductState.loading ? "Loading..." : "Update Product"} */}
+              { updateQuestion.loading ? "Loading..." : "Update Question"}
             </Button>
           </DialogActions>
         </Dialog>
@@ -255,116 +251,87 @@ const Question = ({ ...rest }) => {
                       </InputAdornment>
                     ),
                   }}
-                  placeholder="Search products"
+                  placeholder="Search Question"
                   variant="outlined"
                 />
               </Box>
             </CardContent>
           </Card>
           <Box></Box>
-
           <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Question Information</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Please enter question information here.
-              </DialogContentText>
+        <DialogTitle>Question Details</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please enter Question Details here.
+          </DialogContentText>
 
-              <Box
-                component="form"
-                sx={{
-                  "& > :not(style)": { m: 1, width: "25ch" },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <TextField
-                  id="outlined-basic"
-                  label="First Name"
-                  name="firstname"
-                  onChange={(e) => setFirstname(e.target.value)}
-                  value={firstname}
-                  variant="outlined"
-                />
-                <TextField
-                  id="outlined-basic"
-                  label="Last Name"
-                  name="lastname"
-                  onChange={(e) => setLastname(e.target.value)}
-                  value={lastname}
-                  variant="outlined"
-                />
-                <TextField
-                  id="date"
-                  label="Birthday"
-                  type="date"
-                  name="dob"
-                  onChange={(e) => setDob(e.target.value)}
-                  value={dob}
-                  defaultValue="2017-05-24"
-                  sx={{ width: 220 }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">Gender</FormLabel>
-                  <RadioGroup
-                    aria-label="gender"
-                    defaultValue="female"
-                    name="radio-buttons-group"
-                    onChange={(e) => {
-                      setGender(e.target.value);
-                    }}
-                  >
-                    <FormControlLabel
-                      value="Female"
-                      control={<Radio />}
-                      label="Female"
-                    />
-                    <FormControlLabel
-                      value="Male"
-                      control={<Radio />}
-                      label="Male"
-                    />
-                  </RadioGroup>
-                </FormControl>
+          <Box
+            component="form"
+            sx={{
+              "& > :not(style)": { m: 1, width: "30ch" },
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            
+            <TextField
+              id="outlined-basic"
+              label="Question"
+              name="question"
+              onChange={(e) => setQuestion(e.target.value)}
+              value={question}
+              variant="outlined"
+            />
+             <TextField
+              id="outlined-basic"
+              label="Correct Answer"
+              name="correct_answer"
+              onChange={(e) => setCorrect_answer(e.target.value)}
+              value={correct_answer}
+              variant="outlined"
+            />
+           <TextField
+              id="outlined-basic"
+              label="Incorrect Answer"
+              name="incorrect_answer"
+              onChange={(e) => setIncorrect_answer(e.target.value)}
+              value={incorrect_answer}
+              variant="outlined"
+            />
+             
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleAdd} color="primary" autoFocus>
+            add
+            {/* {addloading ? "Loading..." : "Add new School"} */}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-                <TextField
-                  id="outlined-select-currency"
-                  label="School"
-                  value={schoolId}
-                  name="schoolId"
-                  onChange={(e) => setSchoolId(e.target.value)}
-                  // helperText="Please select your School"
-                >
-                  {/* {schools.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))} */}
-                </TextField>
-                <TextField
-                  id="outlined-select-currency"
-                  select
-                  label="level"
-                  // helperText="Please select your Level"
-                >
-                  {/* {levels.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))} */}
-                </TextField>
-              </Box>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleAdd} color="primary" autoFocus>
-                {/* {addStudent.loading ? "Loading..." : "Add new Student"} */}
-              </Button>
-            </DialogActions>
-          </Dialog>
+      <Dialog
+        open={openDelete}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete the Question below "{question}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            {deleteQuestion.loading? "Loading..." : "Delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
 
           <Box
             sx={{
@@ -389,12 +356,9 @@ const Question = ({ ...rest }) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Id</TableCell>
                   <TableCell>Question</TableCell>
                   <TableCell>Correct Answer</TableCell>
                   <TableCell>Incorrect answer</TableCell>
-                  <TableCell>Exam Name</TableCell>
-                  <TableCell>Number of Question</TableCell>
                   <TableCell>Create Date</TableCell>
                   <TableCell>Update Date</TableCell>
                   <TableCell>Action</TableCell>
@@ -403,15 +367,14 @@ const Question = ({ ...rest }) => {
               <TableBody>
                 {search ? (
                   <>
-                    {results.slice(0, limit).map((product) => (
+                    {results.slice(0, limit).map((question) => (
                       <TableRow
                         hover
-                        //key={product.id}
+                        key={question.id}
                         selected={
-                          selectedCustomerIds.indexOf(product.id) !== -1
+                          selectedCustomerIds.indexOf(question.id) !== -1
                         }
                       >
-                        <TableCell>{product}</TableCell>
                         <TableCell>
                           <Box
                             sx={{
@@ -420,7 +383,7 @@ const Question = ({ ...rest }) => {
                             }}
                           >
                             <Typography color="textPrimary" variant="body1">
-                              {/* {product.name} */}
+                              {question.question}
                             </Typography>
                           </Box>
                         </TableCell>
@@ -432,7 +395,7 @@ const Question = ({ ...rest }) => {
                             }}
                           >
                             <Typography color="textPrimary" variant="body1">
-                              {/* {product.productId} */}
+                              {question.correct_answer}
                             </Typography>
                           </Box>
                         </TableCell>
@@ -444,46 +407,25 @@ const Question = ({ ...rest }) => {
                             }}
                           >
                             <Typography color="textPrimary" variant="body1">
-                              {/* {product.price} */}
+                              {question.incorrect_answer}
                             </Typography>
                           </Box>
                         </TableCell>
+                       
                         <TableCell>
-                          <Box
-                            sx={{
-                              alignItems: "center",
-                              display: "flex",
-                            }}
-                          >
-                            <Typography color="textPrimary" variant="body1">
-                              {/* {product.quantity} */}
-                            </Typography>
-                          </Box>
+                          {moment(question.createdAt).format("DD/MM/YYYY")}
                         </TableCell>
                         <TableCell>
-                          <Box
-                            sx={{
-                              alignItems: "center",
-                              display: "flex",
-                            }}
-                          >
-                            <Typography color="textPrimary" variant="body1">
-                              {/* {product.description} */}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          {/* {moment(product.createdAt).format("DD/MM/YYYY")} */}
-                        </TableCell>
-                        <TableCell>
-                          {/* {moment(product.updatedAt).format("DD/MM/YYYY")} */}
+                          {moment(question.updatedAt).format("DD/MM/YYYY")}
                         </TableCell>
                         <TableCell color="textPrimary" variant="body1">
                           <IconButton
                             aria-label="update"
                             onClick={() => {
-                              //  setcategoryId(product.id);
-                              //  setName(product.name);
+                               setQuestionId(question.id);
+                               setQuestion(question.question);
+                               setCorrect_answer(question.correct_answer);
+                               setIncorrect_answer(question.incorrect_answer);
                               setOpenUpdate(true);
                             }}
                           >
@@ -493,9 +435,11 @@ const Question = ({ ...rest }) => {
                             aria-label="delete"
                             color="secondary"
                             onClick={() => {
-                              //  setcategoryId(category.id);
-                              //  setcategoryName(category.name);
-                              setOpen(true);
+                              setQuestionId(question.id);
+                              setQuestion(question.question);
+                              setCorrect_answer(question.correct_answer);
+                              setIncorrect_answer(question.incorrect_answer)
+                              setOpenDelete(true);
                             }}
                           >
                             <DeleteIcon />
@@ -506,13 +450,13 @@ const Question = ({ ...rest }) => {
                   </>
                 ) : (
                   <>
-                    {/* {products.slice(0, limit).map((product) => ( */}
+                    {questions.slice(0, limit).map((question) => ( 
                     <TableRow
                       hover
-                      // key={product.id}
-                      // selected={selectedProductIds.indexOf(product.id) !== -1}
+                      key={question.id}
+                      selected={selectedProductIds.indexOf(question.id) !== -1}
                     >
-                      <TableCell>1</TableCell>
+                      
                       <TableCell>
                         <Box
                           sx={{
@@ -521,7 +465,7 @@ const Question = ({ ...rest }) => {
                           }}
                         >
                           <Typography color="textPrimary" variant="body1">
-                            {/* {product.name} */}
+                            {question.question}
                           </Typography>
                         </Box>
                       </TableCell>
@@ -533,7 +477,7 @@ const Question = ({ ...rest }) => {
                           }}
                         >
                           <Typography color="textPrimary" variant="body1">
-                            {/* {product.category.name} */}
+                          {question.correct_answer}
                           </Typography>
                         </Box>
                       </TableCell>
@@ -545,51 +489,25 @@ const Question = ({ ...rest }) => {
                           }}
                         >
                           <Typography color="textPrimary" variant="body1">
-                            {/* {product.price} */}
+                          {question.incorrect_answer}
                           </Typography>
                         </Box>
                       </TableCell>
+                     
                       <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {/* {product.quantity} */}
-                          </Typography>
-                        </Box>
+                         {moment(question.createdAt).format("DD/MM/YYYY")} 
                       </TableCell>
                       <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {/* {product.description} */}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        {/* {moment(product.createdAt).format("DD/MM/YYYY")} */}
-                      </TableCell>
-                      <TableCell>
-                        {/* {moment(product.updatedAt).format("DD/MM/YYYY")} */}
+                         {moment(question.updatedAt).format("DD/MM/YYYY")}
                       </TableCell>
                       <TableCell color="textPrimary" variant="body1">
                         <IconButton
                           aria-label="update"
                           onClick={() => {
-                            // setproductId(product.id);
-                            // setName(product.name);
-                            // setcategoryId(product.categoryId);
-                            // setPrice(product.price);
-                            // setImageUrl(product.imageUrl);
-                            // setDescription(product.description)
-                            // setQuantity(product.quantity);
+                            setQuestionId(question.id);
+                               setQuestion(question.question);
+                               setCorrect_answer(question.correct_answer);
+                               setIncorrect_answer(question.incorrect_answer)
                             setOpenUpdate(true);
                           }}
                         >
@@ -599,16 +517,18 @@ const Question = ({ ...rest }) => {
                           aria-label="delete"
                           color="secondary"
                           onClick={() => {
-                            // setproductId(product.id)
-                            // setproductName(product.name)
-                            setOpen(true);
+                            setQuestionId(question.id);
+                               setQuestion(question.question);
+                               setCorrect_answer(question.correct_answer);
+                               setIncorrect_answer(question.incorrect_answer)
+                            setOpenDelete(true);
                           }}
                         >
                           <DeleteIcon />
                         </IconButton>
                       </TableCell>
                     </TableRow>
-                    {/* )) */}
+                    )) }
                   </>
                 )}
               </TableBody>

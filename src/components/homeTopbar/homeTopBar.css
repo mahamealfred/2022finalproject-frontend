@@ -51,9 +51,9 @@
     align-items: center;
 }
 .topAvatar{
-    width: 82px;
-    height: 82px;
+    width: 95px;
+    height: 95px;
     border-radius: 50%;
     object-fit: contain;
     cursor: pointer;
-}
+} 
