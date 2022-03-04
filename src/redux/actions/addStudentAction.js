@@ -31,7 +31,7 @@ export const addStudentAction = (data, navigate) => async (dispatch) => {
     const students = await res.data;
     console.log(students)
     //localStorage.setItem('token', user.data.token);
-    localStorage.setItem("students-data", JSON.stringify(students.data));
+   // localStorage.setItem("students-data", JSON.stringify(students.data));
     //dispatch(loginUserSuccess({ data: students.data }));
     navigate("/dashboard", { replace: true });
   } catch (err) {
@@ -39,7 +39,7 @@ export const addStudentAction = (data, navigate) => async (dispatch) => {
       const errorMessage = await err.response.data.message;
       dispatch(studentsFailure(errorMessage));
     } else {
-      dispatch(studentsFailure("Network n Error"));
+      dispatch(studentsFailure("Network  Error"));
     }
   }
 };

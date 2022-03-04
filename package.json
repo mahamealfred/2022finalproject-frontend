@@ -20,6 +20,8 @@
     "axios": "^0.24.0",
     "chart.js": "^3.7.0",
     "formik": "^2.2.9",
+    "itype": "^3.0.1",
+    "ityped": "^1.0.3",
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-chartjs-2": "^4.0.0",

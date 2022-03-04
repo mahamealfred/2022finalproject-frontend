@@ -22,6 +22,8 @@ import IconButton from "@material-ui/core/IconButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {addUserAction} from "../../../redux/actions/addUserAction";
 import {deleteUserAction} from "../../../redux/actions/deleteUserAction";
+import { getAllSchool } from "../../../redux/actions/schoolsAction";
+import {getAllDistrict} from "../../../redux/actions/districtsAction";
 
 import { Search as SearchIcon } from "react-feather";
 import {
@@ -43,26 +45,35 @@ export default function UserList({ openn, ...rest }) {
   const [selectedUserIds, setSelectedUserIds] = useState([]);
   const dispatch = useDispatch();
   const usersState = useSelector((state) => state.users);
-  const [users, setUsers] = useState([]);
+  const districtsState=useSelector((state)=>state.districts);
+  const schoolsState=useSelector((state)=>state.schools);
 
+  const [users, setUsers] = useState([]);
+const [districts,setDistricts]=useState([])
+const [schools,setSchools]=useState([]);
   const [open, setOpen] = React.useState(false);
 
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
+  const [districtId, setDistrictId]=useState("")
+  const [schoolId, setSchoolId]=useState("")
 
   const addUser = useSelector((state) => state.addUser);
   const deleteUser= useSelector((state)=>state.deleteUser);
   //const [value, setValue] = React.useState(new Date());
-  const [results, setResults] = useState({});
 
-  const [search, setSearch] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [userId,setUserId]=useState("");
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [errors, setErrors] = useState({});
+  const validate= (fullname,email,role,districtId,schoolId) => {
+    // this function will check if the form values are valid
+    
+  }
 
   
 const roles=[
@@ -70,30 +81,31 @@ const roles=[
   value:"DistrictUser",
   label:"District User"
   },{
-    value:"SectorUser",
-    label:"Sector User"
+    value:"SchoolUser",
+    label:"School User"
   }
 ];
 
 const handleAddUser= async()=>{
   console.log(fullname)
   await dispatch(
-    addUserAction({ fullname,email,role})
+    addUserAction({ fullname,email,role,districtId,schoolId})
   ); 
   setOpen(false);
   setFullname("");
   setEmail("");
   setRole("");
- 
-  
-  
-  await dispatch(getAllUser());
+  setSchoolId("");
+  setDistrictId("");
+ await dispatch(getAllUser());
   console.log("added");
 }
 const handleCloseDelete = () => {
   setFullname("");
   setEmail("");
   setRole("");
+  setSchoolId("");
+  setDistrictId("");
  
   setOpenDelete(false);
 };
@@ -124,59 +136,32 @@ const handleLimitChange = (event) => {
    async function fecthData(){
     if (!usersState.loading) {
       if (usersState.users) {
-        setUsers(usersState.users);
+       setUsers(usersState.users);
         await dispatch(getAllUser());
+      }
+    }
+    if (!schoolsState.loading) {
+      if (schoolsState.schools) {
+setSchools(schoolsState.schools);
+        await dispatch(getAllSchool());
+      }
+   }
+    if (!districtsState.loading) {
+      if (districtsState.districts) {
+       setDistricts(districtsState.districts);
+        await dispatch(getAllDistrict());
       }
     }
    }
    fecthData();
-  }, [usersState.users]);
+  }, []);
 
-  const trimString = (s) => {
-    var l = 0,
-      r = s.length - 1;
-    while (l < s.length && s[l] === " ") l++;
-    while (r > l && s[r] === " ") r -= 1;
-    return s.substring(l, r + 1);
-  };
-  const compareObjects = (o1, o2) => {
-    var k = "";
-    for (k in o1) if (o1[k] !== o2[k]) return false;
-    for (k in o2) if (o1[k] !== o2[k]) return false;
-    return true;
-  };
-  const itemExists = (haystack, needle) => {
-    for (var i = 0; i < haystack.length; i++)
-      if (compareObjects(haystack[i], needle)) return true;
-    return false;
-  };
+  
+  
   const searchHandle = async (e) => {
-    setSearch(true);
-    const users = 0;
-    const searchKey = e.target.value;
-    console.log(e.target.value);
-
-    try {
-      var results = [];
-      const toSearch = trimString(searchKey); // trim it
-      for (var i = 0; i < users.length; i++) {
-        for (var key in users[i]) {
-          if (users[i][key] !== null) {
-            if (
-              users[i][key].toString().toLowerCase().indexOf(toSearch) !== -1
-            ) {
-              if (!itemExists(results, users[i])) results.push(users[i]);
-            }
-          }
-        }
-      }
-      setResults(results);
-    } catch (error) {
-      console.log(error);
-    }
+    
   };
-  console.log(results);
-  console.log("po"+users);
+ 
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
       <Box sx={{ mt: 3 }}>
@@ -214,7 +199,7 @@ const handleLimitChange = (event) => {
               variant="contained"
               onClick={() => {
                 setOpen(true);
-              
+                validate();
               }}
             >
               Add User
@@ -230,14 +215,15 @@ const handleLimitChange = (event) => {
           </DialogContentText>
 
           <Box
-            component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "25ch" },
-            }}
-            noValidate
-            autoComplete="off"
+              component="form"
+              sx={{
+                '& .MuiTextField-root': { m: 1, width: '25ch' },
+              }}
+              noValidate
+              autoComplete="off"
           >
             <TextField
+               errors={errors}
               id="outlined-basic"
               label="Full Name"
               name="fullname"
@@ -246,6 +232,7 @@ const handleLimitChange = (event) => {
               variant="outlined"
             />
               <TextField
+
               id="outlined-basic"
               label="Email"
               name="email"
@@ -255,7 +242,7 @@ const handleLimitChange = (event) => {
             />
           
          <TextField
-              id="outlined-select-currency"
+              id="outlined-select-role"
               label="Role"
               select
               value={role}
@@ -266,6 +253,36 @@ const handleLimitChange = (event) => {
               {roles.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              id="outlined-select-district"
+              label="District"
+              select
+              value={districtId}
+              name="districtId"
+              onChange={(e) => setDistrictId(e.target.value)}
+              helperText="Please select your District"
+            >
+              {districts.map((district) => (
+                <MenuItem key={district.id} value={district.id}>
+                  {district.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              id="outlined-select-school"
+              label="School"
+              select
+              value={schoolId}
+              name="schoolId"
+              onChange={(e) => setSchoolId(e.target.value)}
+              helperText="Please select your School"
+            >
+              {schools.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.name}
                 </MenuItem>
               ))}
             </TextField>
@@ -317,99 +334,7 @@ const handleLimitChange = (event) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {search ? (
-                <>
-                  {results.slice(0, limit).map((user) => (
-                    <TableRow
-                      hover
-                      key={user.id}
-                      selected={selectedUserIds.indexOf(user.id) !== -1}
-                    >
-                    
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {user.fullname}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {user.email}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {user.role}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {user.isActive}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                     
-                      <TableCell>
-                        {moment(user.createdAt).format("DD/MM/YYYY")}
-                      </TableCell>
-                      <TableCell>
-                        {moment(user.updatedAt).format("DD/MM/YYYY")}
-                      </TableCell>
-                      <TableCell color="textPrimary" variant="body1">
-                        <IconButton
-                          aria-label="update"
-                          onClick={() => {
-                            //  setcategoryId(product.id);
-                            //  setName(product.name);
-                            setOpenUpdate(true);
-                          }}
-                        >
-                          <BorderColorIcon />
-                        </IconButton>
-                        <IconButton
-                          aria-label="delete"
-                          color="secondary"
-                          onClick={() => {
-                             setUserId(user.id);
-                             setFullname(user.fullname);
-                             setEmail(user.email);
-                             setRole(user.role);
-                            setOpen(true);
-                          }}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-              ) : (
+              
                 <>
                   {users.slice(0, limit).map((user) => (
                   <TableRow
@@ -450,8 +375,8 @@ const handleLimitChange = (event) => {
                       >
                         <Typography color="textPrimary" variant="body1">
                           {user.role}
-                         
                         </Typography>
+                        
                       </Box>
                     </TableCell>
                     <TableCell>
@@ -504,7 +429,7 @@ const handleLimitChange = (event) => {
                   </TableRow>
                    )) }
                 </>
-              )}
+              
             </TableBody>
           </Table>
         </Box>

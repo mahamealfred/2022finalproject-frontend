@@ -22,7 +22,7 @@ export default function Topbar() {
                         <Settings />
                           
                     </div>
-                    <img src="../Assets/images/alf1.jpeg" alt="" className="topAvatar" />
+                    <img src="../Assets/images/reb.jpg" alt="" className="topAvatar" />
                 </div>
 
             </div>

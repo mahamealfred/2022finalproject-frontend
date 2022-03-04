@@ -23,7 +23,7 @@ export const loginAction = (user, history) => async (dispatch) => {
       const errorMessage = await err.response.data.message;
       dispatch(loginFailure(errorMessage));
     } else {
-      dispatch(loginFailure("Network n Error"));
+      dispatch(loginFailure("Network Error"));
     }
   }
 };

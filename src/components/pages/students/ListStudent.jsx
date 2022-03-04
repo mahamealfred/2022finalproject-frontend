@@ -26,6 +26,7 @@ import { useState, useEffect } from "react";
 import { getAllStudent } from "../../../redux/actions/studentsAction";
 import { addStudentAction } from "../../../redux/actions/addStudentAction";
 import { deleteStudentAction } from "../../../redux/actions/deleteStudentAction";
+import { getAllSchool } from "../../../redux/actions/schoolsAction";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -51,9 +52,11 @@ import {
 
 export default function ListStudent({ openn, ...rest }) {
 
-  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
   const dispatch = useDispatch();
   const studentsState = useSelector((state) => state.students);
+  const schoolsState = useSelector((state) => state.schools);
+  const [schools, setSchools] = useState([]);
+
   const [students, setStudents] = useState([]);
   const [open, setOpen] = React.useState(false);
 
@@ -70,9 +73,7 @@ export default function ListStudent({ openn, ...rest }) {
   const addStudent = useSelector((state) => state.addStudent);
   const deleteStudent=useSelector((state)=> state.deleteStudent);
   //const [value, setValue] = React.useState(new Date());
-  const [results, setResults] = useState({});
- 
-  const [search, setSearch] = useState(false);
+  
   const [openUpdate, setOpenUpdate] = useState(false);
 
 
@@ -105,17 +106,10 @@ export default function ListStudent({ openn, ...rest }) {
     setOpen(false);
   };
 
-  //select input field
-
-  // const handleChange = (event) => {
-  //   setSchool(event.target.value);
-  //   setLevel(event.target.value);
-  // };
-
   const handleAdd = async () => {
 
     await dispatch(
-      addStudentAction({ firstname, lastname, email,dob, gender,level,schoolId })
+      addStudentAction({ firstname, lastname, email,dob, gender,level, schoolId })
     );
     setOpen(false);
     setFirstname("");
@@ -129,15 +123,22 @@ export default function ListStudent({ openn, ...rest }) {
     console.log("added");
   };
 
-  useEffect( async() => {
-   
+  useEffect( () => {
+    async function fetchData(){
     if (!studentsState.loading) {
       if (studentsState.students) {
         setStudents(studentsState.students);
         await dispatch(getAllStudent());
       }
-    }
-  }, [studentsState.students]);
+      if (!schoolsState.loading) {
+        if (schoolsState.schools) {
+          setSchools(schoolsState.schools);
+          await dispatch(getAllSchool());
+        }
+      }
+    }}
+    fetchData();
+  }, [studentsState.students,schoolsState.schools]);
 
   const handleCloseDelete = () => {
     setOpenDelete(false);
@@ -150,50 +151,10 @@ export default function ListStudent({ openn, ...rest }) {
   }
 
 
-  const trimString = (s) => {
-    var l = 0,
-      r = s.length - 1;
-    while (l < s.length && s[l] == " ") l++;
-    while (r > l && s[r] == " ") r -= 1;
-    return s.substring(l, r + 1);
-  };
-  const compareObjects = (o1, o2) => {
-    var k = "";
-    for (k in o1) if (o1[k] != o2[k]) return false;
-    for (k in o2) if (o1[k] != o2[k]) return false;
-    return true;
-  };
-  const itemExists = (haystack, needle) => {
-    for (var i = 0; i < haystack.length; i++)
-      if (compareObjects(haystack[i], needle)) return true;
-    return false;
-  };
   const searchHandle = async (e) => {
-    setSearch(true);
-    const products = 0;
-    const searchKey = e.target.value;
-    console.log(e.target.value);
-
-    try {
-      var results = [];
-      const toSearch = trimString(searchKey); // trim it
-      for (var i = 0; i < products.length; i++) {
-        for (var key in products[i]) {
-          if (products[i][key] != null) {
-            if (
-              products[i][key].toString().toLowerCase().indexOf(toSearch) != -1
-            ) {
-              if (!itemExists(results, products[i])) results.push(products[i]);
-            }
-          }
-        }
-      }
-      setResults(results);
-    } catch (error) {
-      console.log(error);
-    }
+    
   };
-  console.log(results);
+ 
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
       <Box sx={{ mt: 3 }}>
@@ -298,17 +259,22 @@ export default function ListStudent({ openn, ...rest }) {
                 />
               </RadioGroup>
             </FormControl>
-
+            <DialogTitle>School Information</DialogTitle>
             <TextField
-              id="outlined-select-currency"
+              id="outlined-select-school"
               label="School"
               value={schoolId}
               select
               name="schoolId"
               onChange={(e) => setSchoolId(e.target.value)}
-              // helperText="Please select your School"
+              helperText="Please select your School"
             >
              
+             {schools.map((school) => (
+                <MenuItem key={school.id} value={school.id}>
+                  {school.name}
+                </MenuItem>
+              ))}
             </TextField>
             <TextField
               id="outlined-select-currency"
@@ -375,133 +341,7 @@ export default function ListStudent({ openn, ...rest }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {search ? (
-                <>
-                  {results.slice(0, limit).map((student) => (
-                    <TableRow
-                      hover
-                      key={student.id}
-                      selected={selectedStudentIds.indexOf(student.id) !== -1}
-                    >
-                      
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {student.lastname}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {student.firstname}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {student.email}
-                        
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {student.gender}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {student.studentcode}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {student.dob}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {student.level}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        {moment(student.createdAt).format("DD/MM/YYYY")}
-                      </TableCell>
-                      <TableCell>
-                        {moment(student.updatedAt).format("DD/MM/YYYY")}
-                      </TableCell>
-                      <TableCell color="textPrimary" variant="body1">
-                        <IconButton
-                          aria-label="update"
-                          onClick={() => {
-                            //  setcategoryId(product.id);
-                            //  setName(product.name);
-                            setOpenUpdate(true);
-                          }}
-                        >
-                          <BorderColorIcon />
-                        </IconButton>
-                        <IconButton
-                          aria-label="delete"
-                          color="secondary"
-                          onClick={() => {
-                            //  setcategoryId(category.id);
-                            //  setcategoryName(category.name);
-                            setOpen(true);
-                          }}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-              ) : (
+           
                 <>
                   {students.slice(0, limit).map((student) => (
                   <TableRow
@@ -632,7 +472,7 @@ export default function ListStudent({ openn, ...rest }) {
                   </TableRow>
                   )) }
                 </>
-              )}
+             
             </TableBody>
           </Table>
         </Box>

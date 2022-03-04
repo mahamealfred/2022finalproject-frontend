@@ -10,6 +10,7 @@ import {
     Typography,
   } from "@material-ui/core";
   import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+  import Alert from '@mui/material/Alert';
   import React from "react";
   import { Formik, Form, Field, ErrorMessage } from "formik";
   import * as Yup from "yup";
@@ -17,10 +18,11 @@ import {
   import { loginAction } from "../../../redux/actions/userLoginAction";
   import { useDispatch, useSelector } from "react-redux";
   import { useHistory } from "react-router-dom";
+  import {studentLoginAction} from "../../../redux/actions/studentLoginAction";
   
   export default function StudentLogin() {
     const dispatch = useDispatch();
-    const userLogin = useSelector((state) => state.userLogin);
+    const studentLogin = useSelector((state) => state.studentLogin);
     const history = useHistory();
   
     const paperStyle = {
@@ -34,10 +36,10 @@ import {
       margin: "8px 0px",
     };
     const btnStyle = {
-      margin: "8px 0px",
+      margin: "6px 0px",
     };
     const textStyle = {
-      margin: "30px 0px",
+      margin: "20px 0px",
     };
     const forgotStyle = {
       textDecoration: "none",
@@ -54,7 +56,8 @@ import {
     });
     const onSubmit = (values, props) => {
       console.log(values);
-      dispatch(loginAction(values, history));
+      
+      dispatch(studentLoginAction(values, history));
     };
     return (
       <Grid>
@@ -109,7 +112,7 @@ import {
                     control={<Checkbox color="primary" />}
                     label="Remember me"
                   />
-                  <p>{userLogin.error}</p>
+               <p>{studentLogin.error}</p>
                   <Button
                     type="submit"
                     color="primary"
@@ -117,8 +120,9 @@ import {
                     fullWidth
                     style={btnStyle}
                     disabled={props.isSubmitting}
+
                   >
-                    {userLogin.loading ? "Loading" : "Sign in"}
+                    {studentLogin.loading ? "Loading" : "Sign in"}
                   </Button>
                 </Form>
               )}

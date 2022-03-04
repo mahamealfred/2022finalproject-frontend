@@ -7,14 +7,14 @@ export default function HomeTopbar() {
       <div className="topbarWrapper">
         <div className="topLeft">
           <img
-            src="../Assets/images/rebLogol.png"
+            src="../../Assets/images/reb.jpg"
             alt=""
             className="topAvatar"
           />
         
         </div>
         <div className="leftTopBar">
-          <span className="logo">Primary and Ordinary level Quality Eduction Booster </span>
+          <span className="logo">Primary and Ordinary level Quality Eduction 5 Booster </span>
           </div>
         <div className="toRight">
          

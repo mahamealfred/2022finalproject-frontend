@@ -2,8 +2,11 @@ import React, { Component } from 'react'
 import {  Switch, Route } from "react-router-dom";
 import Login from "../components/pages/login/Login";
 import DashboardRoute from './dashboard.routes';
+import SchoolDashboardRoute from './schoolDashboard.routes';
+import DistrictDashboardRoute from './districtDashboard.routes';
 import AssessmentRoute from './assessment.routes'
 import Assessment from '../components/pages/assessment/Assessment';
+
 
 
 export default class index extends Component {
@@ -14,10 +17,19 @@ export default class index extends Component {
           <Route path="/dashboard">
             <DashboardRoute />
           </Route>
-          <Route path="/assessment">
-            <AssessmentRoute/>
-            <Assessment/>
+          <Route path="/schooldashboard">
+            <SchoolDashboardRoute/>
           </Route>
+          <Route path="/districtdashboard">
+            <DistrictDashboardRoute/>
+          </Route>
+          <Route path="/assessment">
+          <AssessmentRoute/>
+          </Route>
+          <Route path="/assessments">
+           
+          </Route>
+         
             </Switch>
         )
     }

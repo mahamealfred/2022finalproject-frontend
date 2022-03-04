@@ -9,6 +9,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import {MenuItem} from "@material-ui/core";
 //import MenuItem from "@mui/material/MenuItem";
 
 
@@ -22,6 +23,7 @@ import { getAllSchool } from "../../../redux/actions/schoolsAction";
 import { addSchoolAction } from "../../../redux/actions/addSchoolAction";
 import { updateSchoolAction} from "../../../redux/actions/updateSchoolAction";
 import { deleteSchoolAction } from "../../../redux/actions/deleteSchoolAction";
+import { getAllDistrict } from "../../../redux/actions/districtsAction";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -47,12 +49,13 @@ import {
 export default function School({ openn, ...rest }) {
   const dispatch = useDispatch();
   const schoolsState = useSelector((state) => state.schools);
+  const districtsState=useSelector((state) => state.districts);
   const [schools, setSchools] = useState([]);
+  const [districts,setDistricts]=useState([]);
   const [open, setOpen] = React.useState(false);
 
   const [name, setName] = useState("");
-  const [province, setProvince] = useState("");
-  const [district, setDistrict] = useState("");
+  const [districtId, setDistrictId] = useState("");
   const [sector, setSector] = useState("");
   const [cell, setCell] = useState("");
   const [fullname,setFullname]=useState("");
@@ -85,8 +88,7 @@ export default function School({ openn, ...rest }) {
   };
 const handleCloseUpdate=()=>{
   setName("");
-  setProvince("");
-  setDistrict("");
+  setDistrictId("");
   setSector("");
   setCell("");
   setFullname("");
@@ -106,17 +108,17 @@ const handleCloseUpdate=()=>{
 
   const handleAdd = async () => {
     await dispatch(
-      addSchoolAction({ name,province, district,sector,cell,fullname,email})
+      addSchoolAction({ name, districtId,sector,cell,fullname,email})
     );
     setOpen(false);
     setName("");
-    setProvince("");
-    setDistrict("");
+    setDistrictId("");
     setSector("");
     setCell("");
     setFullname("");
     setEmail("");
     await dispatch(getAllSchool());
+    
     console.log("added");
   };
   console.log(name);
@@ -129,10 +131,16 @@ const handleCloseUpdate=()=>{
         await dispatch(getAllSchool());
       }
     }
+    if (!districtsState.loading) {
+      if (districtsState.districts) {
+        setDistricts(districtsState.districts);
+        await dispatch(getAllDistrict());
+      }
+    }
     
    }
    fetchData();
-  }, [schoolsState.schools]);
+  }, [schoolsState.schools,districtsState.districts]);
 
 
   const handleUpdate = async () => {
@@ -140,12 +148,10 @@ const handleCloseUpdate=()=>{
       return alert("name is required");
     }
     console.log(schoolId);
-    await dispatch(updateSchoolAction({ name,province,district,sector,cell,id: schoolId }));
+    await dispatch(updateSchoolAction({ name,districtId,sector,cell,id: schoolId }));
     setOpenUpdate(false);
-   
     setName("");
-    setProvince("");
-    setDistrict("");
+    setDistrictId("");
     setSector("");
     setCell("");
    
@@ -160,48 +166,9 @@ const handleCloseUpdate=()=>{
   }
  
 
-  const trimString = (s) => {
-    var l = 0,
-      r = s.length - 1;
-    while (l < s.length && s[l] === " ") l++;
-    while (r > l && s[r] === " ") r -= 1;
-    return s.substring(l, r + 1);
-  };
-  const compareObjects = (o1, o2) => {
-    var k = "";
-    for (k in o1) if (o1[k] !== o2[k]) return false;
-    for (k in o2) if (o1[k] !== o2[k]) return false;
-    return true;
-  };
-  const itemExists = (haystack, needle) => {
-    for (var i = 0; i < haystack.length; i++)
-      if (compareObjects(haystack[i], needle)) return true;
-    return false;
-  };
-  const searchHandle = async (e) => {
-    setSearch(true);
-    const schools = 0;
-    const searchKey = e.target.value;
-    console.log(e.target.value);
 
-    try {
-      var results = [];
-      const toSearch = trimString(searchKey); // trim it
-      for (var i = 0; i < schools.length; i++) {
-        for (var key in schools[i]) {
-          if (schools[i][key] !== null) {
-            if (
-              schools[i][key].toString().toLowerCase().indexOf(toSearch) !== -1
-            ) {
-              if (!itemExists(results, schools[i])) results.push(schools[i]);
-            }
-          }
-        }
-      }
-      setResults(results);
-    } catch (error) {
-      console.log(error);
-    }
+  const searchHandle = async (e) => {
+   
   };
   console.log(results);
   return (
@@ -257,22 +224,22 @@ const handleCloseUpdate=()=>{
               value={name}
               variant="outlined"
             />
+           
             <TextField
-              id="outlined-basic"
-              label="Province"
-              name="province"
-              onChange={(e) => setProvince(e.target.value)}
-              value={province}
-              variant="outlined"
-            />
-            <TextField
-              id="outlined-basic"
-              label="District"
+              id="outlined-select-district"
+              select
               name="district"
-              onChange={(e) => setDistrict(e.target.value)}
-              value={district}
-              variant="outlined"
-            />
+              value={districtId}
+              onChange={(e) => setDistrictId(e.target.value)}
+              label="District"
+               helperText="Please select your District"
+            >
+              {districts.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </TextField>
              <TextField
               id="outlined-basic"
               label="Sector"
@@ -289,7 +256,8 @@ const handleCloseUpdate=()=>{
               value={cell}
               variant="outlined"
             />
-             
+            
+            <DialogTitle>School User Information</DialogTitle>
              <TextField
               id="outlined-basic"
               label="Full Name"
@@ -342,22 +310,22 @@ const handleCloseUpdate=()=>{
               value={name}
               variant="outlined"
             />
-            <TextField
-              id="outlined-basic"
-              label="Province"
-              name="province"
-              onChange={(e) => setProvince(e.target.value)}
-              value={province}
-              variant="outlined"
-            />
-            <TextField
-              id="outlined-basic"
-              label="District"
+           
+           <TextField
+              id="outlined-select-district"
+              select
               name="district"
-              onChange={(e) => setDistrict(e.target.value)}
-              value={district}
-              variant="outlined"
-            />
+              value={districtId}
+              onChange={(e) => setDistrictId(e.target.value)}
+              label="District"
+               helperText="Please select your District"
+            >
+              {districts.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </TextField>
              <TextField
               id="outlined-basic"
               label="Sector"
@@ -416,7 +384,6 @@ const handleCloseUpdate=()=>{
             <TableHead>
               <TableRow>
                 <TableCell>School Name</TableCell>
-                <TableCell>Province</TableCell>
                 <TableCell>District</TableCell>
                 <TableCell>Sector</TableCell>
                 <TableCell>Cell</TableCell>
@@ -426,118 +393,7 @@ const handleCloseUpdate=()=>{
               </TableRow>
             </TableHead>
             <TableBody>
-              {search ? (
-                <>
-                  {results.slice(0, limit).map((school) => (
-                    <TableRow
-                      hover
-                      key={school.id}
-                      selected={selectedSchoolIds.indexOf(school.id) !== -1}
-                    >
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                         {school.name}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                          {school.province}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                           {school.district}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                           {school.sector}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                           {school.cell}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                     
-                      <TableCell>
-                        {moment(school.createdAt).format("DD/MM/YYYY")}
-                      </TableCell>
-                      <TableCell>
-                        {moment(school.updatedAt).format("DD/MM/YYYY")}
-                      </TableCell>
-                      <TableCell color="textPrimary" variant="body1">
-                        <IconButton
-                          aria-label="update"
-                          onClick={() => {
-                              setSchoolId(school.id);
-                             setName(school.name);
-                             setProvince(school.province);
-                             setDistrict(school.district);
-                             setSector(school.sector);
-                             setCell(school.cell);
-                           
-                            setOpenUpdate(true);
-                          }}
-                        >
-                          <BorderColorIcon />
-                        </IconButton>
-                        <IconButton
-                          aria-label="delete"
-                          color="secondary"
-                          onClick={() => {
-                            setSchoolId(school.id);
-                            setName(school.name);
-                            setProvince(school.province);
-                            setDistrict(school.district);
-                            setSector(school.sector);
-                            setCell(school.cell);
-                           
-                            setOpenDelete(true);
-                          }}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-              ) : (
+             
                 <>
                   {schools.slice(0, limit).map((school) => (
                   <TableRow
@@ -566,19 +422,7 @@ const handleCloseUpdate=()=>{
                         }}
                       >
                         <Typography color="textPrimary" variant="body1">
-                          {school.province}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          alignItems: "center",
-                          display: "flex",
-                        }}
-                      >
-                        <Typography color="textPrimary" variant="body1">
-                          {school.district}
+                          {school.district.name}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -619,12 +463,10 @@ const handleCloseUpdate=()=>{
                         onClick={() => {
                           setSchoolId(school.id);
                           setName(school.name);
-                          setProvince(school.province);
-                          setDistrict(school.district);
+                          setDistrictId(school.districtId);
                           setSector(school.sector);
                           setCell(school.cell);
-                        
-                         setOpenUpdate(true);
+                          setOpenUpdate(true);
                           setOpenUpdate(true);
                         }}
                       >
@@ -636,12 +478,9 @@ const handleCloseUpdate=()=>{
                         onClick={() => {
                           setSchoolId(school.id);
                           setName(school.name);
-                          setProvince(school.province);
-                          setDistrict(school.district);
+                          setDistrictId(school.districtId);
                           setSector(school.sector);
                           setCell(school.cell);
-                         
-            
                           setOpenDelete(true);
                         }}
                       >
@@ -649,9 +488,9 @@ const handleCloseUpdate=()=>{
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                   )) }
+                  )) }
                 </>
-              )}
+            
             </TableBody>
           </Table>
         </Box>

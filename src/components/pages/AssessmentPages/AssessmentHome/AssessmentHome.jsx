@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 import ErrorMessage from '../../../errorMessage/ErrorMessage'
 
-const AssessmentHome= ({fetchQuestions}) =>{
+const AssessmentHome= () =>{
 
   const [category, setCategory]=useState("");  
   const [difficulty, setDifficulty]=useState(" ");

@@ -32,6 +32,7 @@ export const addUserAction = (data, history) => async (dispatch) => {
       }
     );
     const user = await res.data;
+    console.log(data)
     dispatch(addUserSuccess({ data: user.data }));
     alert("Your account has been created successfully");
   } catch (err) {

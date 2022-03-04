@@ -26,9 +26,6 @@ function PieChart() {
     >
 
     </Pie>
-
-    
-
     </div>
   );
 }
