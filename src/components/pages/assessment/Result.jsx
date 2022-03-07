@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "@material-ui/core";
-import "./assessmentResult.css"
-const AssessmentResult = ({ name, score }) => {
+import "./Result.css"
+const Result = ({ name, score }) => {
   const history = useHistory();
   useEffect(() => {
     if (!name) {
@@ -32,4 +32,4 @@ const AssessmentResult = ({ name, score }) => {
   );
 };
 
-export default AssessmentResult;
+export default Result;

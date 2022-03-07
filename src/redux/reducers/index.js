@@ -23,6 +23,9 @@ import updateQuestionReducer from "./updateQuestionReducer";
 import districtsReducer from "./districtsReducer";
 import getPrimaryStudentsReducer from "./getPrimaryStudentsReducer";
 import studentLoginReducer from "./studentLoginReducer";
+import getExamsByLevelReducer from './getExamsByLevelReducer';
+import getExamAndQuetionByIdReducer from './getExamsAndQuestionByIdReducer';
+
 const allReducers = combineReducers({
   users: usersReducer,
   students: studentsReducer,
@@ -47,6 +50,8 @@ const allReducers = combineReducers({
   districts:districtsReducer,
   getPrimaryStudent: getPrimaryStudentsReducer,
   studentLogin: studentLoginReducer,
+  getExamsByLevel: getExamsByLevelReducer,
+  getExamAndQuestionById: getExamAndQuetionByIdReducer,
 });
 
 export default allReducers;

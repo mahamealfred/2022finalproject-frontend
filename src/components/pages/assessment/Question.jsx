@@ -1,41 +1,62 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
-import "./assessmentQuestion.css";
-import Questions from "../../../Questions/Questions";
+import "./Question.css";
+import HomeTopbar from "../../homeTopbar/HomeTopbar";
+import Header from "../../header/Header";
+import Footer from "../../Footer/Footer";
+import Questions from "../../Questions/Questions";
+import { useDispatch,useSelector } from "react-redux";
+import {getExamsAndQuestionByLevel} from "../../../redux/actions/getExamsAndQuestionByIdAction";
 
-export default function AssessmentQuestion() {
+export default function Question({...rest}) {
+
+  const getExamAndQuestionState=useSelector((state)=> state.getExamAndQuestionById);
+  const dispatch=useDispatch();
   const [questions, setQuestions] = useState();
   const [score, setScore] = useState(0);
+  const [examId, setExamId] = useState('');
+  const [exams,setExams]=useState([]);
+  
+
   const [options, setOptions] = useState();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [numberQuestions, setNumberQuestion]=useState(1);
+  
+  
+  // useEffect(() => {
+  //   setQuestions();
+  //   setOptions(
+  //     questions &&
+  //       handleShuffle([
+  //         questions[currentQuestion]?.correct_answer,
+  //         ...questions[currentQuestion]?.incorrect_answer,
+  //       ])
+  //   );
+  // }, [questions, currentQuestion]);
+  useEffect( () => {
+    async function fetchData(){
+       await dispatch(getExamsAndQuestionByLevel(examId));
+      
+     }
+    fetchData();
+  }, []);
+  console.log( getExamAndQuestionState.exams)
 
-  const fetchQuestions = async (category = "Books", difficulty = "Medium") => {
-    const { data } = await axios.get(
-      `https://opentdb.com/api.php?amount=10${
-        category && `&category=${category}`
-      }${difficulty && `&difficulty=${difficulty}`}&type=multiple`
-    );
+ 
 
-  };
-
-  useEffect(() => {
-    setQuestions();
-    setOptions(
-      questions &&
-        handleShuffle([
-          questions[currentQuestion]?.correct_answer,
-          ...questions[currentQuestion]?.incorrect_answer,
-        ])
-    );
-  }, [questions, currentQuestion]);
+  
+  
 
   const handleShuffle = (options) => {
     return options.sort(() => Math.random() - 0.5);
   };
 
   return (
+    <>
+    <HomeTopbar/>
+    <Header/>
+
     <div className="assessmentQuestion">
       <span className="subtitle">Welcome, Mahame Alfred</span>
       {/* {
@@ -44,7 +65,7 @@ export default function AssessmentQuestion() {
       <>
         <div className="assessmentInf">
           <div className="leftAssessementInf">
-            <span> Assessement Name</span>
+            <span>ASSESSMENT NAME</span>
             <div className="discription">
               <span> Assessement Description</span>
             </div>
@@ -57,6 +78,7 @@ export default function AssessmentQuestion() {
           </div>
         </div>
       </>
+     
       <Questions
       currentQuestion={currentQuestion}
       setCurrentQuestion={setCurrentQuestion}
@@ -80,5 +102,7 @@ export default function AssessmentQuestion() {
         
       } */}
     </div>
+    <Footer/>
+    </>
   );
 }

@@ -27,3 +27,11 @@
     margin-top: 80px;
     object-fit: cover;
 }
+.startassessment{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+}

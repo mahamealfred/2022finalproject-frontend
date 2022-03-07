@@ -3,6 +3,8 @@
     flex-direction: column;
     align-items: center;
     font-family: "Poppins", sans-serif;
+    height: 70vh;
+    border: 8px solid #39445a93;
 }
 
 .subtitle{

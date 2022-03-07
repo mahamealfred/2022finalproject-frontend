@@ -5,7 +5,7 @@ import DashboardRoute from './dashboard.routes';
 import SchoolDashboardRoute from './schoolDashboard.routes';
 import DistrictDashboardRoute from './districtDashboard.routes';
 import AssessmentRoute from './assessment.routes'
-import Assessment from '../components/pages/assessment/Assessment';
+import Assessment from '../components/pages/assessment/AssessmentSelect';
 
 
 
@@ -23,11 +23,8 @@ export default class index extends Component {
           <Route path="/districtdashboard">
             <DistrictDashboardRoute/>
           </Route>
-          <Route path="/assessment">
-          <AssessmentRoute/>
-          </Route>
           <Route path="/assessments">
-           
+          <AssessmentRoute/>
           </Route>
          
             </Switch>

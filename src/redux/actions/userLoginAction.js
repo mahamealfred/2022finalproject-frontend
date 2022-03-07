@@ -12,11 +12,18 @@ export const loginAction = (user, history) => async (dispatch) => {
     const res = await axios.post(`http://localhost:8000/auth/login`, user);
 
     const { data } = await res;
-    console.log();
     localStorage.setItem("x-access-token", data.data.token);
     localStorage.setItem("user", JSON.stringify(data.data.user));
-
-    history.push("/dashboard");
+      if(data.data.role==="Admin"){
+        history.push("/dashboard");
+      }
+      else if(data.data.role==="DistrictUser"){
+        history.push("/districtdashboard");
+      }
+      else {
+        history.push("/schooldashboard");
+      }
+    
   } catch (err) {
     console.log(err);
     if (err.response) {

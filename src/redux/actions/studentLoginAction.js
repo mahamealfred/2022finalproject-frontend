@@ -14,9 +14,9 @@ export const studentLoginAction = (student, history) => async (dispatch) => {
     const { data } = await res;
     console.log(data);
     localStorage.setItem("x-access-token", data.token);
-    localStorage.setItem("student", JSON.stringify(data.student));
+    localStorage.setItem("student-data", JSON.stringify(data.student));
 
-    history.push("/assessment/assessments/home");
+    history.push("/assessments/select");
   } catch (err) {
     console.log(err);
     if (err.response) {
