@@ -1,4 +1,3 @@
-
 import Button from "@mui/material/Button";
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -11,20 +10,17 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 //import MenuItem from "@mui/material/MenuItem";
 
-
-
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
-
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { getAllStudent } from "../../../redux/actions/studentsAction";
-import { addStudentAction } from "../../../redux/actions/addStudentAction";
+import { getAllStudentsBySchoolUserAction } from "../../../redux/actions/getAllStudentsBySchoolUserAction";
+import { addStudentBySchoolUser } from "../../../redux/actions/addStudentBySchoolUseAction";
 import { deleteStudentAction } from "../../../redux/actions/deleteStudentAction";
 import { getAllSchool } from "../../../redux/actions/schoolsAction";
 
@@ -33,7 +29,8 @@ import BorderColorIcon from "@material-ui/icons/BorderColor";
 import IconButton from "@material-ui/core/IconButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import moment from "moment";
-import {MenuItem} from "@material-ui/core";
+import { MenuItem } from "@material-ui/core";
+import { Print } from "@material-ui/icons";
 
 import { Search as SearchIcon } from "react-feather";
 import {
@@ -49,11 +46,14 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 export default function ListStudent({ openn, ...rest }) {
-
   const dispatch = useDispatch();
-  const studentsState = useSelector((state) => state.students);
+  const studentsState = useSelector(
+    (state) => state.getAllStudentsBySchoolUser
+  );
   const schoolsState = useSelector((state) => state.schools);
   const [schools, setSchools] = useState([]);
 
@@ -62,7 +62,7 @@ export default function ListStudent({ openn, ...rest }) {
 
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [email,setEmail] =useState("");
+  const [email, setEmail] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [level, setLevel] = useState("");
@@ -70,26 +70,25 @@ export default function ListStudent({ openn, ...rest }) {
   const [studentId, setStudentId] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
 
-  const addStudent = useSelector((state) => state.addStudent);
-  const deleteStudent=useSelector((state)=> state.deleteStudent);
+  const addStudent = useSelector((state) => state.addStudentBySchoolUser);
+  const deleteStudent = useSelector((state) => state.deleteStudent);
   //const [value, setValue] = React.useState(new Date());
-  
-  const [openUpdate, setOpenUpdate] = useState(false);
 
+  const [openUpdate, setOpenUpdate] = useState(false);
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const levels=[
+  const levels = [
     {
-      value:"P6",
-      label:"primary 6"
+      value: "P6",
+      label: "primary 6",
     },
     {
-      value:"S3",
-      label:"Ordinary 3"
-    }
-  ]
+      value: "S3",
+      label: "Ordinary 3",
+    },
+  ];
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -107,9 +106,8 @@ export default function ListStudent({ openn, ...rest }) {
   };
 
   const handleAdd = async () => {
-
     await dispatch(
-      addStudentAction({ firstname, lastname, email,dob, gender,level, schoolId })
+      addStudentBySchoolUser({ firstname, lastname, email, dob, gender, level })
     );
     setOpen(false);
     setFirstname("");
@@ -118,43 +116,48 @@ export default function ListStudent({ openn, ...rest }) {
     setDob("");
     setGender("");
     setLevel("");
-    setSchoolId("");
-    await dispatch(getAllStudent());
+    await dispatch(getAllStudentsBySchoolUserAction());
     console.log("added");
   };
 
-  useEffect( () => {
-    async function fetchData(){
-    if (!studentsState.loading) {
-      if (studentsState.students) {
-        setStudents(studentsState.students);
-        await dispatch(getAllStudent());
-      }
-      if (!schoolsState.loading) {
-        if (schoolsState.schools) {
-          setSchools(schoolsState.schools);
-          await dispatch(getAllSchool());
+  useEffect(() => {
+    async function fetchData() {
+      if (!studentsState.loading) {
+        if (studentsState.students) {
+          setStudents(studentsState.students);
+          await dispatch(getAllStudentsBySchoolUserAction());
+        }
+        if (!schoolsState.loading) {
+          if (schoolsState.schools) {
+            setSchools(schoolsState.schools);
+            await dispatch(getAllSchool());
+          }
         }
       }
-    }}
+    }
     fetchData();
-  }, [studentsState.students,schoolsState.schools]);
+  }, [studentsState.students, schoolsState.schools]);
 
   const handleCloseDelete = () => {
     setOpenDelete(false);
   };
 
-  const handleDelete = async () =>{
-    await dispatch(deleteStudentAction(studentId))
+  const handleDelete = async () => {
+    await dispatch(deleteStudentAction(studentId));
     setOpenDelete(false);
     window.location.reload();
-  }
-
-
-  const searchHandle = async (e) => {
-    
   };
- 
+
+  const downaloadPdf = async () => {
+    const doc = new jsPDF();
+
+    doc.text("Student List", 20, 10);
+
+    doc.save("table.pdf");
+  };
+
+  const searchHandle = async (e) => {};
+
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
       <Box sx={{ mt: 3 }}>
@@ -216,7 +219,7 @@ export default function ListStudent({ openn, ...rest }) {
               value={lastname}
               variant="outlined"
             />
-             <TextField
+            <TextField
               id="outlined-basic"
               label="Email"
               name="email"
@@ -259,29 +262,13 @@ export default function ListStudent({ openn, ...rest }) {
                 />
               </RadioGroup>
             </FormControl>
-            <DialogTitle>School Information</DialogTitle>
-            <TextField
-              id="outlined-select-school"
-              label="School"
-              value={schoolId}
-              select
-              name="schoolId"
-              onChange={(e) => setSchoolId(e.target.value)}
-              helperText="Please select your School"
-            >
-             
-             {schools.map((school) => (
-                <MenuItem key={school.id} value={school.id}>
-                  {school.name}
-                </MenuItem>
-              ))}
-            </TextField>
+
             <TextField
               id="outlined-select-currency"
               select
               onChange={(e) => setLevel(e.target.value)}
               label="level"
-               helperText="Please select your Level"
+              helperText="Please select your Level"
             >
               {levels.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -294,12 +281,10 @@ export default function ListStudent({ openn, ...rest }) {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleAdd} color="primary" autoFocus>
-           
             {addStudent.loading ? "Loading..." : "Add new Student"}
           </Button>
         </DialogActions>
       </Dialog>
-
 
       <Dialog
         open={openDelete}
@@ -310,7 +295,7 @@ export default function ListStudent({ openn, ...rest }) {
         <DialogTitle id="alert-dialog-title">{"Confirm"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-          Are you sure you want to delete the Student below "{lastname}"?
+            Are you sure you want to delete the Student below "{lastname}"?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -318,7 +303,7 @@ export default function ListStudent({ openn, ...rest }) {
             Cancel
           </Button>
           <Button onClick={handleDelete} color="primary" autoFocus>
-            {deleteStudent.loading? "Loading..." : "Delete"}
+            {deleteStudent.loading ? "Loading..." : "Delete"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -338,18 +323,23 @@ export default function ListStudent({ openn, ...rest }) {
                 <TableCell>Create Date</TableCell>
                 <TableCell>Update Date</TableCell>
                 <TableCell>Action</TableCell>
+                <IconButton
+                  aria-label="delete"
+                  color="secondary"
+                  onClick={() => downaloadPdf()}
+                >
+                  <Print />
+                </IconButton>
               </TableRow>
             </TableHead>
             <TableBody>
-           
-                <>
-                  {students.slice(0, limit).map((student) => (
+              <>
+                {students.slice(0, limit).map((student) => (
                   <TableRow
                     hover
                     key={student.id}
                     //  selected={selectedStudentIds.indexOf(student.id) !== -1}
                   >
-                   
                     <TableCell>
                       <Box
                         sx={{
@@ -423,17 +413,17 @@ export default function ListStudent({ openn, ...rest }) {
                       </Box>
                     </TableCell>
                     <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {student.level}
-                          </Typography>
-                        </Box>
-                      </TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography color="textPrimary" variant="body1">
+                          {student.level}
+                        </Typography>
+                      </Box>
+                    </TableCell>
                     <TableCell>
                       {moment(student.createdAt).format("DD/MM/YYYY")}
                     </TableCell>
@@ -460,9 +450,9 @@ export default function ListStudent({ openn, ...rest }) {
                         aria-label="delete"
                         color="secondary"
                         onClick={() => {
-                          setStudentId(student.id)
-                          setFirstname(student.firstname)
-                          setLastname(student.lastname)
+                          setStudentId(student.id);
+                          setFirstname(student.firstname);
+                          setLastname(student.lastname);
                           setOpenDelete(true);
                         }}
                       >
@@ -470,9 +460,8 @@ export default function ListStudent({ openn, ...rest }) {
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                  )) }
-                </>
-             
+                ))}
+              </>
             </TableBody>
           </Table>
         </Box>
@@ -480,7 +469,7 @@ export default function ListStudent({ openn, ...rest }) {
 
       <TablePagination
         component="div"
-       count={students.length}
+        count={students.length}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}

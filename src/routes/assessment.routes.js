@@ -6,6 +6,7 @@ import Home from "../components/pages/assessment/home/Home";
 import AssessmentSelect from "../components/pages/assessment/AssessmentSelect";
 import Question from "../components/pages/assessment/Question";
 
+
 function App() {
   
   const { path } = useRouteMatch();
@@ -33,6 +34,7 @@ function App() {
                 path={`${path}/select/:id`}
                 component={Question} 
               />
+             
                 
             
             </>

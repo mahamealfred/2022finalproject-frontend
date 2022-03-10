@@ -56,8 +56,10 @@ export default function Question({...rest}) {
     <>
     <HomeTopbar/>
     <Header/>
+    {
+      getExamAndQuestionState.loading ?  "Loading" :   getExamAndQuestionState.exams.length>0    ?
 
-    <div className="assessmentQuestion">
+      <div className="assessmentQuestion">
       <span className="subtitle">Welcome, Mahame Alfred</span>
       {/* {
         questions?
@@ -65,7 +67,7 @@ export default function Question({...rest}) {
       <>
         <div className="assessmentInf">
           <div className="leftAssessementInf">
-            <span>ASSESSMENT NAME</span>
+            <span>ASSESSMENT NAME: {  getExamAndQuestionState.exams[0].name}</span>
             <div className="discription">
               <span> Assessement Description</span>
             </div>
@@ -78,18 +80,10 @@ export default function Question({...rest}) {
           </div>
         </div>
       </>
-     
-      <Questions
-      currentQuestion={currentQuestion}
-      setCurrentQuestion={setCurrentQuestion}
-      questions={questions}
-      options={options}
-      //correct_answer={questions[currentQuestion]?.correct_answer}
-      score={score}
-      setScore={setScore}
-      setNumberQuestion={numberQuestions}
-
-       />
+      <h1>"Questions"</h1>
+    {
+               getExamAndQuestionState.exams[0].questions.toString()
+    }
 
       {/* </>
         :
@@ -102,6 +96,10 @@ export default function Question({...rest}) {
         
       } */}
     </div>
+    :"No Question found"
+    }
+
+   
     <Footer/>
     </>
   );

@@ -25,6 +25,11 @@ import getPrimaryStudentsReducer from "./getPrimaryStudentsReducer";
 import studentLoginReducer from "./studentLoginReducer";
 import getExamsByLevelReducer from './getExamsByLevelReducer';
 import getExamAndQuetionByIdReducer from './getExamsAndQuestionByIdReducer';
+import addStudentBySchoolUserReducer from './addStudentBySchoolUserReducer';
+import getAllStudentsBySchoolUserReducer from './getAllStudentsBySchoolUserReducer';
+import getSpecificStudentNumberInSchoolReducer from './getSpecificStudentNumberInSchoolReducer';
+import getPrimaryResultsBySchoolUserReducer from './getPrimaryResultsBySchoolUserReducer';
+import getAvailableExamsDoneReducer from './getAvailableExamsDoneReducer';
 
 const allReducers = combineReducers({
   users: usersReducer,
@@ -52,6 +57,11 @@ const allReducers = combineReducers({
   studentLogin: studentLoginReducer,
   getExamsByLevel: getExamsByLevelReducer,
   getExamAndQuestionById: getExamAndQuetionByIdReducer,
+  addStudentBySchoolUser: addStudentBySchoolUserReducer,
+  getAllStudentsBySchoolUser:getAllStudentsBySchoolUserReducer,
+  getSpecificStudentNumberInSchool:getSpecificStudentNumberInSchoolReducer,
+  getPrimaryResultsBySchoolUser: getPrimaryResultsBySchoolUserReducer,
+  getAvailablePrimaryExamsDone: getAvailableExamsDoneReducer,
 });
 
 export default allReducers;

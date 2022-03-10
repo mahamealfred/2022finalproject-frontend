@@ -1,114 +1,127 @@
-import React from 'react';
-import './featuredInfo.css';
-import {ArrowDownward,ArrowUpward} from '@material-ui/icons';
+import React from "react";
+import "./featuredInfo.css";
+import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
+import { getSpecificStudentNumberInSchoolAction } from "../../../redux/actions/getSpecificStudentNumberInSchoolAction";
 
 export default function FeaturedInfo() {
+  const dispatch = useDispatch();
+  const studentsState = useSelector((state) => state.getSpecificStudentNumberInSchool);
 
-    const dispatch = useDispatch();
+  const [students, setStudents] = useState([]);
+  useEffect( () => {
+    async function fetchData(){
+        await dispatch(getSpecificStudentNumberInSchoolAction());
+    }
+    fetchData();
+  }, []);
+console.log(studentsState.students.totalStudent)
 
-  const [students,setStudents]=useState([]);
-    
-  
-    return (
-<>
-<span className="featuredStudent">School Name</span>
-
-        <div className="featured" >
-            <div className="featuredItem">
-             <span className="featuredTitle">Total Students In Primary (P6)</span>
-             <div className="featuredMoneyContainer">
-                 <span className="featuredStudent">46</span>
-                 <span className="featuredRate">
-                     Students <ArrowDownward className="featuredIcon negative" />
-                 </span>
-             </div>
-             <span className="featuredSub">Compared to last Month</span>
-            </div>
-            <div className="featuredItem">
-             <span className="featuredTitle">Total Student In Ordinary Level (S3)</span>
-             <div className="featuredMoneyContainer">
-                 <span className="featuredStudent">4</span>
-                 <span className="featuredRate">
-                     Students <ArrowDownward className="featuredIcon negative"/>
-                 </span>
-             </div>
-             <span className="featuredSub">Compared to last Month</span>
-            </div>
-             
-            <div className="featuredItem">
-             <span className="featuredTitle">Number of Male in P6</span>
-             <div className="featuredMoneyContainer">
-                 <span className="featuredStudent">59</span>
-                 <span className="featuredRate">
-                     Stusents <ArrowDownward className="featuredIcon negative" />
-                 </span>
-             </div>
-             <span className="featuredSub">Compared to last Month</span>
-            </div>
-            <div className="featuredItem">
-             <span className="featuredTitle">Number of Female in P6</span>
-             <div className="featuredMoneyContainer">
-                 <span className="featuredStudent">65</span>
-                 <span className="featuredRate">
-                     Students<ArrowUpward className="featuredIcon "/>
-                 </span>
-                
-             </div>
-             <span className="featuredSub">Compared to last Month</span>
-            </div>
-            
+  return (
+    <>
+     {
+      studentsState.loading ?  "Loading" :   studentsState.students.length > 0    ?
+     <>
+      <span className="featuredStudent">Ordinary Level (S3)</span>
+      <div className="featured">
+        <div className="featuredItem">
+          <span className="featuredTitle">Total Students In Ordinary Level (S3)</span>
+          <div className="featuredMoneyContainer">
+            <span className="featuredStudent">{studentsState.students[0].totalStudentInOrdinary}</span>
+            <span className="featuredRate">
+              Students <ArrowDownward className="featuredIcon negative" />
+            </span>
+          </div>
+          <span className="featuredSub">Compared to last Month</span>
         </div>
-        <span className="featuredStudent">Primary</span>
+        <div className="featuredItem">
+          <span className="featuredTitle">
+            Number of Male Student In Ordinary Level (S3)
+          </span>
+          <div className="featuredMoneyContainer">
+            <span className="featuredStudent">{studentsState.students[0].totalMaleStudentInOrdinary}</span>
+            <span className="featuredRate">
+              Students <ArrowDownward className="featuredIcon negative" />
+            </span>
+          </div>
+          <span className="featuredSub">Compared to last Month</span>
+        </div>
 
-<div className="featured" >
-    <div className="featuredItem">
-     <span className="featuredTitle">Total Students In Primary (P6)</span>
-     <div className="featuredMoneyContainer">
-         <span className="featuredStudent">46</span>
-         <span className="featuredRate">
-             Students <ArrowDownward className="featuredIcon negative" />
-         </span>
-     </div>
-     <span className="featuredSub">Compared to last Month</span>
-    </div>
-    <div className="featuredItem">
-     <span className="featuredTitle">Total Student In Ordinary Level (S3)</span>
-     <div className="featuredMoneyContainer">
-         <span className="featuredStudent">4</span>
-         <span className="featuredRate">
-             Students <ArrowDownward className="featuredIcon negative"/>
-         </span>
-     </div>
-     <span className="featuredSub">Compared to last Month</span>
-    </div>
-     
-    <div className="featuredItem">
-     <span className="featuredTitle">Number of Male in P6</span>
-     <div className="featuredMoneyContainer">
-         <span className="featuredStudent">59</span>
-         <span className="featuredRate">
-             Stusents <ArrowDownward className="featuredIcon negative" />
-         </span>
-     </div>
-     <span className="featuredSub">Compared to last Month</span>
-    </div>
-    
-    
-    <div className="featuredItem">
-     <span className="featuredTitle">Number of Female in    S3</span>
-     <div className="featuredMoneyContainer">
-         <span className="featuredStudent">65</span>
-         <span className="featuredRate">
-             Students<ArrowUpward className="featuredIcon "/>
-         </span>
-        
-     </div>
-     <span className="featuredSub">Compared to last Month</span>
-    </div>
-</div>
+        <div className="featuredItem">
+          <span className="featuredTitle">Number of Female in Ordinary Level (S3)</span>
+          <div className="featuredMoneyContainer">
+            <span className="featuredStudent">{studentsState.students[0].totalFemaleStudentInOrdinary}</span>
+            <span className="featuredRate">
+              Stusents <ArrowDownward className="featuredIcon negative" />
+            </span>
+          </div>
+          <span className="featuredSub">Compared to last Month</span>
+        </div>
+        <div className="featuredItem">
+          <span className="featuredTitle">Performance in Assessment</span>
+          <div className="featuredMoneyContainer">
+            <span className="featuredStudent">65</span>
+            <span className="featuredRate">
+              %
+              <ArrowUpward className="featuredIcon " />
+            </span>
+          </div>
+          <span className="featuredSub">Compared to last Month</span>
+        </div>
+      </div>
+      <span className="featuredStudent">Primary (P6)</span>
 
-        </>
-    )
+      <div className="featured">
+        <div className="featuredItem">
+          <span className="featuredTitle">Total Students In Primary (P6)</span>
+          <div className="featuredMoneyContainer">
+            <span className="featuredStudent">{studentsState.students[0].totalStudentInPrimary}</span>
+            <span className="featuredRate">
+              Students <ArrowDownward className="featuredIcon negative" />
+            </span>
+          </div>
+          <span className="featuredSub">Compared to last Month</span>
+        </div>
+        <div className="featuredItem">
+          <span className="featuredTitle">
+            Number of Male Student In Primary  (P6)
+          </span>
+          <div className="featuredMoneyContainer">
+            <span className="featuredStudent">{studentsState.students[0].totalMaleStudentInPrimary}</span>
+            <span className="featuredRate">
+              Students <ArrowDownward className="featuredIcon negative" />
+            </span>
+          </div>
+          <span className="featuredSub">Compared to last Month</span>
+        </div>
+
+        <div className="featuredItem">
+          <span className="featuredTitle">Number of Female in Primary (P6)</span>
+          <div className="featuredMoneyContainer">
+            <span className="featuredStudent">{studentsState.students[0].totalFemaleStudentInPrimary}</span>
+            <span className="featuredRate">
+              Stusents <ArrowDownward className="featuredIcon negative" />
+            </span>
+          </div>
+          <span className="featuredSub">Compared to last Month</span>
+        </div>
+
+        <div className="featuredItem">
+          <span className="featuredTitle">Performance in Assessment</span>
+          <div className="featuredMoneyContainer">
+            <span className="featuredStudent">80</span>
+            <span className="featuredRate">
+              %
+              <ArrowUpward className="featuredIcon " />
+            </span>
+          </div>
+          <span className="featuredSub">Compared to last Month</span>
+        </div>
+      </div>
+     </>
+      : "No Data Found"
+     }
+     </>
+  );
 }

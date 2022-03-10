@@ -2,7 +2,24 @@ import React from 'react';
 import './sidebar.css';
 import {LineStyle, Timeline,TrendingUp,Person,Report} from '@material-ui/icons';
 import {Link} from "react-router-dom";
+import InputIcon from '@material-ui/icons/Input';
+import { useHistory } from 'react-router-dom';
+import {
+ 
+  IconButton,
+
+} from '@material-ui/core';
 export default function Sidebar() {
+
+    const history=useHistory();
+    const handleLogout=() =>{
+        
+        localStorage.removeItem('x-access-token');
+        localStorage.removeItem('user-data');
+        history.push("/", { push: true} );
+       
+        
+          }
     return (
         <div className="sidebar">
             <div className="sideBarWrapper">
@@ -42,13 +59,13 @@ export default function Sidebar() {
                 <div className="sideBarMenu">
                     <h3 className="sideBarTitle">Results Menu</h3>
                     <ul className="sidebarList">
-                    <Link to="/dashboard/exams" className="link">
+                    <Link to="/schooldashboard/primaryresults" className="link">
                         <li className="sidebarListItem active">
                          <LineStyle className="sidebarIcon" />
                          Primary Level Results
                         </li>
                         </Link>
-                        <Link to="/dashboard/results" className="link">
+                        <Link to="/schooldashboard/ordinarylevelresults" className="link">
                         <li className="sidebarListItem">
                          <TrendingUp  className="sidebarIcon" />
                         Ordinary Level Results
@@ -85,7 +102,9 @@ export default function Sidebar() {
                          Edit profile
                         </li>
                         <li className="sidebarListItem">
-                         <TrendingUp  className="sidebarIcon" />
+                         <IconButton className="sidebarIcon" color="inherit" onClick={()=>handleLogout()}>
+                          <InputIcon />
+                         </IconButton>
                          Logout
                         </li>
 

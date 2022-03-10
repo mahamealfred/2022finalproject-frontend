@@ -1,5 +1,7 @@
+import React from 'react';
 import "./homeTopBar.css";
 // import { useNavigate } from 'react-router-dom';
+
 import InputIcon from '@material-ui/icons/Input';
 import {
  
@@ -7,15 +9,19 @@ import {
 
 } from '@material-ui/core';
 
-export default function HomeTopbar(history) {
-  // const navigate=useNavigate();
+
+
+export default function HomeTopbar() {
+
+  
   const handleLogout=() =>{
-    localStorage.removeItem('x-access-token');
-    localStorage.removeItem('student-data');
-    history.push("/assessments", { push: true} );
-    // navigate('/', { push: true })
-    
-      }
+      
+      localStorage.removeItem('x-access-token');
+      localStorage.removeItem('user-data');
+     // history.push("/", { push: true} );
+     
+      
+        }
   return (
     <div className="topbar">
       <div className="topbarWrapper">
@@ -34,6 +40,7 @@ export default function HomeTopbar(history) {
         <IconButton color="inherit" onClick={()=>handleLogout()}>
             <InputIcon />
           </IconButton>
+                          
         </div>
       </div>
     </div>

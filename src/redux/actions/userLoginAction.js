@@ -13,7 +13,7 @@ export const loginAction = (user, history) => async (dispatch) => {
 
     const { data } = await res;
     localStorage.setItem("x-access-token", data.data.token);
-    localStorage.setItem("user", JSON.stringify(data.data.user));
+    localStorage.setItem("user-data", JSON.stringify(data.data.user));
       if(data.data.role==="Admin"){
         history.push("/dashboard");
       }

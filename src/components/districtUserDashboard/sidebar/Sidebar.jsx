@@ -8,7 +8,24 @@ import {
   Report,
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
+import InputIcon from '@material-ui/icons/Input';
+import { useHistory } from 'react-router-dom';
+import {
+ 
+  IconButton,
+
+} from '@material-ui/core';
 export default function Sidebar() {
+
+  const history=useHistory();
+  const handleLogout=() =>{
+      
+      localStorage.removeItem('x-access-token');
+      localStorage.removeItem('user-data');
+      history.push("/", { push: true} );
+     
+      
+        }
   return (
     <div className="sidebar">
       <div className="sideBarWrapper">
@@ -80,8 +97,10 @@ export default function Sidebar() {
               Edit profile
             </li>
             <li className="sidebarListItem">
-              <TrendingUp className="sidebarIcon" />
-              Logout
+            <IconButton className="sidebarIcon" color="inherit" onClick={()=>handleLogout()}>
+                          <InputIcon />
+                         </IconButton>
+                         Logout
             </li>
           </ul>
         </div>
