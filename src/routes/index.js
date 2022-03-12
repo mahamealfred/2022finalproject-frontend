@@ -5,7 +5,7 @@ import DashboardRoute from './dashboard.routes';
 import SchoolDashboardRoute from './schoolDashboard.routes';
 import DistrictDashboardRoute from './districtDashboard.routes';
 import AssessmentRoute from './assessment.routes'
-import Assessment from '../components/pages/assessment/AssessmentSelect';
+
 
 
 

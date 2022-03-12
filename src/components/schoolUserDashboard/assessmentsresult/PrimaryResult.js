@@ -7,16 +7,10 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { getPrimaryResultsBySchoolUserAction } from "../../../redux/actions/getPrimaryResultsBySchoolUserAction";
-import { addStudentBySchoolUser } from "../../../redux/actions/addStudentBySchoolUseAction";
-import { deleteStudentAction } from "../../../redux/actions/deleteStudentAction";
-import { getAllSchool } from "../../../redux/actions/schoolsAction";
 import { getAvailablePrimaryExamsDoneAction } from "../../../redux/actions/getAvailableExamsDoneAction";
-
-import DeleteIcon from "@material-ui/icons/Delete";
-import BorderColorIcon from "@material-ui/icons/BorderColor";
-import IconButton from "@material-ui/core/IconButton";
+import { DialogTitle } from "@mui/material";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import moment from "moment";
+
 import { MenuItem } from "@material-ui/core";
 
 import { Search as SearchIcon } from "react-feather";
@@ -33,7 +27,7 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import DoughnutChart from "./charts/DoughnutChart";
+
 
 export default function PrimaryResult({ openn, ...rest }) {
   const dispatch = useDispatch();
@@ -46,36 +40,14 @@ export default function PrimaryResult({ openn, ...rest }) {
 
   const [results, setResults] = useState([]);
   const [students, setStudents] = useState([]);
-  const [open, setOpen] = React.useState(false);
   const [examId, setExamId] = useState("");
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [dob, setDob] = useState("");
-  const [gender, setGender] = useState("");
-  const [level, setLevel] = useState("");
-  const [schoolId, setSchoolId] = useState("");
-  const [studentId, setStudentId] = useState("");
-  const [openDelete, setOpenDelete] = useState(false);
+  
   const [exams, setExams] = useState("");
 
   //const [value, setValue] = React.useState(new Date());
 
-  const [openUpdate, setOpenUpdate] = useState(false);
-
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
-
-  const levels = [
-    {
-      value: "P6",
-      label: "primary 6",
-    },
-    {
-      value: "S3",
-      label: "Ordinary 3",
-    },
-  ];
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -85,32 +57,13 @@ export default function PrimaryResult({ openn, ...rest }) {
     setPage(newPage);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
 
-  const handleAdd = async () => {
-    await dispatch(
-      addStudentBySchoolUser({ firstname, lastname, email, dob, gender, level })
-    );
-    setOpen(false);
-    setFirstname("");
-    setLastname("");
-    setEmail("");
-    setDob("");
-    setGender("");
-    setLevel("");
-    await dispatch(getPrimaryResultsBySchoolUserAction(examId));
-    console.log("added");
-  };
 
   useEffect(() => {
     async function fetchData() {
       await dispatch(getAvailablePrimaryExamsDoneAction());
       setExamId(exams);
+
       if (!primaryResultsState.loading) {
         if (primaryResultsState.results) {
           setResults(primaryResultsState.results);
@@ -121,23 +74,23 @@ export default function PrimaryResult({ openn, ...rest }) {
     fetchData();
   }, [primaryResultsState.results]);
 
-  const handleCloseDelete = () => {
-    setOpenDelete(false);
-  };
-
-  const handleDelete = async () => {
-    await dispatch(deleteStudentAction(studentId));
-    setOpenDelete(false);
-    window.location.reload();
-  };
 
   const searchHandle = async (e) => {};
 
   return (
     <>
- 
       <div style={{ flex: 4, height: "auto", width: "400px" }}>
-      <span className="featuredStudent" style={{fontSize:20,fontWeight:600}} >Primary Level Assessment Results (P6)</span>
+        <span
+          className="featuredStudent"
+          style={{ fontSize: 20, fontWeight: 600 }}
+        >
+          <DialogTitle>
+          Primary Level Assessment Results (P6)
+          </DialogTitle>
+          
+       
+         
+        </span>
         <Box sx={{ mt: 3 }}>
           <Card>
             <CardContent>
@@ -160,23 +113,23 @@ export default function PrimaryResult({ openn, ...rest }) {
               </Box>
             </CardContent>
 
-            <Box sx={{maxWidth:300}}>
+            <Box sx={{ maxWidth: 300 }}>
               <TextField
-              select
-              fullWidth
-              label="Select Assessment"
-              variant="outlined"
-              style={{ marginBottom: 30 }}
-              value={exams}
-              onChange={(e) => setExams(e.target.value)}
-            >
-              {getAvailablePrimaryExamsDoneState.exams.map((option) => (
-                <MenuItem key={option.id} value={option.id}>
-                  {option.subject}
-                </MenuItem>
-              ))}
-            </TextField>
-              </Box>
+                select
+                fullWidth
+                label="Select Assessment"
+                variant="outlined"
+                style={{ marginBottom: 30 }}
+                value={exams}
+                onChange={(e) => setExams(e.target.value)}
+              >
+                {getAvailablePrimaryExamsDoneState.exams.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.subject}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
           </Card>
         </Box>
 

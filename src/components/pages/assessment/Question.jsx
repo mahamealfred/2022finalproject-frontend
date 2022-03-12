@@ -5,25 +5,24 @@ import "./Question.css";
 import HomeTopbar from "../../homeTopbar/HomeTopbar";
 import Header from "../../header/Header";
 import Footer from "../../Footer/Footer";
-import Questions from "../../Questions/Questions";
-import { useDispatch,useSelector } from "react-redux";
-import {getExamsAndQuestionByLevel} from "../../../redux/actions/getExamsAndQuestionByIdAction";
+import { useDispatch, useSelector } from "react-redux";
+import { getExamsAndQuestionByLevel } from "../../../redux/actions/getExamsAndQuestionByIdAction";
+import Questions from '../../Questions/Questions'
 
-export default function Question({...rest}) {
-
-  const getExamAndQuestionState=useSelector((state)=> state.getExamAndQuestionById);
-  const dispatch=useDispatch();
+export default function Question({ ...rest }) {
+  const getExamAndQuestionState = useSelector(
+    (state) => state.getExamAndQuestionById
+  );
+  const dispatch = useDispatch();
   const [questions, setQuestions] = useState();
   const [score, setScore] = useState(0);
-  const [examId, setExamId] = useState('');
-  const [exams,setExams]=useState([]);
-  
+  const [examId, setExamId] = useState("");
+  const [exams, setExams] = useState([]);
 
   const [options, setOptions] = useState();
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [numberQuestions, setNumberQuestion]=useState(1);
-  
-  
+  const [numberQuestions, setNumberQuestion] = useState(1);
+
   // useEffect(() => {
   //   setQuestions();
   //   setOptions(
@@ -34,19 +33,13 @@ export default function Question({...rest}) {
   //       ])
   //   );
   // }, [questions, currentQuestion]);
-  useEffect( () => {
-    async function fetchData(){
-       await dispatch(getExamsAndQuestionByLevel(examId));
-      
-     }
+  useEffect(() => {
+    async function fetchData() {
+      await dispatch(getExamsAndQuestionByLevel(examId));
+    }
     fetchData();
   }, []);
-  console.log( getExamAndQuestionState.exams)
-
- 
-
-  
-  
+  console.log(getExamAndQuestionState.exams);
 
   const handleShuffle = (options) => {
     return options.sort(() => Math.random() - 0.5);
@@ -54,38 +47,40 @@ export default function Question({...rest}) {
 
   return (
     <>
-    <HomeTopbar/>
-    <Header/>
-    {
-      getExamAndQuestionState.loading ?  "Loading" :   getExamAndQuestionState.exams.length>0    ?
-
-      <div className="assessmentQuestion">
-      <span className="subtitle">Welcome, Mahame Alfred</span>
-      {/* {
+      <HomeTopbar />
+      <Header />
+      {getExamAndQuestionState.loading ? (
+        "Loading"
+      ) : getExamAndQuestionState.exams.length > 0 ? (
+        <div className="assessmentQuestion">
+          <span className="subtitle">Welcome, Mahame Alfred</span>
+          {/* {
         questions?
           <> */}
-      <>
-        <div className="assessmentInf">
-          <div className="leftAssessementInf">
-            <span>ASSESSMENT NAME: {  getExamAndQuestionState.exams[0].name}</span>
-            <div className="discription">
-              <span> Assessement Description</span>
+          <>
+            <div className="assessmentInf">
+              <div className="leftAssessementInf">
+                <span>
+                  ASSESSMENT NAME: {getExamAndQuestionState.exams[0].name}
+                </span>
+                <div className="discription">
+                  <span> Assessement Description</span>
+                </div>
+              </div>
+              <div className="rightAssessmentInfo">
+                <div className="time">
+                  <span> Time left: 1h 30min</span>
+                </div>
+                <span> Question: {numberQuestions}/10 questions</span>
+              </div>
             </div>
-          </div>
-          <div className="rightAssessmentInfo">
-            <div className="time">
-              <span> Time left: 1h 30min</span>
-            </div>
-            <span> Question: {numberQuestions}/10 questions</span>
-          </div>
-        </div>
-      </>
-      <h1>"Questions"</h1>
-    {
-               getExamAndQuestionState.exams[0].questions.toString()
-    }
+          </>
+          <h1>"Questions"</h1>
+          {getExamAndQuestionState.exams[0].questions.map((question) => {
+            return <Questions question={question}/>
+          })}
 
-      {/* </>
+          {/* </>
         :
         <>
         </>
@@ -95,12 +90,12 @@ export default function Question({...rest}) {
            />
         
       } */}
-    </div>
-    :"No Question found"
-    }
+        </div>
+      ) : (
+        "No Question found"
+      )}
 
-   
-    <Footer/>
+      <Footer />
     </>
   );
 }

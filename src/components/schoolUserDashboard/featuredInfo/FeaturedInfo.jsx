@@ -4,7 +4,7 @@ import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { getSpecificStudentNumberInSchoolAction } from "../../../redux/actions/getSpecificStudentNumberInSchoolAction";
-
+import { DialogTitle } from "@mui/material";
 export default function FeaturedInfo() {
   const dispatch = useDispatch();
   const studentsState = useSelector((state) => state.getSpecificStudentNumberInSchool);
@@ -23,7 +23,9 @@ console.log(studentsState.students.totalStudent)
      {
       studentsState.loading ?  "Loading" :   studentsState.students.length > 0    ?
      <>
+     <DialogTitle>
       <span className="featuredStudent">Ordinary Level (S3)</span>
+      </DialogTitle>
       <div className="featured">
         <div className="featuredItem">
           <span className="featuredTitle">Total Students In Ordinary Level (S3)</span>
@@ -70,7 +72,10 @@ console.log(studentsState.students.totalStudent)
           <span className="featuredSub">Compared to last Month</span>
         </div>
       </div>
+      <DialogTitle>
       <span className="featuredStudent">Primary (P6)</span>
+      </DialogTitle>
+   
 
       <div className="featured">
         <div className="featuredItem">

@@ -106,6 +106,21 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
               </Box>
             </CardContent>
             <Box sx={{ maxWidth: 300 }}>
+            <TextField
+                select
+                fullWidth
+                label="Select School"
+                variant="outlined"
+                style={{ marginBottom: 30 }}
+                value={exams}
+                onChange={(e) => setExams(e.target.value)}
+              >
+                {getOrdinaryLevelExamsState.exams.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.subject}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 select
                 fullWidth

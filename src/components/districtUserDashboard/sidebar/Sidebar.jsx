@@ -58,13 +58,13 @@ export default function Sidebar() {
         <div className="sideBarMenu">
           <h3 className="sideBarTitle">Results Menu</h3>
           <ul className="sidebarList">
-            <Link to="/districtdashboard/exams" className="link">
+            <Link to="/districtdashboard/primaryresults" className="link">
               <li className="sidebarListItem active">
                 <LineStyle className="sidebarIcon" />
                 Primary Level Results
               </li>
             </Link>
-            <Link to="/districtdashboard/results" className="link">
+            <Link to="/districtdashboard/ordinarylevelresults" className="link">
               <li className="sidebarListItem">
                 <TrendingUp className="sidebarIcon" />
                 Ordinary Level Results

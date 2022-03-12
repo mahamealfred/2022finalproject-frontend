@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import "./questions.css"
 
-const Questions = ({currentQuestion, setCurrentQuestion,correct_answer="better", options=["good","better","excellent","None"], Questions, score,setScore}) => {
+const Questions = ({currentQuestion, setCurrentQuestion,correct_answer="better", options=["good","better","excellent","None"], question, score,setScore}) => {
     const [selected,setSelected]=useState(false);
     const [error, setError]=useState(false)
     
@@ -45,8 +45,9 @@ const Questions = ({currentQuestion, setCurrentQuestion,correct_answer="better",
       <div className='question'>
           <h1>Question 1</h1>
           <div className='singleQuestion'>
-               <h2>What is Photosynthesis?</h2>  {/*{Questions[currentQuestion].Question} */}
+               <h2>{question.question}</h2>  {/*{Questions[currentQuestion].Question} */}
                <div className='options'>
+               {question.incorrect_answer}
                 {error && <ErrorMessage>{error}</ErrorMessage>}
                 {
                     options &&

@@ -6,12 +6,11 @@ import TextField from "@mui/material/TextField";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { getOrdinaryLevelResultsBySchoolUserAction } from "../../../redux/actions/getOrdinaryLevelResultBySchoolUserAction";
-
-import { getOrdinaryLevelExamsAction } from "../../../redux/actions/getOrdinaryLevelExamsAction";
-
-import PerfectScrollbar from "react-perfect-scrollbar";
+import { getPrimaryResultsBySchoolUserAction } from "../../../redux/actions/getPrimaryResultsBySchoolUserAction";
+import { getAvailablePrimaryExamsDoneAction } from "../../../redux/actions/getAvailableExamsDoneAction";
 import { DialogTitle } from "@mui/material";
+import PerfectScrollbar from "react-perfect-scrollbar";
+
 import { MenuItem } from "@material-ui/core";
 
 import { Search as SearchIcon } from "react-feather";
@@ -29,20 +28,20 @@ import {
   Typography,
 } from "@material-ui/core";
 
-export default function OrdinaryLevelResults({ openn, ...rest }) {
+
+export default function PrimaryResults({ openn, ...rest }) {
   const dispatch = useDispatch();
-  const ordinaryResultsState = useSelector(
-    (state) => state.getOrdinaryLevelResultBySchoolUser
+  const primaryResultsState = useSelector(
+    (state) => state.getPrimaryResultsBySchoolUser
   );
-  const getOrdinaryLevelExamsState = useSelector(
-    (state) => state.getOrdinaryLevelExams
+  const getAvailablePrimaryExamsDoneState = useSelector(
+    (state) => state.getAvailablePrimaryExamsDone
   );
 
   const [results, setResults] = useState([]);
   const [students, setStudents] = useState([]);
-
   const [examId, setExamId] = useState("");
-
+  
   const [exams, setExams] = useState("");
 
   //const [value, setValue] = React.useState(new Date());
@@ -58,20 +57,23 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
     setPage(newPage);
   };
 
+
+
   useEffect(() => {
     async function fetchData() {
-      await dispatch(getOrdinaryLevelExamsAction());
+      await dispatch(getAvailablePrimaryExamsDoneAction());
       setExamId(exams);
 
-      if (!ordinaryResultsState.loading) {
-        if (ordinaryResultsState.results) {
-          setResults(ordinaryResultsState.results);
-          await dispatch(getOrdinaryLevelResultsBySchoolUserAction(examId));
+      if (!primaryResultsState.loading) {
+        if (primaryResultsState.results) {
+          setResults(primaryResultsState.results);
+          await dispatch(getPrimaryResultsBySchoolUserAction(examId));
         }
       }
     }
     fetchData();
-  }, [ordinaryResultsState.results]);
+  }, [primaryResultsState.results]);
+
 
   const searchHandle = async (e) => {};
 
@@ -82,7 +84,12 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
           className="featuredStudent"
           style={{ fontSize: 20, fontWeight: 600 }}
         >
-          <DialogTitle>Ordinary Level Assessment Results (S3)</DialogTitle>
+          <DialogTitle>
+          Primary Level Assessment Results (P6)
+          </DialogTitle>
+          
+       
+         
         </span>
         <Box sx={{ mt: 3 }}>
           <Card>
@@ -105,7 +112,23 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
                 />
               </Box>
             </CardContent>
+
             <Box sx={{ maxWidth: 300 }}>
+            <TextField
+                select
+                fullWidth
+                label="Select School"
+                variant="outlined"
+                style={{ marginBottom: 30 }}
+                value={exams}
+                onChange={(e) => setExams(e.target.value)}
+              >
+                {getAvailablePrimaryExamsDoneState.exams.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.subject}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 select
                 fullWidth
@@ -115,7 +138,7 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
                 value={exams}
                 onChange={(e) => setExams(e.target.value)}
               >
-                {getOrdinaryLevelExamsState.exams.map((option) => (
+                {getAvailablePrimaryExamsDoneState.exams.map((option) => (
                   <MenuItem key={option.id} value={option.id}>
                     {option.subject}
                   </MenuItem>
@@ -254,6 +277,6 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
     </>
   );
 }
-OrdinaryLevelResults.propTypes = {
+PrimaryResults.propTypes = {
   students: PropTypes.array.isRequired,
 };
