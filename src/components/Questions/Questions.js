@@ -1,93 +1,52 @@
-import { Button } from '@mui/material';
-import {useState} from 'react';
-import { useHistory } from 'react-router-dom';
-import ErrorMessage from '../errorMessage/ErrorMessage';
-import "./questions.css"
+import { Button } from "@mui/material";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import ErrorMessage from "../errorMessage/ErrorMessage";
+import "./questions.css";
 
-const Questions = ({currentQuestion, setCurrentQuestion,correct_answer="better", options=["good","better","excellent","None"], question, score,setScore}) => {
-    const [selected,setSelected]=useState(false);
-    const [error, setError]=useState(false)
-    
-    const history=useHistory();
-   
-     const handleSelect =(i)=>{
-         if(selected===i && selected===correct_answer)
-         {
-             return "select";
-         }else if(selected==i && selected!==correct_answer){
-             return "wrong";
-         }
-         else if(i===correct_answer){
-             return "select";
-         }
-     };
-     const handleCheck=()=>{
+const Questions = ({ question, index, score, setScore }) => {
+  const [selected, setSelected] = useState(false);
 
-     }
-     const handleNext=()=>{
-         if(currentQuestion > 8){
-           history.push('/assessement/assessments/result')
-         }
-         else if(selected){
-             setCurrentQuestion(currentQuestion +1)
-             setSelected();
-         }
-         else{
-             setError("Please select an option first");
-         }
-     }
-     const handleQuit=()=>{
+  const handleSelect = (i, correct_answer) => {
+    console.log("here", i);
+  };
 
-     }
-    
+  const handleChange = (e, correct_answer) => {
+    const value = e.currentTarget.value;
+    setSelected(value);
+    console.log("value", value);
+    console.log("correct_answer", correct_answer);
+    setScore(value, correct_answer, index);
+  };
+
   return (
-      <>
-      <div className='question'>
-          <h1>Question 1</h1>
-          <div className='singleQuestion'>
-               <h2>{question.question}</h2>  {/*{Questions[currentQuestion].Question} */}
-               <div className='options'>
-               {question.incorrect_answer}
-                {error && <ErrorMessage>{error}</ErrorMessage>}
-                {
-                    options &&
-                     options.map((i)=>
-                        <Button 
-                        onClick={()=>handleCheck(i)}
-                        className={`singleOption ${selected && handleSelect(i)}`}
-                        key={i}
-                        disabled={selected}
-                        >
-                           {i}
-                        </Button>
-                    )
-                }
-               </div>
-               <div className='controls'>
-                      <Button
-                      variant="contained"
-                      color="secondary"
-                      size="large"
-                      style={{width :185}}
-                      href="/"
-                      onClick={handleQuit}
-                      >
-                          Quit
-                      </Button>
-                      <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      style={{width :185}}
-                       onClick={handleNext}
-                      >
-                          Next Question
-                      </Button>
-               </div>
+    <>
+      <div className="question">
+        <div>
+          <h5>{`${index + 1} - ${question.question}`}</h5>{" "}
+          {/*{Questions[currentQuestion].Question} */}
+          {console.log(score)}
+          <div className="options">
+            <ol type="A">
+              {/* {error && <ErrorMessage>{error}</ErrorMessage>} */}
+              {question.incorrect_answer &&
+                question.incorrect_answer.map((i) => (
+                  <li>
+                    <input
+                      type="radio"
+                      name={`option-${index + 1}`}
+                      value={i}
+                      onChange={(e) => handleChange(e, question.correct_answer)}
+                    />{" "}
+                    <label>{i}</label>
+                  </li>
+                ))}
+            </ol>
           </div>
+        </div>
       </div>
-      </>
-  )
+    </>
+  );
 };
 
 export default Questions;

@@ -1,46 +1,33 @@
-import React from 'react';
+import React from "react";
 import "./homeTopBar.css";
 // import { useNavigate } from 'react-router-dom';
 
-import InputIcon from '@material-ui/icons/Input';
-import {
- 
-  IconButton,
-
-} from '@material-ui/core';
-
-
+import InputIcon from "@material-ui/icons/Input";
+import { IconButton } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 export default function HomeTopbar() {
-
-  
-  const handleLogout=() =>{
-      
-      localStorage.removeItem('x-access-token');
-      localStorage.removeItem('user-data');
-     // history.push("/", { push: true} );
-     
-      
-        }
+  const history = useHistory();
+  const handleLogout = () => {
+    localStorage.removeItem("x-access-token");
+    localStorage.removeItem("user-data");
+    history.push("/assessments", { push: true });
+  };
   return (
     <div className="topbar">
       <div className="topbarWrapper">
         <div className="topLeft">
-          <img
-            src="../../Assets/images/reb.jpg"
-            alt=""
-            className="topAvatar"
-          />
-        
+          <img src="../../Assets/images/reb.jpg" alt="" className="topAvatar" />
         </div>
         <div className="leftTopBar">
-          <span className="logo">Primary and Ordinary level Quality Eduction 5 Booster </span>
-          </div>
+          <span className="logo">
+            Primary and Ordinary level Quality Eduction 5 Booster{" "}
+          </span>
+        </div>
         <div className="toRight">
-        <IconButton color="inherit" onClick={()=>handleLogout()}>
+          <IconButton color="inherit" onClick={() => handleLogout()}>
             <InputIcon />
           </IconButton>
-                          
         </div>
       </div>
     </div>
