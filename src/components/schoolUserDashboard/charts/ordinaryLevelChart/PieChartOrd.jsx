@@ -1,13 +1,15 @@
-import "./doughnut.css";
-import { Doughnut } from "react-chartjs-2";
-import { useEffect, useState } from "react";
+
+import './pieChart.css';
+import 'chart.js/auto';
+import {Pie} from 'react-chartjs-2'
+import  {useEffect,useState} from "react";
 import axios from "axios";
 
-
-function DoughnutChartOrd() {
+function PieChart() {
   const [data, setData] = useState({datasets:[]});
-  useEffect(() => {
-    const fetchData = async () => {
+
+  useEffect(()=>{
+     async function fetchData(){
       const labelSet = [];
       const dataSet1 = [];
       const dataSet2 = [];
@@ -25,7 +27,7 @@ function DoughnutChartOrd() {
       }
 
       await axios
-        .get(`http://localhost:8000/results/percentagemarksprimaryresults`, {
+        .get(`http://localhost:8000/results/percentageordinaryresultsbasedongender`, {
           headers: headers,
         })
         .then(function (response) {
@@ -33,7 +35,7 @@ function DoughnutChartOrd() {
           return res;
         })
         .then(function (res) {
-          labelSet.push(res.length + "  Available Assessment Results ");
+          labelSet.push( "Assessments Results ");
           for (const val of res) {
             const resCount = val.AssessmentCount;
             const finalTotal = ((val.total / (resCount * 100)) * 100).toFixed(2);
@@ -42,9 +44,8 @@ function DoughnutChartOrd() {
           console.log("lebal set...:", res);
           setData({
             labels: [
-            "French Assessment %",
-            "Kinyarwanda Assessment %",
-            "Social Study %",
+            "Male %",
+            "Female %",
           ],
           datasets: [
             {
@@ -60,20 +61,20 @@ function DoughnutChartOrd() {
         .catch(function (error) {
           console.log("error", error);
         });
-    };
-    fetchData();
-   
-    
-  }, []);
-  
-  
+     }
+     fetchData();
+  },[])
+
+
+
   return (
-    <div className="doughnutChart">
-      <span className="doughnutChartTitle">Student Performance P6</span>
-      
-      <Doughnut data={data}></Doughnut>
+    <div className="pieChart">
+    <span className="pieChartTitle">Students Performance Based on Gender In S3</span>
+    <Pie
+    data={data}
+    ></Pie>
     </div>
   );
 }
 
-export default DoughnutChartOrd;
+export default PieChart;

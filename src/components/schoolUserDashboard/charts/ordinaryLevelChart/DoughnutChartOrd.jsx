@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 
-function DoughnutChartOrd() {
+function DoughnutChart() {
   const [data, setData] = useState({datasets:[]});
   useEffect(() => {
     const fetchData = async () => {
@@ -25,7 +25,7 @@ function DoughnutChartOrd() {
       }
 
       await axios
-        .get(`http://localhost:8000/results/percentagemarksprimaryresults`, {
+        .get(`http://localhost:8000/results/percentagemarksordinaryresults`, {
           headers: headers,
         })
         .then(function (response) {
@@ -36,13 +36,13 @@ function DoughnutChartOrd() {
           labelSet.push(res.length + "  Available Assessment Results ");
           for (const val of res) {
             const resCount = val.AssessmentCount;
-            const finalTotal = ((val.total / (resCount * 100)) * 100).toFixed(2);
+            const finalTotal =( (val.total / (resCount * 100)) * 100).toFixed(2);
             dataSet1.push(finalTotal);
           }
           console.log("lebal set...:", res);
           setData({
             labels: [
-            "French Assessment %",
+            "Chemistry Assessment %",
             "Kinyarwanda Assessment %",
             "Social Study %",
           ],
@@ -69,11 +69,11 @@ function DoughnutChartOrd() {
   
   return (
     <div className="doughnutChart">
-      <span className="doughnutChartTitle">Student Performance P6</span>
+      <span className="doughnutChartTitle">Student Performance S3</span>
       
       <Doughnut data={data}></Doughnut>
     </div>
   );
 }
 
-export default DoughnutChartOrd;
+export default DoughnutChart;

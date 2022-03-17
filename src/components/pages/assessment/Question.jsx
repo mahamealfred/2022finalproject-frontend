@@ -116,7 +116,7 @@ export default function Question({ ...rest }) {
                   ASSESSMENT NAME: {getExamAndQuestionState.exams[0].name}
                 </span>
                 <div className="discription">
-                  <span> Assessement Description</span>
+                  <span> Assessement Description :{getExamAndQuestionState.exams[0].subject}</span>
                 </div>
               </div>
               <div className="rightAssessmentInfo">
@@ -147,7 +147,7 @@ export default function Question({ ...rest }) {
             </div>
           ) : (
             <>
-              <h1>"Questions"</h1>
+              <h1>Questions</h1>
               {getExamAndQuestionState.exams[0].questions.map(
                 (question, index) => {
                   return (
