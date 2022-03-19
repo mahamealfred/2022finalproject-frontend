@@ -44,11 +44,15 @@ function App() {
               <PrivateRoute exact path={`${path}/exams`} component={Exam} />
               <PrivateRoute
                 exact
-                path={`${path}/questions`}
+                path={`${path}/questions/:id`}
                 component={Question}
               />
               <PrivateRoute exact path={`${path}/results`} component={Result} />
-              <PrivateRoute exact path={`${path}/districts`} component={District} />
+              <PrivateRoute
+                exact
+                path={`${path}/districts`}
+                component={District}
+              />
             </>
           )}
         />

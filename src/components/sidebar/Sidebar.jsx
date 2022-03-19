@@ -87,12 +87,12 @@ export default function Sidebar() {
                 Assessments
               </li>
             </Link>
-            <Link to="/dashboard/questions" className="link">
+            {/* <Link to="/dashboard/questions" className="link">
               <li className="sidebarListItem ">
                 <LineStyle className="sidebarIcon" />
                 Questions
               </li>
-            </Link>
+            </Link> */}
             
           </ul>
         </div>

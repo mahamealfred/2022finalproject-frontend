@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import * as React from "react";
 import Box from "@mui/material/Box";
-
+import { Link } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -17,6 +17,7 @@ import { getAllExam } from "../../../redux/actions/examsAction";
 import { addExamAction } from "../../../redux/actions/addExamAction";
 import { deleteExamAction } from "../../../redux/actions/deleteExamAction";
 import { updateExamAction } from "../../../redux/actions/updateExamAction";
+import Print from "@material-ui/icons/Print";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -48,7 +49,6 @@ export default function Exam({ openn, ...rest }) {
   const [subject, setSubject] = useState("");
   const [name, setName] = useState("");
   const [startDate, setStartDate] = useState("");
-
 
   const addExam = useSelector((state) => state.addExam);
   const deleteExam = useSelector((state) => state.deleteExam);
@@ -108,7 +108,7 @@ export default function Exam({ openn, ...rest }) {
   };
 
   const handleAdd = async () => {
-    console.log(subject, name, startDate,level);
+    console.log(subject, name, startDate, level);
     await dispatch(
       addExamAction({
         name,
@@ -131,7 +131,9 @@ export default function Exam({ openn, ...rest }) {
       return alert("name is required");
     }
     console.log(examId);
-    await dispatch(updateExamAction({ name, subject,level, startDate, id: examId }));
+    await dispatch(
+      updateExamAction({ name, subject, level, startDate, id: examId })
+    );
     setOpenUpdate(false);
 
     setName("");
@@ -142,11 +144,14 @@ export default function Exam({ openn, ...rest }) {
     await dispatch(getAllExam());
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    dispatch(getAllExam());
+  }, []);
+
+  useEffect(() => {
     if (!examsState.loading) {
       if (examsState.exams) {
         setExams(examsState.exams);
-        await dispatch(getAllExam());
       }
     }
   }, [examsState.exams]);
@@ -227,7 +232,7 @@ export default function Exam({ openn, ...rest }) {
                 shrink: true,
               }}
             />
-             <TextField
+            <TextField
               id="outlined-select-currency"
               select
               onChange={(e) => setLevel(e.target.value)}
@@ -240,7 +245,6 @@ export default function Exam({ openn, ...rest }) {
                 </MenuItem>
               ))}
             </TextField>
-         
           </Box>
         </DialogContent>
         <DialogActions>
@@ -295,7 +299,7 @@ export default function Exam({ openn, ...rest }) {
                 shrink: true,
               }}
             />
-             <TextField
+            <TextField
               id="outlined-select-currency"
               select
               onChange={(e) => setLevel(e.target.value)}
@@ -376,7 +380,6 @@ export default function Exam({ openn, ...rest }) {
                     <TableCell>
                       <Box
                         sx={{
-
                           alignItems: "center",
                           display: "flex",
                         }}
@@ -406,6 +409,11 @@ export default function Exam({ openn, ...rest }) {
                       {moment(exam.updatedAt).format("DD/MM/YYYY")}
                     </TableCell>
                     <TableCell color="textPrimary" variant="body1">
+                      <IconButton arial-label="add">
+                        <Link to={`/dashboard/questions/${exam.id}`}>
+                          <Print />
+                        </Link>
+                      </IconButton>
                       <IconButton
                         aria-label="update"
                         onClick={() => {

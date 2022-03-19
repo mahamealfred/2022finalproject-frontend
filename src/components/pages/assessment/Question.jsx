@@ -9,11 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { getExamsAndQuestionByLevel } from "../../../redux/actions/getExamsAndQuestionByIdAction";
 import Questions from "../../Questions/Questions";
 import { Button } from "@mui/material";
+import { addResultAction } from "../../../redux/actions/addResultAction";
+import { useParams } from "react-router-dom";
 
 export default function Question({ ...rest }) {
   const getExamAndQuestionState = useSelector(
     (state) => state.getExamAndQuestionById
   );
+  const addResultState = useSelector((state) => state.addResult);
   const dispatch = useDispatch();
   const [questions, setQuestions] = useState();
   const [score, setScore] = useState(0);
@@ -24,10 +27,9 @@ export default function Question({ ...rest }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [answers, setAnswers] = useState([]);
   const [examId, setExamId] = useState("");
+  const params = useParams();
 
   const studentData = JSON.parse(localStorage.getItem("student-data"));
-  // get fullname
-  console.log(studentData);
   const fullname = studentData ? studentData.fullName : "Dear, Student";
 
   const clock = (hr, mm, ss) => {
@@ -51,14 +53,15 @@ export default function Question({ ...rest }) {
   };
 
   useEffect(() => {
+    const id = params.id;
+    setExamId(id);
     async function fetchData() {
-      await dispatch(getExamsAndQuestionByLevel(examId));
+      await dispatch(getExamsAndQuestionByLevel(id));
     }
 
     clock(1, 1, 10);
     fetchData();
   }, []);
-
   const handleShuffle = (options) => {
     return options.sort(() => Math.random() - 0.5);
   };
@@ -95,6 +98,8 @@ export default function Question({ ...rest }) {
     // set loading to false
     setIsSubmitted(true);
     setIsLoading(false);
+    dispatch(addResultAction({ examId, marks: percentage }));
+    // stop clock
   };
 
   return (
@@ -116,12 +121,19 @@ export default function Question({ ...rest }) {
                   ASSESSMENT NAME: {getExamAndQuestionState.exams[0].name}
                 </span>
                 <div className="discription">
-                  <span> Assessement Description :{getExamAndQuestionState.exams[0].subject}</span>
+                  <span>
+                    {" "}
+                    Assessement Description :
+                    {getExamAndQuestionState.exams[0].subject}
+                  </span>
                 </div>
               </div>
               <div className="rightAssessmentInfo">
                 <div className="time">
-                  <span> Remaining Time: {remainingTime}</span>
+                  <span>
+                    {" "}
+                    Remaining Time: {isSubmitted ? "Done" : remainingTime}
+                  </span>
                 </div>
                 <span>
                   {" "}
@@ -134,16 +146,22 @@ export default function Question({ ...rest }) {
           </>
           {isSubmitted && !isLoading ? (
             <div className="assessmentResult">
-              <div className="result">
-                <span>You have completed this test.</span>
-                <br />
-                <span>
-                  You have scored {score} out of{" "}
-                  {getExamAndQuestionState.exams[0].questions.length || 0}
-                </span>
-                <br />
-                <span>Your score is {percentage}%</span>
-              </div>
+              {addResultState.loading ? (
+                "Loading"
+              ) : addResultState.success ? (
+                <div className="result">
+                  <span>You have completed this test.</span>
+                  <br />
+                  <span>
+                    You have scored {score} out of{" "}
+                    {getExamAndQuestionState.exams[0].questions.length || 0}
+                  </span>
+                  <br />
+                  <span>Your score is {percentage}%</span>
+                </div>
+              ) : (
+                `Error: ${addResultState.error}`
+              )}
             </div>
           ) : (
             <>
