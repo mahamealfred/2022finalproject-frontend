@@ -80,22 +80,18 @@ const roles=[
   {
   value:"DistrictUser",
   label:"District User"
-  },{
-    value:"SchoolUser",
-    label:"School User"
   }
 ];
 
 const handleAddUser= async()=>{
   console.log(fullname)
   await dispatch(
-    addUserAction({ fullname,email,role,districtId,schoolId})
+    addUserAction({ fullname,email,role,districtId})
   ); 
   setOpen(false);
   setFullname("");
   setEmail("");
   setRole("");
-  setSchoolId("");
   setDistrictId("");
  await dispatch(getAllUser());
   console.log("added");
@@ -271,7 +267,7 @@ setSchools(schoolsState.schools);
                 </MenuItem>
               ))}
             </TextField>
-            <TextField
+            {/* <TextField
               id="outlined-select-school"
               label="School"
               select
@@ -285,7 +281,7 @@ setSchools(schoolsState.schools);
                   {option.name}
                 </MenuItem>
               ))}
-            </TextField>
+            </TextField> */}
            
           </Box>
         </DialogContent>

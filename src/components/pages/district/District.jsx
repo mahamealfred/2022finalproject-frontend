@@ -10,6 +10,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { MenuItem } from "@material-ui/core";
 //import MenuItem from "@mui/material/MenuItem";
+
+
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
@@ -17,6 +19,8 @@ import { getAllExam } from "../../../redux/actions/examsAction";
 import { addExamAction } from "../../../redux/actions/addExamAction";
 import { deleteExamAction } from "../../../redux/actions/deleteExamAction";
 import { updateExamAction } from "../../../redux/actions/updateExamAction";
+import {getAllDistrict} from "../../../redux/actions/districtsAction";
+import {addDistrictAction} from "../../../redux/actions/addDistrictAction";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -39,21 +43,27 @@ import {
   Typography,
 } from "@material-ui/core";
 
-export default function Exam({ openn, ...rest }) {
+export default function District({ openn, ...rest }) {
   const dispatch = useDispatch();
   const examsState = useSelector((state) => state.exams);
   const [exams, setExams] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [districts,setDistricts]=useState([]);
 
   const [subject, setSubject] = useState("");
   const [name, setName] = useState("");
   const [startDate, setStartDate] = useState("");
-
+  const [provincename,setProvincename]=useState("");
+  const [fullname,setFullname]=useState("");
+  const [email,setEmail] =useState("");
 
   const addExam = useSelector((state) => state.addExam);
   const deleteExam = useSelector((state) => state.deleteExam);
   const updateExam = useSelector((state) => state.updateExam);
+  const getDistrictsState=useSelector((state)=>state.districts);
+  const addDistrict=useSelector((state)=>state.addDistrict);
   //const [value, setValue] = React.useState(new Date());
+
   const [selectedExamIds, setSelectedExamIds] = useState([]);
   const [search, setSearch] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -64,15 +74,27 @@ export default function Exam({ openn, ...rest }) {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const levels = [
+  const Provinces = [
     {
-      value: "P6",
-      label: "primary 6",
+      value: "Nouth",
+      label: "Nouth Province",
     },
     {
-      value: "S3",
-      label: "Ordinary 3",
+      value: "South",
+      label: "South Province",
     },
+    {
+        value: "East",
+        label: "East Province",
+      },
+      {
+        value: "West",
+        label: "West Province",
+      },
+      {
+        value: "Kigali",
+        label: "Kigali City",
+      },
   ];
   const handleCloseUpdate = () => {
     setName("");
@@ -108,48 +130,48 @@ export default function Exam({ openn, ...rest }) {
   };
 
   const handleAdd = async () => {
-    console.log(subject, name, startDate,level);
-    await dispatch(
-      addExamAction({
-        name,
-        subject,
-        startDate,
-        level,
-      })
-    );
+    console.log(provincename, name,fullname,email);
+    await dispatch( addDistrictAction({provincename, name,fullname, email}) );
     setOpen(false);
-    setSubject("");
+    setProvincename("");
     setName("");
-    setStartDate("");
-    setLevel("");
-    await dispatch(getAllExam());
+    setFullname("");
+    setEmail("");
+    await dispatch(getAllDistrict());
     console.log("added");
   };
 
   const handleUpdate = async () => {
-    if (!name) {
-      return alert("name is required");
-    }
-    console.log(examId);
-    await dispatch(updateExamAction({ name, subject,level, startDate, id: examId }));
-    setOpenUpdate(false);
+    // if (!name) {
+    //   return alert("name is required");
+    // }
+    // console.log(examId);
+    // await dispatch(updateExamAction({ name, subject,level, startDate, id: examId }));
+    // setOpenUpdate(false);
 
-    setName("");
-    setSubject("");
-    setStartDate("");
-    setLevel("");
-    setSearch(false);
-    await dispatch(getAllExam());
+    // setName("");
+    // setSubject("");
+    // setStartDate("");
+    // setLevel("");
+    // setSearch(false);
+    // await dispatch(getAllExam());
   };
 
   useEffect(async () => {
+     
+      if (!getDistrictsState.loading) {
+        if (getDistrictsState.districts) {
+          setDistricts(getDistrictsState.districts);
+          await dispatch(getAllDistrict());
+        }
+      }
     if (!examsState.loading) {
       if (examsState.exams) {
         setExams(examsState.exams);
         await dispatch(getAllExam());
       }
     }
-  }, [examsState.exams]);
+  }, [examsState.exams,getDistrictsState.districts]);
 
   const searchHandle = async (e) => {};
 
@@ -180,14 +202,14 @@ export default function Exam({ openn, ...rest }) {
       </Box>
 
       <Button variant="outlined" onClick={handleClickOpen}>
-        Add Exam
+        Add District
       </Button>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Exam Details</DialogTitle>
+        <DialogTitle>District Details</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please enter Exam information here.
+            Please enter District information here.
           </DialogContentText>
 
           <Box
@@ -200,53 +222,50 @@ export default function Exam({ openn, ...rest }) {
           >
             <TextField
               id="outlined-basic"
-              label="Subject"
+              label="Dristrict Name"
               name="subject"
-              onChange={(e) => setSubject(e.target.value)}
-              value={subject}
-              variant="outlined"
-            />
-            <TextField
-              id="outlined-basic"
-              label="Description"
-              name="name"
               onChange={(e) => setName(e.target.value)}
               value={name}
               variant="outlined"
             />
-            <TextField
-              id="date"
-              label="Start Date"
-              type="date"
-              name="startDate"
-              onChange={(e) => setStartDate(e.target.value)}
-              value={startDate}
-              defaultValue="2017-05-24"
-              sx={{ width: 220 }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-             <TextField
+              <TextField
               id="outlined-select-currency"
               select
-              onChange={(e) => setLevel(e.target.value)}
-              label="level"
-              helperText="Please select your Level"
+              onChange={(e) => setProvincename(e.target.value)}
+              label="Province"
+              helperText="Please select your Province"
             >
-              {levels.map((option) => (
+              {Provinces.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
               ))}
             </TextField>
          
+            <TextField
+              id="outlined-basic"
+              label="FullName"
+              name="fullname"
+              onChange={(e) => setFullname(e.target.value)}
+              value={fullname}
+              variant="outlined"
+            />
+             <TextField
+              id="outlined-basic"
+              label="Email"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              variant="outlined"
+            />
+            
+           
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleAdd} color="primary" autoFocus>
-            {addExam.loading ? "Loading..." : "Add new Exam"}
+            {addDistrict.loading ? "Loading..." : "Add new District"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -255,7 +274,7 @@ export default function Exam({ openn, ...rest }) {
         <DialogTitle>Update Exam Details</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please Edit Exam information here.
+            Please Edit District information here.
           </DialogContentText>
 
           <Box
@@ -266,48 +285,29 @@ export default function Exam({ openn, ...rest }) {
             noValidate
             autoComplete="off"
           >
-            <TextField
+             <TextField
               id="outlined-basic"
-              label="Subject"
+              label="Dristrict Name"
               name="subject"
-              onChange={(e) => setSubject(e.target.value)}
-              value={subject}
-              variant="outlined"
-            />
-            <TextField
-              id="outlined-basic"
-              label="Description"
-              name="name"
               onChange={(e) => setName(e.target.value)}
               value={name}
               variant="outlined"
             />
-            <TextField
-              id="date"
-              label="Start Date"
-              type="date"
-              name="startDate"
-              onChange={(e) => setStartDate(e.target.value)}
-              value={startDate}
-              defaultValue="2017-05-24"
-              sx={{ width: 220 }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-             <TextField
+              <TextField
               id="outlined-select-currency"
               select
-              onChange={(e) => setLevel(e.target.value)}
-              label="level"
-              helperText="Please select your Level"
+              onChange={(e) => setProvincename(e.target.value)}
+              label="Province"
+              helperText="Please select your Province"
             >
-              {levels.map((option) => (
+              {Provinces.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
               ))}
             </TextField>
+         
+    
           </Box>
         </DialogContent>
         <DialogActions>
@@ -345,9 +345,8 @@ export default function Exam({ openn, ...rest }) {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Subject</TableCell>
-                <TableCell>Assessment Name</TableCell>
-                <TableCell>Start Date</TableCell>
+                <TableCell>District Name</TableCell>
+                <TableCell>Province Name</TableCell>
                 <TableCell>Created Date</TableCell>
                 <TableCell>Update Date</TableCell>
                 <TableCell>Action</TableCell>
@@ -355,11 +354,11 @@ export default function Exam({ openn, ...rest }) {
             </TableHead>
             <TableBody>
               <>
-                {exams.slice(0, limit).map((exam) => (
+                {districts.slice(0, limit).map((district) => (
                   <TableRow
                     hover
-                    key={exam.id}
-                    selected={selectedExamIds.indexOf(exam.id) !== -1}
+                    key={district.id}
+                    selected={selectedExamIds.indexOf(district.id) !== -1}
                   >
                     <TableCell>
                       <Box
@@ -369,7 +368,7 @@ export default function Exam({ openn, ...rest }) {
                         }}
                       >
                         <Typography color="textPrimary" variant="body1">
-                          {exam.subject}
+                          {district.name}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -382,37 +381,25 @@ export default function Exam({ openn, ...rest }) {
                         }}
                       >
                         <Typography color="textPrimary" variant="body1">
-                          {exam.name}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          alignItems: "center",
-                          display: "flex",
-                        }}
-                      >
-                        <Typography color="textPrimary" variant="body1">
-                          {exam.startDate}
+                          {district.provincename}
                         </Typography>
                       </Box>
                     </TableCell>
 
                     <TableCell>
-                      {moment(exams.createdAt).format("DD/MM/YYYY")}
+                      {moment(district.createdAt).format("DD/MM/YYYY")}
                     </TableCell>
                     <TableCell>
-                      {moment(exam.updatedAt).format("DD/MM/YYYY")}
+                      {moment(district.updatedAt).format("DD/MM/YYYY")}
                     </TableCell>
                     <TableCell color="textPrimary" variant="body1">
                       <IconButton
                         aria-label="update"
                         onClick={() => {
-                          setExamId(exam.id);
-                          setName(exam.name);
-                          setSubject(exam.subject);
-                          setStartDate(exam.startDate);
+                        //   setExamId(exam.id);
+                        //   setName(exam.name);
+                        //   setSubject(exam.subject);
+                        //   setStartDate(exam.startDate);
 
                           setOpenUpdate(true);
                         }}
@@ -423,12 +410,12 @@ export default function Exam({ openn, ...rest }) {
                         aria-label="delete"
                         color="secondary"
                         onClick={() => {
-                          setExamId(exam.id);
-                          setName(exam.name);
-                          setSubject(exam.subject);
-                          setLevel(exam.level);
-                          setStartDate(exam.startDate);
-                          setOpenDelete(true);
+                        //   setExamId(exam.id);
+                        //   setName(exam.name);
+                        //   setSubject(exam.subject);
+                        //   setLevel(exam.level);
+                        //   setStartDate(exam.startDate);
+                         setOpenDelete(true);
                         }}
                       >
                         <DeleteIcon />
@@ -454,6 +441,6 @@ export default function Exam({ openn, ...rest }) {
     </div>
   );
 }
-Exam.propTypes = {
-  exams: PropTypes.array.isRequired,
+District.propTypes = {
+  districts: PropTypes.array.isRequired,
 };

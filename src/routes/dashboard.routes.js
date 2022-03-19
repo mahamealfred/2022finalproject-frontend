@@ -11,6 +11,7 @@ import Question from "../components/pages/question/Question";
 import Dashboard from "../Views/Dashboard";
 import PrivateRoute from "./PrivateRoute";
 import Result from "../components/pages/result/Result";
+import District from "../components/pages/district/District";
 
 function App() {
   const { path } = useRouteMatch();
@@ -47,6 +48,7 @@ function App() {
                 component={Question}
               />
               <PrivateRoute exact path={`${path}/results`} component={Result} />
+              <PrivateRoute exact path={`${path}/districts`} component={District} />
             </>
           )}
         />

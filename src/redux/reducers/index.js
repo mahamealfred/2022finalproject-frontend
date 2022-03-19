@@ -33,7 +33,7 @@ import getAvailableExamsDoneReducer from './getAvailableExamsDoneReducer';
 import getOrdinaryLevelExamsReducer from './getOrdinaryLevelExamsReducer';
 import getOrdinaryLevelResultBySchoolUserReducer from './getOrdinaryLevelResultBySchoolUserReducer';
 import getPercentageMarksPrimaryResultsBySchoolUserReducer from './getPercentageMarksPrimaryResultsBySchoolUserReducer';
-
+import addDistrictReducer from "./addDistrictsReducer";
 const allReducers = combineReducers({
   users: usersReducer,
   students: studentsReducer,
@@ -68,6 +68,7 @@ const allReducers = combineReducers({
   getOrdinaryLevelExams:getOrdinaryLevelExamsReducer,
   getOrdinaryLevelResultBySchoolUser: getOrdinaryLevelResultBySchoolUserReducer,
   getPercentageMarksPrimaryResultsBySchoolUser: getPercentageMarksPrimaryResultsBySchoolUserReducer,
+  addDistrict: addDistrictReducer,
 });
 
 export default allReducers;
