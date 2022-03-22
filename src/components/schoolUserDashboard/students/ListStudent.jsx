@@ -30,7 +30,7 @@ import IconButton from "@material-ui/core/IconButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import moment from "moment";
 import { MenuItem } from "@material-ui/core";
-import { Print } from "@material-ui/icons";
+
 
 import { Search as SearchIcon } from "react-feather";
 import {
@@ -48,6 +48,8 @@ import {
 } from "@material-ui/core";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { Report } from "@material-ui/icons";
+import { format } from "date-fns";
 
 export default function ListStudent({ openn, ...rest }) {
   const dispatch = useDispatch();
@@ -120,23 +122,31 @@ export default function ListStudent({ openn, ...rest }) {
     console.log("added");
   };
 
+useEffect(()=>{
+  async function fetchData(){
+    await dispatch(getAllStudentsBySchoolUserAction());
+    await dispatch(getAllSchool());
+  }
+  fetchData();
+  
+},[])
+
   useEffect(() => {
     async function fetchData() {
       if (!studentsState.loading) {
         if (studentsState.students) {
           setStudents(studentsState.students);
-          await dispatch(getAllStudentsBySchoolUserAction());
         }
         if (!schoolsState.loading) {
           if (schoolsState.schools) {
             setSchools(schoolsState.schools);
-            await dispatch(getAllSchool());
+           
           }
         }
       }
     }
     fetchData();
-  }, [studentsState.students, schoolsState.schools]);
+  }, [!studentsState.students,! schoolsState.schools]);
 
   const handleCloseDelete = () => {
     setOpenDelete(false);
@@ -148,12 +158,53 @@ export default function ListStudent({ openn, ...rest }) {
     window.location.reload();
   };
 
-  const downaloadPdf = async () => {
+  const generateListOfAllStudent =()=> {
     const doc = new jsPDF();
+     const tableColumn=['Last Name','First Name','Email','StudentCode','Gender','Level']
+    const tableRows=[]
 
-    doc.text("Student List", 20, 10);
-
-    doc.save("table.pdf");
+    students.map(student =>{
+      const studentData=[
+        student.lastname,
+        student.firstname,
+        student.email,
+        student.studentcode,
+        student.gender,
+        student.level,
+       // format(new Date(student.updated_at), "yyyy-MM-dd")
+      ];
+      tableRows.push(studentData);
+      console.log(studentData)
+    });
+    const imageData=`<img src="../../Assets/images/reb.jpg" alt="" className="topAvatar" />`;
+   console.log('imge...',imageData)
+    doc.autoTable(tableColumn, tableRows, { 
+      startY: 20,
+      theme: "grid",
+     margin: 10,
+     styles: {
+       font: "courier",
+       fontSize: 12,
+       overflow: "linebreak",
+       cellPadding: 1,
+       halign: "left"
+     },
+     });
+  const date = Date().split(" ");
+  const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
+  doc.text(" Students List.", 14, 15);
+ doc.addImage(imageData, 'JPEG', 15, 40, 180, 160);
+ doc.save(`report_${dateStr}.pdf`);
+  };
+  const reportStudents = students.filter(student => student.status === "completed");
+  const assignColorToTicketStatus = student => {
+    if (student.status === "completed") {
+      return "p-3 mb-2 bg-success text-white";
+    } else if (student.status === "in_progress") {
+      return "p-3 mb-2 bg-warning text-dark";
+    } else if (student.status === "opened") {
+      return "p-3 mb-2 bg-light text-dark";
+    }
   };
 
   const searchHandle = async (e) => {};
@@ -183,11 +234,22 @@ export default function ListStudent({ openn, ...rest }) {
           </CardContent>
         </Card>
       </Box>
-
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+    
+    <Box>
+    <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Add new Student
       </Button>
+      <IconButton
+                  aria-label="print"
+                  color="secondary"
+                  onClick={() => generateListOfAllStudent(reportStudents)}
+                >
+                  <Report />
+                  Generate Report
+                </IconButton>
 
+    </Box>
+     
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Student Information</DialogTitle>
         <DialogContent>
@@ -322,14 +384,9 @@ export default function ListStudent({ openn, ...rest }) {
                 <TableCell>School Level</TableCell>
                 <TableCell>Create Date</TableCell>
                 <TableCell>Update Date</TableCell>
+               
                 <TableCell>Action</TableCell>
-                <IconButton
-                  aria-label="delete"
-                  color="secondary"
-                  onClick={() => downaloadPdf()}
-                >
-                  <Print />
-                </IconButton>
+               
               </TableRow>
             </TableHead>
             <TableBody>
@@ -430,7 +487,11 @@ export default function ListStudent({ openn, ...rest }) {
                     <TableCell>
                       {moment(student.updatedAt).format("DD/MM/YYYY")}
                     </TableCell>
+                    
                     <TableCell color="textPrimary" variant="body1">
+                    <TableBody className={assignColorToTicketStatus(student)}>
+                  {student.status}
+                </TableBody>
                       <IconButton
                         aria-label="update"
                         onClick={() => {

@@ -1,5 +1,5 @@
+import React from 'react'
 import Button from "@mui/material/Button";
-import * as React from "react";
 import Box from "@mui/material/Box";
 
 import TextField from "@mui/material/TextField";
@@ -156,22 +156,29 @@ export default function District({ openn, ...rest }) {
     // setSearch(false);
     // await dispatch(getAllExam());
   };
+  useEffect(()=>{
+    async function fetchData(){
+      await dispatch(getAllDistrict());
+      await dispatch(getAllExam());
+    }
+    fetchData();
+  },[])
 
   useEffect(async () => {
      
       if (!getDistrictsState.loading) {
         if (getDistrictsState.districts) {
           setDistricts(getDistrictsState.districts);
-          await dispatch(getAllDistrict());
+       
         }
       }
     if (!examsState.loading) {
       if (examsState.exams) {
         setExams(examsState.exams);
-        await dispatch(getAllExam());
+      
       }
     }
-  }, [examsState.exams,getDistrictsState.districts]);
+  }, [!examsState.exams,!getDistrictsState.districts]);
 
   const searchHandle = async (e) => {};
 

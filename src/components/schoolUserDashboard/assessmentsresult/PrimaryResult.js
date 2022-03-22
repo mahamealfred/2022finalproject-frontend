@@ -12,7 +12,9 @@ import { DialogTitle } from "@mui/material";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 import { MenuItem } from "@material-ui/core";
-
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { Report } from "@material-ui/icons";
 import { Search as SearchIcon } from "react-feather";
 import {
   Card,
@@ -27,6 +29,8 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import logo from "../../../images/reb.jpg";
 
 
 export default function PrimaryResult({ openn, ...rest }) {
@@ -63,17 +67,70 @@ export default function PrimaryResult({ openn, ...rest }) {
     async function fetchData() {
       await dispatch(getAvailablePrimaryExamsDoneAction());
       setExamId(exams);
-
       if (!primaryResultsState.loading) {
         if (primaryResultsState.results) {
           setResults(primaryResultsState.results);
-          await dispatch(getPrimaryResultsBySchoolUserAction(examId));
+          await dispatch(getPrimaryResultsBySchoolUserAction(examId)); 
         }
       }
+      
     }
     fetchData();
   }, [primaryResultsState.results]);
+ 
 
+  const generatePrimaryStudentsResult =()=> {
+    const doc = new jsPDF();
+     const tableColumn=['Full Name','StudentCode','Gender','Assessment','Marks','Level']
+    const tableRows=[]
+
+    results.map(result =>{
+      const fullname=result.student.lastname+' '+result.student.firstname;
+      const studentResult=[
+        fullname,
+        result.student.studentcode,
+        result.student.gender,
+        result.exam.name,
+        result.marks,
+        result.student.level,
+       // format(new Date(student.updated_at), "yyyy-MM-dd")
+      ];
+      tableRows.push(studentResult);
+      console.log(studentResult)
+    });
+    doc.addImage(logo, 'JPG', 10, 10, 30, 30);
+   results.map(result=>{
+    doc.text(`${result.exam.level} ${result.exam.name} Results`, 12, 15);
+  })
+    doc.autoTable(tableColumn, tableRows, { 
+      startY: 20,
+      theme: "grid",
+     margin: 10,
+     marginBottom:20,
+     alignItems:"center",
+     styles: {
+       font: "courier",
+       fontSize: 12,
+       overflow: "linebreak",
+       cellPadding: 1,
+       halign: "left"
+     },
+     });
+  const date = Date().split(" ");
+
+  const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
+  doc.save(`report_${dateStr}.pdf`);
+  };
+  //const reportResults = results.filter(result => result.status === "completed");
+  const assignColorToTicketStatus = result => {
+    if (result.status === "completed") {
+      return "p-3 mb-2 bg-success text-white";
+    } else if (result.status === "in_progress") {
+      return "p-3 mb-2 bg-warning text-dark";
+    } else if (result.status === "opened") {
+      return "p-3 mb-2 bg-light text-dark";
+    }
+  };
 
   const searchHandle = async (e) => {};
 
@@ -110,8 +167,10 @@ export default function PrimaryResult({ openn, ...rest }) {
                   placeholder="Search Student"
                   variant="outlined"
                 />
+                
               </Box>
             </CardContent>
+           
 
             <Box sx={{ maxWidth: 300 }}>
               <TextField
@@ -129,7 +188,16 @@ export default function PrimaryResult({ openn, ...rest }) {
                   </MenuItem>
                 ))}
               </TextField>
+              <IconButton
+                  aria-label="print"
+                  color="secondary"
+                  onClick={() => generatePrimaryStudentsResult()}
+                >
+                  <Report />
+                  Generate Report
+                </IconButton>
             </Box>
+            
           </Card>
         </Box>
 

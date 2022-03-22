@@ -1,5 +1,7 @@
 import React from "react";
 import "./sidebar.css";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import {
   LineStyle,
   Timeline,

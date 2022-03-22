@@ -77,14 +77,14 @@ export default function FeaturedInfo() {
               <span className="featuredTitle">Performance in Assessment</span>
               <div className="featuredMoneyContainer">
                 <span className="featuredStudent">
-                  {(
+                  {Math.round(
                     (studentsState.students[0].ordinaryStudentPercentage[0]
                       .total /
                       (studentsState.students[0].ordinaryStudentPercentage[0]
                         .AssessmentCount *
                         100)) *
                     100
-                  ).toFixed(2)}
+                  )}
                 </span>
                 <span className="featuredRate">
                   %
@@ -146,14 +146,14 @@ export default function FeaturedInfo() {
               <span className="featuredTitle">Performance in Assessment</span>
               <div className="featuredMoneyContainer">
                 <span className="featuredStudent">
-                  {(
+                  {Math.round(
                     (studentsState.students[0].primaryStudentPercentage[0]
                       .total /
                       (studentsState.students[0].primaryStudentPercentage[0]
                         .AssessmentCount *
                         100)) *
                     100
-                  ).toFixed(2)}
+                  )}
                 </span>
                 {/* {console.log('student perc..',studentsState.students[0].primaryStudentPercentage[0].total)} */}
                 <span className="featuredRate">

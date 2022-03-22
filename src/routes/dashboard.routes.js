@@ -1,3 +1,4 @@
+import React from 'react'
 import Home from "../components/pages/home/Home";
 import { useRouteMatch, Switch, Route } from "react-router-dom";
 import UserList from "../components/pages/userList/UserList";
@@ -12,9 +13,38 @@ import Dashboard from "../Views/Dashboard";
 import PrivateRoute from "./PrivateRoute";
 import Result from "../components/pages/result/Result";
 import District from "../components/pages/district/District";
+//import {decode} from "../helpers/jwtTokenizer";
+import {useEffect} from "react";
+import jwt from "jsonwebtoken";
+import { useHistory } from 'react-router-dom';
 
 function App() {
+
+  const decode= (token) => {
+    const JWT_SECRET="mytokensecret";
+    const payload =jwt.verify(token, JWT_SECRET);
+     return payload;
+  }
+  const history= useHistory();
+  useEffect(() => {
+  
+    const token =localStorage.getItem('x-access-token');
+    if (token) {
+    const {exp}=decode(token);
+    console.log(history)
+    if(Date.now()>=exp*1000){
+      localStorage.removeItem("x-access-token")
+     return history.push('/', { push: true })
+    }
+    else{
+      return null
+    }
+  }
+  return history.push('/', { push: true })
+
+  }, [])
   const { path } = useRouteMatch();
+
   return (
     <Switch>
       <Dashboard>

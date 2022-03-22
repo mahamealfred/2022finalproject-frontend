@@ -2,7 +2,7 @@
 import './pieChart.css';
 import 'chart.js/auto';
 import {Pie} from 'react-chartjs-2'
-
+import React from 'react'
 function PieChart() {
   return (
     <div className="pieChart">

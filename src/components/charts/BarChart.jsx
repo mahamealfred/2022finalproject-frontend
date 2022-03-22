@@ -1,4 +1,5 @@
 
+import React from 'react'
 import './pieChart.css';
 import 'chart.js/auto';
 import {Bar} from 'react-chartjs-2'

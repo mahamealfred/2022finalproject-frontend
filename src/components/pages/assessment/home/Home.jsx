@@ -1,4 +1,4 @@
-
+import React from 'react'
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import {Link} from "react-router-dom";
@@ -17,8 +17,8 @@ export default function Home() {
     <HomeTopbar/>
     <div className='header'>
       <div className='headerTitles'>
-      <span className='headerTitlesSm'>Primary and Ordinary level Quality Education Booster System</span>
-      <span className='headerTitlesLg'>REB</span>
+      <span className='headerTitlesSm'>REB</span>
+      {/* <span className='headerTitlesLg'>REB</span> */}
       </div>
    <img 
    className='headerImg'

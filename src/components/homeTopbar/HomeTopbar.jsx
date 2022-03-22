@@ -21,7 +21,7 @@ export default function HomeTopbar() {
         </div>
         <div className="leftTopBar">
           <span className="logo">
-            Primary and Ordinary level Quality Eduction 5 Booster{" "}
+            Primary and Ordinary level Quality Eduction  Booster{" "}
           </span>
         </div>
         <div className="toRight">

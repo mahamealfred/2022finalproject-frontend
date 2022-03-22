@@ -36,7 +36,8 @@ import getPercentageMarksPrimaryResultsBySchoolUserReducer from './getPercentage
 import addQuestionReducer from "./addQuestionReducer";
 import addDistrictReducer from "./addDistrictsReducer";
 import getQuestionByExamIdReducer from "./getQuestionByExamIdReducer";
-import addResultReducer from "./addResultReducer"
+import addResultReducer from "./addResultReducer";
+import getAllStudentNumbersReducer from "./getAllStudentsNumbersReducer";
 const allReducers = combineReducers({
   users: usersReducer,
   students: studentsReducer,
@@ -75,6 +76,7 @@ const allReducers = combineReducers({
   addQuestion:addQuestionReducer,
   getQuestionByExamId: getQuestionByExamIdReducer,
   addResult:addResultReducer,
+  getAllStudentNumbers: getAllStudentNumbersReducer,
 
 });
 

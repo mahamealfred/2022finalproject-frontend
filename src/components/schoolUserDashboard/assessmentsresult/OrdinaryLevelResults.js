@@ -28,6 +28,10 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { Report } from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
 
 export default function OrdinaryLevelResults({ openn, ...rest }) {
   const dispatch = useDispatch();
@@ -72,6 +76,61 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
     }
     fetchData();
   }, [ordinaryResultsState.results]);
+
+  
+  const generateOrdinaryLevelStudentsResult =()=> {
+    const doc = new jsPDF();
+     const tableColumn=['Full Name','StudentCode','Gender','Assessment','Marks','Level']
+    const tableRows=[]
+
+    results.map(result =>{
+      const fullname=result.student.lastname+' '+result.student.firstname;
+      const studentResult=[
+        fullname,
+        result.student.studentcode,
+        result.student.gender,
+        result.exam.name,
+        result.marks,
+        result.student.level,
+       // format(new Date(student.updated_at), "yyyy-MM-dd")
+      ];
+      tableRows.push(studentResult);
+      console.log(studentResult)
+    });
+    const imageData=`<img src="../../Assets/images/reb.jpg" alt="" className="topAvatar" />`;
+   console.log('imge...',imageData)
+    doc.autoTable(tableColumn, tableRows, { 
+      startY: 20,
+      theme: "grid",
+     margin: 10,
+     styles: {
+       font: "courier",
+       fontSize: 12,
+       overflow: "linebreak",
+       cellPadding: 1,
+       halign: "left"
+     },
+     });
+  const date = Date().split(" ");
+ 
+  results.map(result=>{
+    doc.text(`${result.exam.level} ${result.exam.name} Results`, 12, 15);
+  })
+  const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
+  
+ doc.addImage(imageData, 'JPEG', 15, 40, 180, 160);
+ doc.save(`report_${dateStr}.pdf`);
+  };
+  //const reportResults = results.filter(result => result.status === "completed");
+  const assignColorToTicketStatus = result => {
+    if (result.status === "completed") {
+      return "p-3 mb-2 bg-success text-white";
+    } else if (result.status === "in_progress") {
+      return "p-3 mb-2 bg-warning text-dark";
+    } else if (result.status === "opened") {
+      return "p-3 mb-2 bg-light text-dark";
+    }
+  };
 
   const searchHandle = async (e) => {};
 
@@ -121,6 +180,14 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
                   </MenuItem>
                 ))}
               </TextField>
+              <IconButton
+                  aria-label="print"
+                  color="secondary"
+                  onClick={() => generateOrdinaryLevelStudentsResult()}
+                >
+                  <Report />
+                  Generate Report
+                </IconButton>
             </Box>
           </Card>
         </Box>
