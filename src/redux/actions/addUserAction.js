@@ -1,4 +1,7 @@
 import axios from "axios";
+import * as React from "react";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
 import {
     ADD_USER_REQUEST,
@@ -10,12 +13,12 @@ import {
 export const addUserAction = (data, history) => async (dispatch) => {
   try {
     dispatch(addUserRequest());
-    const token = await localStorage.getItem("token");
+    const token = await localStorage.getItem("x-access-token");
     let headers;
     if (token) {
       headers = {
         "Content-Type": "application/json",
-        "my-token": `${token}`,
+        token: `${token}`,
       };
     } else {
       headers = {
@@ -33,8 +36,8 @@ export const addUserAction = (data, history) => async (dispatch) => {
     );
     const user = await res.data;
     console.log(data)
-    dispatch(addUserSuccess({ data: user.data }));
-    alert("Your account has been created successfully");
+    dispatch(addUserSuccess({ data: user.data ,message:user.message}));
+   alert('Account was successful created')
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;

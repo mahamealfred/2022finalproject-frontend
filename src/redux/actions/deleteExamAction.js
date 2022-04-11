@@ -1,3 +1,4 @@
+import { AlarmTwoTone } from "@material-ui/icons";
 import axios from "axios";
 import {
     DELETE_EXAM_REQUEST,
@@ -8,12 +9,12 @@ import {
 export const deleteExamAction = (id) => async (dispatch) => {
   try {
     dispatch(deleteExamRequest());
-    const token = await localStorage.getItem("token");
+    const token = await localStorage.getItem("x-access-token");
     let headers;
     if (token) {
       headers = {
         "Content-Type": "application/json",
-        "my-token": `${token}`,
+        token: `${token}`,
       };
     } else {
       headers = {
@@ -24,7 +25,7 @@ export const deleteExamAction = (id) => async (dispatch) => {
       headers: headers,
     });
     dispatch(deleteExamSuccess());
-   
+   AlarmTwoTone('Deleted Successull')
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;

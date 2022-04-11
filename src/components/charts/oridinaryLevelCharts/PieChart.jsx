@@ -31,7 +31,7 @@ function PieChart() {
 
       await axios
         .get(
-          `http://localhost:8000/results/percentagemarks`,
+          `http://localhost:8000/results/ordinarylevelpercentagemarks`,
           {
             headers: headers,
           }
@@ -73,7 +73,7 @@ function PieChart() {
   }, []);
   return (
     <div className="pieChart">
-    <span className="pieChartTitle">Students Performance Based on Gender In P6</span>
+    <span className="pieChartTitle">Students Performance Based on Gender In S3</span>
     <Pie
     data={data}
     >

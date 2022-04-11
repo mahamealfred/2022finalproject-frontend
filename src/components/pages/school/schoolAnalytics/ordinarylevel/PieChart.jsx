@@ -5,12 +5,14 @@ import {Pie} from 'react-chartjs-2'
 import React from 'react'
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import {useParams} from 'react-router-dom';
 function PieChart() {
+  const params=useParams();
   const [data, setData] = useState({ datasets: [] });
 
   useEffect(() => {
     async function fetchData() {
+      const id=params.id
       const labelSet = [];
       const dataSet1 = [];
       const dataSet2 = [];
@@ -31,7 +33,7 @@ function PieChart() {
 
       await axios
         .get(
-          `http://localhost:8000/results/percentagemarks`,
+          `http://localhost:8000/results/ordinarylevelpercentagebasedongender/${id}`,
           {
             headers: headers,
           }
@@ -47,7 +49,6 @@ function PieChart() {
             const genderValue = val["student.gender"];
             const finalTotal = ((val.total / (resCount * 100)) * 100).toFixed( 2);
             dataSet1.push(finalTotal);
-
             genderSet.push(genderValue);
           }
 
@@ -73,12 +74,15 @@ function PieChart() {
   }, []);
   return (
     <div className="pieChart">
-    <span className="pieChartTitle">Students Performance Based on Gender In P6</span>
-    <Pie
+    <span className="pieChartTitle">Students Performance Based on Gender In S3</span>
+    <div className='chart' >
+    <Pie 
     data={data}
     >
 
     </Pie>
+    </div>
+   
     </div>
   );
 }

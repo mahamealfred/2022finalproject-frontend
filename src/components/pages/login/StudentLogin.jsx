@@ -27,7 +27,7 @@ import {
   
     const paperStyle = {
       padding: 20,
-      height: "60vh",
+      height: "75vh",
       width: 280,
       margin: "80px auto",
     };

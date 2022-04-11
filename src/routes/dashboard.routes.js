@@ -13,6 +13,7 @@ import Dashboard from "../Views/Dashboard";
 import PrivateRoute from "./PrivateRoute";
 import Result from "../components/pages/result/Result";
 import District from "../components/pages/district/District";
+import StudentsInSchool from "../components/pages/school/StudentsInSchool";
 //import {decode} from "../helpers/jwtTokenizer";
 import {useEffect} from "react";
 import jwt from "jsonwebtoken";
@@ -70,7 +71,7 @@ function App() {
                 path={`${path}/newUser`}
                 component={NewUser}
               />
-              <PrivateRoute exact path={`${path}/school`} component={School} />
+              <PrivateRoute exact path={`${path}/schools`} component={School} />
               <PrivateRoute exact path={`${path}/exams`} component={Exam} />
               <PrivateRoute
                 exact
@@ -83,6 +84,7 @@ function App() {
                 path={`${path}/districts`}
                 component={District}
               />
+              <PrivateRoute exact path={`${path}/studentsinschool/:id`} component={StudentsInSchool}/>
             </>
           )}
         />

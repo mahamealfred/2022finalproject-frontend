@@ -3,15 +3,16 @@ import React from 'react'
 import { Bar } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {useParams} from 'react-router-dom';
 
 
 
-
-function BarChartOrd() {
-  
+function BarChart() {
+    const params=useParams();
     const [data, setData] = useState({datasets:[]});
 
   useEffect(() => {
+    const id =params.id;
     const fetchData = async () => {
       const labelSet = [];
       const dataSet1 = [];
@@ -30,21 +31,21 @@ function BarChartOrd() {
         };
       }
   
-       await axios.get(`http://localhost:8000/results/percentagemarksprimaryresults`, {
+       await axios.get(`http://localhost:8000/results/primarypercentageinassessmentinspecificschool/${id}`, {
         headers: headers,
     }).then(function (response) {
         const res = response.data.data;
         return res;
         })
         .then(function (res) {
-          labelSet.push(res.length + "  Available Assessment Results ");
+          labelSet.push(res.length + "Available Assessment Results");
           for (const val of res) {
             const resCount = val.AssessmentCount;
             const examName=val['exam.Name']
             const finalTotal =( (val.total / (resCount * 100)) * 100).toFixed(2);
             dataSet1.push(finalTotal);
             examSet.push(examName)
-            // console.log("resp data...:", res);
+             console.log("resp data...data:", res);
             // console.log("resp exam Names...:", examName);
           }
           console.log("resp data...:", res);
@@ -91,7 +92,7 @@ function BarChartOrd() {
   }, []);
   return (
     <div className="barChart">
-    <span className="barChartTitle">Student Performance P6</span>
+    <span className="barChartTitle">P6 Students Performance </span>
       
       <Bar
         data={data}
@@ -112,4 +113,4 @@ function BarChartOrd() {
   );
 }
 
-export default BarChartOrd;
+export default BarChart;

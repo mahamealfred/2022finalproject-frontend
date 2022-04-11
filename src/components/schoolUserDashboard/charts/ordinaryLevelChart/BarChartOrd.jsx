@@ -12,6 +12,7 @@ function BarChart() {
       const labelSet = [];
       const dataSet1 = [];
       const dataSet2 = [];
+      const examSet=[];
       const token = await localStorage.getItem("x-access-token");
       let headers;
       if (token) {
@@ -37,17 +38,15 @@ function BarChart() {
           labelSet.push(res.length + "  Available Assessment Results ");
           for (const val of res) {
             const resCount = val.AssessmentCount;
+            const examName=val['exam.Name']
             const finalTotal =( (val.total / (resCount * 100)) * 100).toFixed(2);
             dataSet1.push(finalTotal);
+            examSet.push(examName);
           }
           console.log("resp...:", res);
 
           setData({
-            labels: [
-              "Chemistry %",
-              "Kinyarwanda Assessment %",
-              "Social Study %",
-            ],
+            labels:examSet,
             datasets: [
               {
                 label: labelSet,

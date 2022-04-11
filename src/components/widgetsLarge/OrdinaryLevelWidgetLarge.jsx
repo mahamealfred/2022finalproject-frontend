@@ -1,9 +1,9 @@
 import React from 'react'
-import './widgetLarge.css';
+import './ordinaryLevelWidgetLarge.css';
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function WidgetLarge() {
+export default function OrdinaryLevelWidgetLarge() {
 
     const [data,setData]=useState([]);
     console.log("all data",data)
@@ -25,7 +25,7 @@ export default function WidgetLarge() {
     
           await axios
             .get(
-              `http://localhost:8000/results/topprimaryschool`,
+              `http://localhost:8000/results/topordinarylevelresult`,
               {
                 headers: headers,
               }
@@ -41,10 +41,7 @@ export default function WidgetLarge() {
             //   for (const val of res) {
             //     const schoolName=val['school.name'];
             //     console.log("schoool name", schoolName)
-            //   }
-    
-             
-              
+            //   } 
             })
             .catch(function(error) {
               console.log("error", error);
@@ -55,7 +52,7 @@ export default function WidgetLarge() {
     
     return (
         <div className="widgetLarge">
-            <h3 className="widgetLargeTitle">P6 schools Performance</h3>
+            <h3 className="widgetLargeTitle">S3 schools Performance</h3>
           
             <table className="widgetLargeTable">
                 <tr className="widgetLargeTr">
@@ -69,7 +66,7 @@ export default function WidgetLarge() {
                    <td className="widgetLargeUser">  
                 <span className="widgetLargName">{d['school.name']}</span>
                    </td>
-                   <td className="widgetLargeAmount">P6</td>
+                   <td className="widgetLargeAmount">S3</td>
                    <td className="widgetLargeAmount">{(d['results.avarage'])}%</td>
                 </tr>
                            )))

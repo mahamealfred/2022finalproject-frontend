@@ -9,6 +9,8 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -25,7 +27,7 @@ export default function Login() {
 
   const paperStyle = {
     padding: 20,
-    height: "60vh",
+    height: "70vh",
     width: 280,
     margin: "80px auto",
   };
@@ -54,6 +56,7 @@ export default function Login() {
   const onSubmit = (values, props) => {
     console.log(values);
     dispatch(loginAction(values, history));
+    
   };
   return (
     <Grid>
@@ -99,8 +102,16 @@ export default function Login() {
                   control={<Checkbox color="primary" />}
                   label="Remember me"
                 />
-                 <p>{userLogin.error}</p>
-               
+                {
+                  !userLogin.error? null:
+                  <Stack sx={{ width: '100%' }} spacing={2}>
+              <Alert variant="filled" severity="error">
+                  {userLogin.error}
+                   </Alert>
+                   </Stack>
+                }
+                 {/* <p>{userLogin.error}</p>
+                */}
                 <Button
                   type="submit"
                   color="primary"

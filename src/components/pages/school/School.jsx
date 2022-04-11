@@ -1,4 +1,3 @@
-
 import Button from "@mui/material/Button";
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -9,19 +8,15 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import {MenuItem} from "@material-ui/core";
+import { MenuItem } from "@material-ui/core";
 //import MenuItem from "@mui/material/MenuItem";
-
-
-
-
 
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { getAllSchool } from "../../../redux/actions/schoolsAction";
 import { addSchoolAction } from "../../../redux/actions/addSchoolAction";
-import { updateSchoolAction} from "../../../redux/actions/updateSchoolAction";
+import { updateSchoolAction } from "../../../redux/actions/updateSchoolAction";
 import { deleteSchoolAction } from "../../../redux/actions/deleteSchoolAction";
 import { getAllDistrict } from "../../../redux/actions/districtsAction";
 
@@ -30,6 +25,8 @@ import BorderColorIcon from "@material-ui/icons/BorderColor";
 import IconButton from "@material-ui/core/IconButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import moment from "moment";
+import { Link } from "react-router-dom";
+import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 
 import { Search as SearchIcon } from "react-feather";
 import {
@@ -49,26 +46,22 @@ import {
 export default function School({ openn, ...rest }) {
   const dispatch = useDispatch();
   const schoolsState = useSelector((state) => state.schools);
-  const districtsState=useSelector((state) => state.districts);
+  const districtsState = useSelector((state) => state.districts);
   const [schools, setSchools] = useState([]);
-  const [districts,setDistricts]=useState([]);
+  const [districts, setDistricts] = useState([]);
   const [open, setOpen] = React.useState(false);
 
   const [name, setName] = useState("");
   const [districtId, setDistrictId] = useState("");
   const [sector, setSector] = useState("");
   const [cell, setCell] = useState("");
-  const [fullname,setFullname]=useState("");
-  const [email,setEmail]=useState("");
-  const [schoolId,setSchoolId]=useState("");
-
-
-
-
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [schoolId, setSchoolId] = useState("");
 
   const addSchool = useSelector((state) => state.addSchool);
   const updateSchool = useSelector((state) => state.updateSchool);
-  const deleteSchool=useSelector((state)=>state.deleteSchool)
+  const deleteSchool = useSelector((state) => state.deleteSchool);
   //const [value, setValue] = React.useState(new Date());
   const [results, setResults] = useState({});
   const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
@@ -86,15 +79,15 @@ export default function School({ openn, ...rest }) {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-const handleCloseUpdate=()=>{
-  setName("");
-  setDistrictId("");
-  setSector("");
-  setCell("");
-  setFullname("");
-  setEmail("");
-  setOpenUpdate(false);
-}
+  const handleCloseUpdate = () => {
+    setName("");
+    setDistrictId("");
+    setSector("");
+    setCell("");
+    setFullname("");
+    setEmail("");
+    setOpenUpdate(false);
+  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -105,10 +98,9 @@ const handleCloseUpdate=()=>{
     setOpenDelete(false);
   };
 
-
   const handleAdd = async () => {
     await dispatch(
-      addSchoolAction({ name, districtId,sector,cell,fullname,email})
+      addSchoolAction({ name, districtId, sector, cell, fullname, email })
     );
     setOpen(false);
     setName("");
@@ -118,58 +110,59 @@ const handleCloseUpdate=()=>{
     setFullname("");
     setEmail("");
     await dispatch(getAllSchool());
-    
+
     console.log("added");
   };
   console.log(name);
+  useEffect(() => {
+    async function fetchData() {
+      await dispatch(getAllSchool());
+      await dispatch(getAllDistrict());
+    }
+    fetchData();
+  }, []);
 
-  useEffect( () => {
-   async function fetchData(){
-    if (!schoolsState.loading) {
-      if (schoolsState.schools) {
-        setSchools(schoolsState.schools);
-        await dispatch(getAllSchool());
+  useEffect(() => {
+    async function fetchData() {
+      if (!schoolsState.loading) {
+        if (schoolsState.schools) {
+          setSchools(schoolsState.schools);
+        }
+      }
+      if (!districtsState.loading) {
+        if (districtsState.districts) {
+          setDistricts(districtsState.districts);
+        }
       }
     }
-    if (!districtsState.loading) {
-      if (districtsState.districts) {
-        setDistricts(districtsState.districts);
-        await dispatch(getAllDistrict());
-      }
-    }
-    
-   }
-   fetchData();
-  }, [schoolsState.schools,districtsState.districts]);
-
+    fetchData();
+  }, [schoolsState.schools, districtsState.districts]);
 
   const handleUpdate = async () => {
     if (!name) {
       return alert("name is required");
     }
     console.log(schoolId);
-    await dispatch(updateSchoolAction({ name,districtId,sector,cell,id: schoolId }));
+    await dispatch(
+      updateSchoolAction({ name, districtId, sector, cell, id: schoolId })
+    );
     setOpenUpdate(false);
     setName("");
     setDistrictId("");
     setSector("");
     setCell("");
-   
-    setSearch(false)
+
+    setSearch(false);
     await dispatch(getAllSchool());
   };
 
-  const handleDelete = async () =>{
-    await dispatch(deleteSchoolAction(schoolId))
+  const handleDelete = async () => {
+    await dispatch(deleteSchoolAction(schoolId));
     setOpenDelete(false);
     window.location.reload();
-  }
- 
-
-
-  const searchHandle = async (e) => {
-   
   };
+
+  const searchHandle = async (e) => {};
   console.log(results);
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
@@ -224,7 +217,7 @@ const handleCloseUpdate=()=>{
               value={name}
               variant="outlined"
             />
-           
+
             <TextField
               id="outlined-select-district"
               select
@@ -232,7 +225,7 @@ const handleCloseUpdate=()=>{
               value={districtId}
               onChange={(e) => setDistrictId(e.target.value)}
               label="District"
-               helperText="Please select your District"
+              helperText="Please select your District"
             >
               {districts.map((option) => (
                 <MenuItem key={option.id} value={option.id}>
@@ -240,7 +233,7 @@ const handleCloseUpdate=()=>{
                 </MenuItem>
               ))}
             </TextField>
-             <TextField
+            <TextField
               id="outlined-basic"
               label="Sector"
               name="sector"
@@ -248,7 +241,7 @@ const handleCloseUpdate=()=>{
               value={sector}
               variant="outlined"
             />
-           <TextField
+            <TextField
               id="outlined-basic"
               label="Cell"
               name="cell"
@@ -256,26 +249,24 @@ const handleCloseUpdate=()=>{
               value={cell}
               variant="outlined"
             />
-            
+
             <DialogTitle>School User Information</DialogTitle>
-             <TextField
+            <TextField
               id="outlined-basic"
               label="Full Name"
               name="fullname"
               onChange={(e) => setFullname(e.target.value)}
               value={fullname}
               variant="outlined"
-            /> 
-             <TextField
+            />
+            <TextField
               id="outlined-basic"
               label="Email"
               name="email"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               variant="outlined"
-            /> 
-
-          
+            />
           </Box>
         </DialogContent>
         <DialogActions>
@@ -285,7 +276,6 @@ const handleCloseUpdate=()=>{
           </Button>
         </DialogActions>
       </Dialog>
-
 
       <Dialog open={openUpdate} onClose={handleCloseUpdate}>
         <DialogTitle>Update School Information</DialogTitle>
@@ -310,15 +300,15 @@ const handleCloseUpdate=()=>{
               value={name}
               variant="outlined"
             />
-           
-           <TextField
+
+            <TextField
               id="outlined-select-district"
               select
               name="district"
               value={districtId}
               onChange={(e) => setDistrictId(e.target.value)}
               label="District"
-               helperText="Please select your District"
+              helperText="Please select your District"
             >
               {districts.map((option) => (
                 <MenuItem key={option.id} value={option.id}>
@@ -326,7 +316,7 @@ const handleCloseUpdate=()=>{
                 </MenuItem>
               ))}
             </TextField>
-             <TextField
+            <TextField
               id="outlined-basic"
               label="Sector"
               name="sector"
@@ -334,7 +324,7 @@ const handleCloseUpdate=()=>{
               value={sector}
               variant="outlined"
             />
-           <TextField
+            <TextField
               id="outlined-basic"
               label="Cell"
               name="cell"
@@ -342,8 +332,6 @@ const handleCloseUpdate=()=>{
               value={cell}
               variant="outlined"
             />
-
-          
           </Box>
         </DialogContent>
         <DialogActions>
@@ -362,7 +350,7 @@ const handleCloseUpdate=()=>{
         <DialogTitle id="alert-dialog-title">{"Confirm"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-          Are you sure you want to delete the School below "{name}"?
+            Are you sure you want to delete the School below "{name}"?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -370,13 +358,10 @@ const handleCloseUpdate=()=>{
             Cancel
           </Button>
           <Button onClick={handleDelete} color="primary" autoFocus>
-            {deleteSchool.loading? "Loading..." : "Delete"}
+            {deleteSchool.loading ? "Loading..." : "Delete"}
           </Button>
         </DialogActions>
       </Dialog>
-
-      
-
 
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
@@ -393,15 +378,13 @@ const handleCloseUpdate=()=>{
               </TableRow>
             </TableHead>
             <TableBody>
-             
-                <>
-                  {schools.slice(0, limit).map((school) => (
+              <>
+                {schools.slice(0, limit).map((school) => (
                   <TableRow
                     hover
                     key={school.id}
                     selected={selectedSchoolIds.indexOf(school.id) !== -1}
                   >
-        
                     <TableCell>
                       <Box
                         sx={{
@@ -450,7 +433,7 @@ const handleCloseUpdate=()=>{
                         </Typography>
                       </Box>
                     </TableCell>
-                    
+
                     <TableCell>
                       {moment(school.createdAt).format("DD/MM/YYYY")}
                     </TableCell>
@@ -458,6 +441,11 @@ const handleCloseUpdate=()=>{
                       {moment(school.updatedAt).format("DD/MM/YYYY")}
                     </TableCell>
                     <TableCell color="textPrimary" variant="body1">
+                    <IconButton arial-label="add">
+                        <Link to={`/dashboard/studentsinschool/${school.id}`}>
+                          <ViewComfyIcon/>
+                        </Link>
+                      </IconButton>
                       <IconButton
                         aria-label="update"
                         onClick={() => {
@@ -488,9 +476,8 @@ const handleCloseUpdate=()=>{
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                  )) }
-                </>
-            
+                ))}
+              </>
             </TableBody>
           </Table>
         </Box>

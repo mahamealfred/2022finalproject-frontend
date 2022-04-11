@@ -14,6 +14,7 @@ function PieChart() {
       const labelSet = [];
       const dataSet1 = [];
       const dataSet2 = [];
+      const genderSet=[];
       const token = await localStorage.getItem("x-access-token");
       let headers;
       if (token) {
@@ -39,15 +40,14 @@ function PieChart() {
           labelSet.push( "Assessments Results ");
           for (const val of res) {
             const resCount = val.AssessmentCount;
+            const genderValue=val['student.gender']
             const finalTotal = ((val.total / (resCount * 100)) * 100).toFixed(2);
             dataSet1.push(finalTotal);
+            genderSet.push(genderValue)
           }
           console.log("lebal set...:", res);
           setData({
-            labels: [
-            "Male %",
-            "Female %",
-          ],
+            labels:genderSet,
           datasets: [
             {
               label: labelSet,

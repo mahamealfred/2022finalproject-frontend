@@ -29,7 +29,6 @@ export default function Question({ ...rest }) {
   const [answers, setAnswers] = useState([]);
   const [examId, setExamId] = useState("");
   const params = useParams();
-
   const studentData = JSON.parse(localStorage.getItem("student-data"));
   const fullname = studentData ? studentData.fullName : "Dear, Student";
 
@@ -45,14 +44,13 @@ export default function Question({ ...rest }) {
           hr--;
         }
       }
-
       if (hr.toString().length < 2) hr = "0" + hr;
       if (mm.toString().length < 2) mm = "0" + mm;
       if (ss.toString().length < 2) ss = "0" + ss;
       setRemainingTime(hr + " : " + mm + " : " + ss);
     }, 1000);
   };
-
+  //console.log("kkk",getExamAndQuestionState.exams[0])
   useEffect(() => {
     const id = params.id;
     setExamId(id);
@@ -62,6 +60,7 @@ export default function Question({ ...rest }) {
 
     clock(1, 1, 10);
     fetchData();
+   
   }, []);
   const handleShuffle = (options) => {
     return options.sort(() => Math.random() - 0.5);
@@ -133,7 +132,7 @@ export default function Question({ ...rest }) {
                 <div className="time">
                   <span>
                     {" "}
-                    Remaining Time: {isSubmitted ? "Done" : remainingTime}
+                    Remaining Time: {isSubmitted  ? "Done" : remainingTime}
                   </span>
                 </div>
                 <span>

@@ -17,13 +17,16 @@ import { getAllExam } from "../../../redux/actions/examsAction";
 import { addExamAction } from "../../../redux/actions/addExamAction";
 import { deleteExamAction } from "../../../redux/actions/deleteExamAction";
 import { updateExamAction } from "../../../redux/actions/updateExamAction";
-import Print from "@material-ui/icons/Print";
+
+import DescriptionIcon from '@material-ui/icons/Description';
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
 import IconButton from "@material-ui/core/IconButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import moment from "moment";
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 import { Search as SearchIcon } from "react-feather";
 import {
@@ -190,6 +193,14 @@ export default function Exam({ openn, ...rest }) {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Exam Details</DialogTitle>
+        {
+                  !addExam.error? null:
+                  <Stack sx={{ width: '100%' }} spacing={2}>
+              <Alert variant="filled" severity="error">
+                  {addExam.error}
+                   </Alert>
+                   </Stack>
+                }
         <DialogContent>
           <DialogContentText>
             Please enter Exam information here.
@@ -411,7 +422,7 @@ export default function Exam({ openn, ...rest }) {
                     <TableCell color="textPrimary" variant="body1">
                       <IconButton arial-label="add">
                         <Link to={`/dashboard/questions/${exam.id}`}>
-                          <Print />
+                          <DescriptionIcon />
                         </Link>
                       </IconButton>
                       <IconButton

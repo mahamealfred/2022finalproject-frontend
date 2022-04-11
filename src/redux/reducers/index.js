@@ -38,6 +38,7 @@ import addDistrictReducer from "./addDistrictsReducer";
 import getQuestionByExamIdReducer from "./getQuestionByExamIdReducer";
 import addResultReducer from "./addResultReducer";
 import getAllStudentNumbersReducer from "./getAllStudentsNumbersReducer";
+import getStudentsBySchoolIdReducer from './getStudentsBySchoolIdReducer';
 const allReducers = combineReducers({
   users: usersReducer,
   students: studentsReducer,
@@ -77,6 +78,7 @@ const allReducers = combineReducers({
   getQuestionByExamId: getQuestionByExamIdReducer,
   addResult:addResultReducer,
   getAllStudentNumbers: getAllStudentNumbersReducer,
+  getStudentBySchoolId: getStudentsBySchoolIdReducer,
 
 });
 

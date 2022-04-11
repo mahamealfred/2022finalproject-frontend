@@ -25,9 +25,8 @@ function DoughnutChart() {
           "Content-Type": "application/json",
         };
       }
-
       await axios
-        .get(`http://localhost:8000/results/persentageresultsinallassessment`, {
+        .get(`http://localhost:8000/results/ordinarylevelpersentageresultsinallassessment`, {
           headers: headers,
         })
         .then(function (response) {
@@ -67,7 +66,7 @@ function DoughnutChart() {
   }, []);
   return (
     <div className="doughnutChart">
-    <span className="doughnutChartTitle">P6 Students Performance In Assessment</span>
+    <span className="doughnutChartTitle">S3 Students Performance In Assessment</span>
     
     <Doughnut
     data={data }

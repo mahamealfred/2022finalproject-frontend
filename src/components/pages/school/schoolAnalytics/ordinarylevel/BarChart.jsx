@@ -3,15 +3,17 @@ import React from 'react'
 import { Bar } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {useParams} from "react-router-dom";
 
 
 
 
 function BarChartOrd() {
-  
+  const params=useParams()
     const [data, setData] = useState({datasets:[]});
 
   useEffect(() => {
+    const id=params.id;
     const fetchData = async () => {
       const labelSet = [];
       const dataSet1 = [];
@@ -30,7 +32,7 @@ function BarChartOrd() {
         };
       }
   
-       await axios.get(`http://localhost:8000/results/percentagemarksprimaryresults`, {
+       await axios.get(`http://localhost:8000/results/ordinarypercentageinassessmentinspecificschool/${id}`, {
         headers: headers,
     }).then(function (response) {
         const res = response.data.data;
@@ -47,7 +49,7 @@ function BarChartOrd() {
             // console.log("resp data...:", res);
             // console.log("resp exam Names...:", examName);
           }
-          console.log("resp data...:", res);
+          console.log("resp resp data...:", res);
           
           setData(
             {
@@ -91,7 +93,7 @@ function BarChartOrd() {
   }, []);
   return (
     <div className="barChart">
-    <span className="barChartTitle">Student Performance P6</span>
+    <span className="barChartTitle">S3 Students Performance </span>
       
       <Bar
         data={data}

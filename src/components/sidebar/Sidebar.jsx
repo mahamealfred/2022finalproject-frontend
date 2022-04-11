@@ -15,8 +15,9 @@ import InputIcon from "@material-ui/icons/Input";
 import { useHistory } from "react-router-dom";
 import { IconButton } from "@material-ui/core";
 export default function Sidebar() {
+
   const history = useHistory();
-  const handleLogout = () => {
+   const handleLogout = () => {
     localStorage.removeItem("x-access-token");
     localStorage.removeItem("user-data");
     history.push("/", { push: true });
@@ -145,10 +146,11 @@ export default function Sidebar() {
               <IconButton
                 className="sidebarIcon"
                 color="inherit"
-                onClick={() => handleLogout()}
+                onClick={handleLogout}
               >
-                <InputIcon />
+               <InputIcon />
               </IconButton>
+             
               Logout
             </li>
           </ul>

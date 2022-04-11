@@ -124,18 +124,25 @@ export default function ListStudent({ openn, ...rest }) {
     await dispatch(getAllStudent());
     console.log("added");
   };
+  useEffect(()=>{
+    async function fetchData(){
+      await dispatch(getAllStudent());
+      await dispatch(getAllSchool());
+    }
+    fetchData();
+  },[])
 
   useEffect(() => {
     async function fetchData() {
       if (!studentsState.loading) {
         if (studentsState.students) {
           setStudents(studentsState.students);
-          await dispatch(getAllStudent());
+          
         }
         if (!schoolsState.loading) {
           if (schoolsState.schools) {
             setSchools(schoolsState.schools);
-            await dispatch(getAllSchool());
+           
           }
         }
       }

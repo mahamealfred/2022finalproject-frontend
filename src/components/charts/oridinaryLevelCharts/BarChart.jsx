@@ -30,7 +30,7 @@ function BarChartOrd() {
         };
       }
   
-       await axios.get(`http://localhost:8000/results/percentagemarksprimaryresults`, {
+       await axios.get(`http://localhost:8000/results/ordinarylevelpersentageresultsinallassessment`, {
         headers: headers,
     }).then(function (response) {
         const res = response.data.data;
@@ -91,7 +91,7 @@ function BarChartOrd() {
   }, []);
   return (
     <div className="barChart">
-    <span className="barChartTitle">Student Performance P6</span>
+    <span className="barChartTitle">S3 Students Performance </span>
       
       <Bar
         data={data}

@@ -8,7 +8,7 @@ import {
 export const addExamAction = (data, history) => async (dispatch) => {
   try {
     dispatch(examRequest());
-    const token = await localStorage.getItem("token");
+    const token = await localStorage.getItem("x-access-token");
     let headers;
     if (token) {
       headers = {
@@ -31,6 +31,7 @@ export const addExamAction = (data, history) => async (dispatch) => {
     // localStorage.setItem('my-token', user.data.token);
      localStorage.setItem('exam-data', JSON.stringify(exam.data));
     dispatch(examSuccess ({ data: exam.data }));
+    alert(" Exam Added successfully");
     history('/dashboard', { replace: true })
    
   } catch (err) {
@@ -38,7 +39,7 @@ export const addExamAction = (data, history) => async (dispatch) => {
       const errorMessage = await err.response.data.message;
       dispatch(examFailure(errorMessage));
     } else {
-      dispatch(examFailure("Network n Error"));
+      dispatch(examFailure("Network Error"));
     }
   }
 };

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import PropTypes from "prop-types";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Button from "@material-ui/core/Button";
@@ -66,7 +66,7 @@ const Question = ({ ...rest }) => {
   );
 
   const handleAdd = async () => {
-    setOpen(true);
+    setOpen(true)
     const data = {
       question: question,
       correct_answer: correct_answer,
@@ -74,15 +74,13 @@ const Question = ({ ...rest }) => {
       // create an array from incorrect answer using ,
       incorrect_answer: incorrect_answer.split(","),
     };
-    console.log(data);
+    console.log("question sent:", data);
     await dispatch(addQuestionAction(data));
     setQuestion("");
     setCorrect_answer("");
     setIncorrect_answer("");
-
-    await dispatch(getAllQuestion());
-
-    console.log("added");
+    await dispatch(getQuestionByExamIdAction(examId));
+    console.log("added")
   };
   const handleAddClose = () => {
     setOpen(false);
@@ -98,22 +96,22 @@ const Question = ({ ...rest }) => {
     if (!question) {
       return alert("Question is required");
     }
+    const data = {
+      question: question,
+      correct_answer: correct_answer,
+     
+      id: questionId,
+      // create an array from incorrect answer using ,
+      incorrect_answer: incorrect_answer.split(","),
+    };
     console.log(questionId);
-    await dispatch(
-      updateQuestionAction({
-        question,
-        correct_answer,
-        incorrect_answer,
-        id: questionId,
-      })
-    );
+    await dispatch( updateQuestionAction( data));
     setOpenUpdate(false);
-
     setQuestion("");
     setCorrect_answer("");
     setIncorrect_answer("");
     setSearch(false);
-    await dispatch(getAllQuestion());
+    await dispatch(getQuestionByExamIdAction(examId));
   };
 
   const handleCloseUpdate = () => {
@@ -150,6 +148,7 @@ const Question = ({ ...rest }) => {
 
   useEffect(() => {
     const id = params.id;
+    console.log("my id", id)
     setExamId(id);
     dispatch(getQuestionByExamIdAction(id));
   }, []);
