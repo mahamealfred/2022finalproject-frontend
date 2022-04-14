@@ -6,16 +6,17 @@ import React from 'react'
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {useParams} from 'react-router-dom';
-
 function PieChart() {
-  const [data, setData] = useState({ datasets: [] });
   const params=useParams();
+  const [data, setData] = useState({ datasets: [] });
+
   useEffect(() => {
     async function fetchData() {
       const id=params.id
       const labelSet = [];
       const dataSet1 = [];
       const dataSet2 = [];
+
       const genderSet = [];
       const token = await localStorage.getItem("x-access-token");
       let headers;
@@ -32,7 +33,7 @@ function PieChart() {
 
       await axios
         .get(
-          `http://localhost:8000/results/primarylevelpercentagebaseongender/${id}`,
+          `http://localhost:8000/results/ordinarylevelpercentagebasedongender/${id}`,
           {
             headers: headers,
           }
@@ -42,14 +43,12 @@ function PieChart() {
           return res;
         })
         .then(function(res) {
-          console.log('schoolss detailes',res)
           labelSet.push("Assessments Results ");
           for (const val of res) {
             const resCount = val.AssessmentCount;
             const genderValue = val["student.gender"];
             const finalTotal = ((val.total / (resCount * 100)) * 100).toFixed( 2);
             dataSet1.push(finalTotal);
-
             genderSet.push(genderValue);
           }
 
@@ -75,15 +74,15 @@ function PieChart() {
   }, []);
   return (
     <div className="pieChart">
-    <span className="pieChartTitle">Students Performance Based on Gender In P6</span>
-   <div className='chart'>
-   <Pie
+    <span className="pieChartTitle">Students Performance Based on Gender In S3</span>
+    <div className='chart' >
+    <Pie 
     data={data}
     >
 
     </Pie>
-   </div>
-    
+    </div>
+   
     </div>
   );
 }

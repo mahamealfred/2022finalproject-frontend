@@ -31,8 +31,9 @@ import {
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import logo from "../../../images/reb.jpg";
-
-
+import "./primaryresult.css";
+import PieChartPri from "./charts/primaryresultChartAnalysis/PieChart";
+import BarChartPri from "./charts/primaryresultChartAnalysis/BarChart";
 export default function PrimaryResult({ openn, ...rest }) {
   const dispatch = useDispatch();
   const primaryResultsState = useSelector(
@@ -45,7 +46,7 @@ export default function PrimaryResult({ openn, ...rest }) {
   const [results, setResults] = useState([]);
   const [students, setStudents] = useState([]);
   const [examId, setExamId] = useState("");
-  
+  const todaydate=new Date().toISOString().slice(0,10);
   const [exams, setExams] = useState("");
 
   //const [value, setValue] = React.useState(new Date());
@@ -61,11 +62,19 @@ export default function PrimaryResult({ openn, ...rest }) {
     setPage(newPage);
   };
 
+useEffect(()=>{
+async function fetchData(){
+  
 
+}
+fetchData();
+},[]);
 
   useEffect(() => {
     async function fetchData() {
       await dispatch(getAvailablePrimaryExamsDoneAction());
+     
+     
       setExamId(exams);
       if (!primaryResultsState.loading) {
         if (primaryResultsState.results) {
@@ -73,14 +82,26 @@ export default function PrimaryResult({ openn, ...rest }) {
           await dispatch(getPrimaryResultsBySchoolUserAction(examId)); 
         }
       }
-      
+    
     }
     fetchData();
-  }, [primaryResultsState.results]);
+  }, [primaryResultsState.loading,primaryResultsState.results]);
  
 
   const generatePrimaryStudentsResult =()=> {
     const doc = new jsPDF();
+    doc.addImage(logo, "JPEG", 20, 5, 40, 40);
+    doc.setFont("Helvertica", "normal");
+    doc.text("Rwanda Basic Education Board", 20, 50);
+    doc.text("School Name:", 20, 55);
+    doc.text("Email: info@reb.rw", 20, 60);
+    results.map(result=>{
+      doc.text(`${result.exam.level} ${result.exam.name} Results`,20, 65);
+    })
+    doc.setFont("Helvertica", "normal");
+    doc.text(`Date ${todaydate}`, 140, 65);
+    doc.setFont("Helvertica", "bold");
+    doc.text("Primary Student Report", 70, 75);
      const tableColumn=['Full Name','StudentCode','Gender','Assessment','Marks','Level']
     const tableRows=[]
 
@@ -98,24 +119,22 @@ export default function PrimaryResult({ openn, ...rest }) {
       tableRows.push(studentResult);
       console.log(studentResult)
     });
-    doc.addImage(logo, 'JPG', 10, 10, 30, 30);
-   results.map(result=>{
-    doc.text(`${result.exam.level} ${result.exam.name} Results`, 12, 15);
-  })
-    doc.autoTable(tableColumn, tableRows, { 
-      startY: 20,
-      theme: "grid",
-     margin: 10,
-     marginBottom:20,
-     alignItems:"center",
-     styles: {
-       font: "courier",
-       fontSize: 12,
-       overflow: "linebreak",
-       cellPadding: 1,
-       halign: "left"
-     },
-     });
+   
+  
+  doc.autoTable(tableColumn, tableRows, {
+    startY: 80,
+    theme: "striped",
+    margin: 10,
+    styles: {
+      font: "courier",
+      fontSize: 12,
+      overflow: "linebreak",
+      cellPadding: 3,
+      halign: "center",
+    },
+    head: [tableColumn],
+    body: [tableRows],
+  });
   const date = Date().split(" ");
 
   const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
@@ -150,27 +169,7 @@ export default function PrimaryResult({ openn, ...rest }) {
         </span>
         <Box sx={{ mt: 3 }}>
           <Card>
-            <CardContent>
-              <Box sx={{ maxWidth: 500 }}>
-                <TextField
-                  fullWidth
-                  onChange={(e) => searchHandle(e)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SvgIcon fontSize="small" color="action">
-                          <SearchIcon />
-                        </SvgIcon>
-                      </InputAdornment>
-                    ),
-                  }}
-                  placeholder="Search Student"
-                  variant="outlined"
-                />
-                
-              </Box>
-            </CardContent>
-           
+          
 
             <Box sx={{ maxWidth: 300 }}>
               <TextField
@@ -188,7 +187,39 @@ export default function PrimaryResult({ openn, ...rest }) {
                   </MenuItem>
                 ))}
               </TextField>
-              <IconButton
+             
+             
+            </Box>
+            
+          </Card>
+        </Box>
+        <div className="homeWidgets">
+                <PieChartPri />
+                <BarChartPri />
+                </div>
+                <Box sx={{ mt: 3 }}>
+          <Card>
+            <CardContent>
+              <Box sx={{ maxWidth: 500 }}>
+                <TextField
+                  fullWidth
+                  onChange={(e) => searchHandle(e)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SvgIcon fontSize="small" color="action">
+                          <SearchIcon />
+                        </SvgIcon>
+                      </InputAdornment>
+                    ),
+                  }}
+                  placeholder="Search Student"
+                  variant="outlined"
+                />
+             
+              </Box>
+            </CardContent>
+                <IconButton
                   aria-label="print"
                   color="secondary"
                   onClick={() => generatePrimaryStudentsResult()}
@@ -196,11 +227,8 @@ export default function PrimaryResult({ openn, ...rest }) {
                   <Report />
                   Generate Report
                 </IconButton>
-            </Box>
-            
-          </Card>
-        </Box>
-
+                </Card>
+                </Box>
         <PerfectScrollbar>
           <Box sx={{ minWidth: 1050 }}>
             <Table>

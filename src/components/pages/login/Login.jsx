@@ -27,8 +27,8 @@ export default function Login() {
 
   const paperStyle = {
     padding: 20,
-    height: "70vh",
-    width: 280,
+    height: "65vh",
+    width: 300,
     margin: "80px auto",
   };
   const avatarStyle = {
@@ -118,7 +118,7 @@ export default function Login() {
                   variant="contained"
                   fullWidth
                   style={btnStyle}
-                  disabled={props.isSubmitting}
+                  // disabled={props.isSubmitting}
                 >
                   {userLogin.loading ? "Loading" : "Sign in"}
                 </Button>

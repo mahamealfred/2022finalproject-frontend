@@ -27,8 +27,8 @@ import {
   
     const paperStyle = {
       padding: 20,
-      height: "75vh",
-      width: 280,
+      height: "65vh",
+      width: 300,
       margin: "80px auto",
     };
     const avatarStyle = {
@@ -119,7 +119,7 @@ import {
                     variant="contained"
                     fullWidth
                     style={btnStyle}
-                    disabled={props.isSubmitting}
+                    // disabled={props.isSubmitting}
 
                   >
                     {studentLogin.loading ? "Loading" : "Sign in"}

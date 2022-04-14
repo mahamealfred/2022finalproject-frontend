@@ -32,6 +32,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Report } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
+import logo from "../../../images/reb.jpg";
 
 export default function OrdinaryLevelResults({ openn, ...rest }) {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
   const [examId, setExamId] = useState("");
 
   const [exams, setExams] = useState("");
-
+  const todaydate=new Date().toISOString().slice(0,10);
   //const [value, setValue] = React.useState(new Date());
 
   const [limit, setLimit] = useState(10);
@@ -80,6 +81,18 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
   
   const generateOrdinaryLevelStudentsResult =()=> {
     const doc = new jsPDF();
+    doc.addImage(logo, "JPEG", 20, 5, 40, 40);
+    doc.setFont("Helvertica", "normal");
+    doc.text("Rwanda Basic Education Board", 20, 50);
+    doc.text("School Name:", 20, 55);
+    doc.text("Email: info@reb.rw", 20, 60);
+    results.map(result=>{
+      doc.text(`${result.exam.level} ${result.exam.name} Results`,20, 65);
+    })
+    doc.setFont("Helvertica", "normal");
+    doc.text(`Date ${todaydate}`, 140, 65);
+    doc.setFont("Helvertica", "bold");
+    doc.text("Ordinary Level Student Report", 70, 75);
      const tableColumn=['Full Name','StudentCode','Gender','Assessment','Marks','Level']
     const tableRows=[]
 
@@ -99,26 +112,22 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
     });
     const imageData=`<img src="../../Assets/images/reb.jpg" alt="" className="topAvatar" />`;
    console.log('imge...',imageData)
-    doc.autoTable(tableColumn, tableRows, { 
-      startY: 20,
-      theme: "grid",
-     margin: 10,
-     styles: {
-       font: "courier",
-       fontSize: 12,
-       overflow: "linebreak",
-       cellPadding: 1,
-       halign: "left"
-     },
-     });
+   doc.autoTable(tableColumn, tableRows, {
+    startY: 80,
+    theme: "striped",
+    margin: 10,
+    styles: {
+      font: "courier",
+      fontSize: 12,
+      overflow: "linebreak",
+      cellPadding: 3,
+      halign: "center",
+    },
+    head: [tableColumn],
+    body: [tableRows],
+  });
   const date = Date().split(" ");
- 
-  results.map(result=>{
-    doc.text(`${result.exam.level} ${result.exam.name} Results`, 12, 15);
-  })
   const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
-  
- doc.addImage(imageData, 'JPEG', 15, 40, 180, 160);
  doc.save(`report_${dateStr}.pdf`);
   };
   //const reportResults = results.filter(result => result.status === "completed");

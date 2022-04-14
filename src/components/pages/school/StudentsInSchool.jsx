@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Button from "@material-ui/core/Button";
-import './studentInSchool.css';
+import "./studentInSchool.css";
 import {
   Card,
   Table,
@@ -29,28 +29,32 @@ import { getStudentsBySchoolIdAction } from "../../../redux/actions/getStudentsB
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Report } from "@material-ui/icons";
-import logo from "../../images/reb.jpg"
+import logo from "../../images/reb.jpg";
 import BarChartOrd from "../school/schoolAnalytics/ordinarylevel/BarChart";
 import FeaturedInfoOrdi from "../school/schoolAnalytics/ordinarylevel/FeaturedInfo";
 import PieChartOrdi from "../school/schoolAnalytics/ordinarylevel/PieChart";
 import FeaturedInfoPri from "../school/schoolAnalytics/primary/FeaturedInfo";
 import PieChartPri from "../school/schoolAnalytics/primary/PieChart";
 import BarChartPri from "../school/schoolAnalytics/primary/BarChart";
+import DoughnutChartOrdi from "../school/schoolAnalytics/ordinarylevel/DoughnutChart";
+import DoughnutChartPri from "../school/schoolAnalytics/primary/DoughnutChart";
 const StudentsInSchool = ({ ...rest }) => {
-
   // const dispatch = useDispatch()
- 
+
   const [search, setSearch] = useState(false);
-  
-  const [schoolId,setSchoolId]=useState("")
-  const [students,setStudents]=useState([])
+
+  const [schoolId, setSchoolId] = useState("");
+  const [students, setStudents] = useState([]);
   const params = useParams();
   const dispatch = useDispatch();
 
-const getStudentBySchoolIdState=useSelector((state)=>state.getStudentBySchoolId);
+  const getStudentBySchoolIdState = useSelector(
+    (state) => state.getStudentBySchoolId
+  );
   const [selectedProductIds, setSelectedProductIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const todaydate=new Date().toISOString().slice(0,10);
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -68,63 +72,141 @@ const getStudentBySchoolIdState=useSelector((state)=>state.getStudentBySchoolId)
     return date;
   };
 
-  const generateListOfAllStudent =()=> {
+  const generateListOfAllStudent = () => {
     const doc = new jsPDF();
-    doc.addImage(logo, "JPEG", 20, 20, 40, 40);
-    doc.setFont("Helvertica", "bold");
-    doc.text("Quality Education Bosster System", 20, 20);
+    doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
-    doc.text(`Date ${todaysDate()}`, 140, 60);
+    doc.text("Rwanda Basic Education Board", 20, 50);
+    doc.text("School Name:", 20, 55);
+    doc.text("Email: info@reb.rw", 20, 60);
+    doc.setFont("Helvertica", "normal");
+    doc.text(`Date ${todaydate}`, 140, 65);
     doc.setFont("Helvertica", "bold");
-    doc.text("Student List Report", 80, 70);
-     const tableColumn=['Last Name','First Name','StudentCode','Gender','Level','Marks']
-    const tableRows=[]
+    doc.text("Primary Student Assessment Report", 70, 75);
+    const tableColumn = [
+      "Last Name",
+      "First Name",
+      "StudentCode",
+      "Gender",
+      "Level",
+      "Marks",
+    ];
+    const tableRows = [];
 
-    students.map(student =>{
-      const marks=()=>{
-        if(!student.results[0]){
+    students.map((student) => {
+      const marks = () => {
+        if (!student.results[0]) {
           return "No Marks";
         }
-         return (student.results[0].marks);
-      }
-      const studentData=[
+        return student.results[0].marks;
+      };
+
+      const studentData = [
         student.lastname,
         student.firstname,
         student.studentcode,
         student.gender,
         student.level,
         marks(),
-       // format(new Date(student.updated_at), "yyyy-MM-dd")
+        // format(new Date(student.updated_at), "yyyy-MM-dd")
       ];
-      tableRows.push(studentData);
-      console.log(studentData)
+      if (student.level === "P6") {
+        tableRows.push(studentData);
+      } else {
+        return null;
+      }
+      console.log(studentData);
     });
-   
-    doc.autoTable(tableColumn, tableRows, { 
+
+    doc.autoTable(tableColumn, tableRows, {
       startY: 80,
       theme: "striped",
-     margin: 10,
-     styles: {
-       font: "courier",
-       fontSize: 12,
-       overflow: "linebreak",
-       cellPadding: 3,
-       halign: "center"
-     },
-     head: [tableColumn],
-     body:[tableRows],
-     });
-  const date = Date().split(" ");
-  const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
- 
+      margin: 10,
+      styles: {
+        font: "courier",
+        fontSize: 12,
+        overflow: "linebreak",
+        cellPadding: 3,
+        halign: "center",
+      },
+      head: [tableColumn],
+      body: [tableRows],
+    });
+    const date = Date().split(" ");
+    const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
 
- doc.save(`report_${dateStr}.pdf`);
+    doc.save(`report_${dateStr}.pdf`);
+  };
+  const generateListOfAllStudentOrdinaryLevel = () => {
+    const doc = new jsPDF();
+    doc.addImage(logo, "JPEG", 20, 5, 40, 40);
+    doc.setFont("Helvertica", "normal");
+    doc.text("Rwanda Basic Education Board", 20, 50);
+    doc.text("School Name:", 20, 55);
+    doc.text("Email: info@reb.rw", 20, 60);
+    doc.setFont("Helvertica", "normal");
+    doc.text(`Date ${todaydate}`, 140, 65);
+    doc.setFont("Helvertica", "bold");
+    doc.text("Ordinary Level Student Assessment Report", 70, 75);
+    const tableColumn = [
+      "Last Name",
+      "First Name",
+      "StudentCode",
+      "Gender",
+      "Level",
+      "Marks",
+    ];
+    const tableRows = [];
+
+    students.map((student) => {
+      const marks = () => {
+        if (!student.results[0]) {
+          return "No Marks";
+        }
+        return student.results[0].marks;
+      };
+
+      const studentData = [
+        student.lastname,
+        student.firstname,
+        student.studentcode,
+        student.gender,
+        student.level,
+        marks(),
+        // format(new Date(student.updated_at), "yyyy-MM-dd")
+      ];
+      if (student.level === "S3") {
+        tableRows.push(studentData);
+      } else {
+        return null;
+      }
+      console.log(studentData);
+    });
+
+    doc.autoTable(tableColumn, tableRows, {
+      startY: 80,
+      theme: "striped",
+      margin: 10,
+      styles: {
+        font: "courier",
+        fontSize: 12,
+        overflow: "linebreak",
+        cellPadding: 3,
+        halign: "center",
+      },
+      head: [tableColumn],
+      body: [tableRows],
+    });
+    const date = Date().split(" ");
+    const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
+
+    doc.save(`report_${dateStr}.pdf`);
   };
 
+
   useEffect(() => {
-  
     const id = params.id;
-    console.log("my id", id)
+    console.log("my id", id);
     setSchoolId(id);
     dispatch(getStudentsBySchoolIdAction(id));
   }, []);
@@ -136,25 +218,32 @@ const getStudentBySchoolIdState=useSelector((state)=>state.getStudentBySchoolId)
       }
     }
   }, [!getStudentBySchoolIdState.loading]);
-  
 
   const searchHandle = async (e) => {};
 
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
       <div className="homeWidgets">
-      <FeaturedInfoOrdi />
+        <FeaturedInfoOrdi />
       </div>
       <div className="homeWidgets">
-      <PieChartOrdi />
-      <BarChartOrd />
+        <PieChartOrdi />
+        <BarChartOrd />
       </div>
       <div className="homeWidgets">
-      <FeaturedInfoPri />
+        <DoughnutChartOrdi />
+        <BarChartOrd />
       </div>
       <div className="homeWidgets">
-      <PieChartPri />
-      <BarChartPri />
+        <FeaturedInfoPri />
+      </div>
+      <div className="homeWidgets">
+        <PieChartPri />
+        <BarChartPri />
+      </div>
+      <div className="homeWidgets">
+        <DoughnutChartPri />
+        <BarChartOrd />
       </div>
       <Card {...rest}>
         <Box sx={{ mt: 3 }}>
@@ -178,14 +267,21 @@ const getStudentBySchoolIdState=useSelector((state)=>state.getStudentBySchoolId)
                 />
               </Box>
               <IconButton
-                  aria-label="print"
-                  color="secondary"
-                  onClick={() => generateListOfAllStudent()}
-                >
-                  <Report />
-                  Generate Report
-                </IconButton>
-
+                aria-label="print"
+                color="secondary"
+                onClick={() => generateListOfAllStudent()}
+              >
+                <Report />
+                Generate Primary Level Report
+              </IconButton>
+              <IconButton
+                aria-label="print"
+                color="secondary"
+                onClick={() => generateListOfAllStudentOrdinaryLevel()}
+              >
+                <Report />
+                Generate Ordinary Level Report
+              </IconButton>
             </CardContent>
           </Card>
           <Box></Box>
@@ -218,7 +314,7 @@ const getStudentBySchoolIdState=useSelector((state)=>state.getStudentBySchoolId)
                           }}
                         >
                           <Typography color="textPrimary" variant="body1">
-                            {student.lastname+" "+student.firstname}
+                            {student.lastname + " " + student.firstname}
                           </Typography>
                         </Box>
                       </TableCell>
@@ -230,11 +326,8 @@ const getStudentBySchoolIdState=useSelector((state)=>state.getStudentBySchoolId)
                           }}
                         >
                           <Typography color="textPrimary" variant="body1">
-                            
-                           {student.studentcode}
-                            
+                            {student.studentcode}
                           </Typography>
-                        
                         </Box>
                       </TableCell>
                       <TableCell>
@@ -247,10 +340,9 @@ const getStudentBySchoolIdState=useSelector((state)=>state.getStudentBySchoolId)
                           <Typography color="textPrimary" variant="body1">
                             {student.gender}
                           </Typography>
-                        
                         </Box>
                       </TableCell>
-                     
+
                       <TableCell>
                         <Box
                           sx={{
@@ -261,7 +353,6 @@ const getStudentBySchoolIdState=useSelector((state)=>state.getStudentBySchoolId)
                           <Typography color="textPrimary" variant="body1">
                             {student.level}
                           </Typography>
-                        
                         </Box>
                       </TableCell>
                       <TableCell>
@@ -272,21 +363,20 @@ const getStudentBySchoolIdState=useSelector((state)=>state.getStudentBySchoolId)
                           }}
                         >
                           <Typography color="textPrimary" variant="body1">
-                            
-                              <Box
-                                sx={{
-                                  alignItems: "center",
-                                  display: "flex",
-                                }}
-                              >
-                              {
-                                !student.results[0]?"No Marks": 
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              {!student.results[0] ? (
+                                "No Marks"
+                              ) : (
                                 <Typography color="textPrimary" variant="body1">
-                                {student.results[0].marks}
+                                  {student.results[0].marks}
                                 </Typography>
-                            }
-                              </Box>
-                          
+                              )}
+                            </Box>
                           </Typography>
                         </Box>
                       </TableCell>
