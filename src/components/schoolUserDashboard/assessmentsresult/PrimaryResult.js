@@ -67,13 +67,6 @@ export default function PrimaryResult({ openn, ...rest }) {
     setExamId(id);
     console.log("exam id id ", id);
     await dispatch(getPrimaryResultsBySchoolUserAction(id));
-    
-            if (primaryResultsState.results) {
-              setResults(primaryResultsState.results);
-            }
-          
-        
-    
   };
 
   // useEffect(() => {
@@ -165,6 +158,13 @@ export default function PrimaryResult({ openn, ...rest }) {
 
   const searchHandle = async (e) => {};
 
+  const handleExamData = (e) => {
+    console.log("hahahahah majhame")
+    const id = e.target.value;
+    setExams(id)
+    getExamByIdData(id)
+  }
+
   return (
     <>
       <div style={{ flex: 4, height: "auto", width: "400px" }}>
@@ -183,11 +183,8 @@ export default function PrimaryResult({ openn, ...rest }) {
                 label="Select Assessment"
                 variant="outlined"
                 style={{ marginBottom: 30 }}
-                onClick={() => 
-                  getExamByIdData(exams)
-                }
                 value={exams}
-                onChange={(e) => setExams(e.target.value) }
+                onChange={(e) => handleExamData(e) }
               >
                 {getAvailablePrimaryExamsDoneState.exams.map((option) => (
                   <MenuItem key={option.id} value={option.id}>
@@ -201,7 +198,7 @@ export default function PrimaryResult({ openn, ...rest }) {
         {
           !examId? null:
         <div className="homeWidgets">
-          <PieChartPri examId={examId} />
+          <PieChartPri data={primaryResultsState.results} />
           <BarChartPri />
         </div>
 }
@@ -252,7 +249,7 @@ export default function PrimaryResult({ openn, ...rest }) {
               </TableHead>
               <TableBody>
                 <>
-                  {results.slice(0, limit).map((result) => (
+                  {primaryResultsState.results ? primaryResultsState.results.slice(0, limit).map((result) => (
                     <TableRow
                       hover
                       key={result.id}
@@ -345,7 +342,7 @@ export default function PrimaryResult({ openn, ...rest }) {
                         </Box>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  )) : null}
                 </>
               </TableBody>
             </Table>
