@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 
 export default function HomeTopbar() {
   const history = useHistory();
+  const isAuth = localStorage.getItem("x-access-token");
   const handleLogout = () => {
     localStorage.removeItem("x-access-token");
     localStorage.removeItem("user-data");
@@ -21,14 +22,17 @@ export default function HomeTopbar() {
         </div>
         <div className="leftTopBar">
           <span className="logo">
-            Primary and Ordinary level Quality Eduction  Booster{" "}
+            Primary and Ordinary level Quality Eduction  Booster
           </span>
         </div>
+        {
+          !isAuth? null:
         <div className="toRight">
           <IconButton color="inherit" onClick={() => handleLogout()}>
             <InputIcon />
           </IconButton>
         </div>
+}
       </div>
     </div>
   );

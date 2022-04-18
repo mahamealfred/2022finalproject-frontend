@@ -10,7 +10,8 @@ import HomeTopbar from '../../homeTopbar/HomeTopbar';
 import Header from '../../header/Header';
 import Footer from '../../Footer/Footer';
 import { getExamsAndQuestionByLevel } from "../../../redux/actions/getExamsAndQuestionByIdAction";
-import moment from "moment"
+import moment from "moment";
+import jwt from "jsonwebtoken";
 const AssessmentSelect= () =>{
 
   const getExamsByLevelState=useSelector((state)=>state.getExamsByLevel)
@@ -41,8 +42,32 @@ const AssessmentSelect= () =>{
     }
     
   }
+  const decode= (token) => {
+    const JWT_SECRET="mytokensecret";
+    const payload =jwt.verify(token, JWT_SECRET);
+     return payload;
+  }
+  
+  useEffect(() => {
+  
+    const token =localStorage.getItem('x-access-token');
+    if (token) {
+    const {exp}=decode(token);
+    console.log(history)
+    if(Date.now()>=exp*1000){
+      localStorage.removeItem("x-access-token")
+     return history.push('/assessments/studentLogin', { push: true })
+    }
+    else{
+      return null
+    }
+  }
+  return history.push('/', { push: true })
 
+  },[]);
+  console.log("exam id...:",exams);
   useEffect( () => {
+  
     setExams("")
     handlegetAssessment();
     async function fetchData(){
@@ -100,6 +125,7 @@ const AssessmentSelect= () =>{
          </div>
        </div>
        {
+         
         !getExamAndQuestionState.exams[0]&& !exams? null:
         <span style={{ fontSize:20}}>This Assessments will be available till: 
         {moment(getExamAndQuestionState.exams[0].startDate).format("MMMM Do YYYY, h:mm:ss a")}</span>

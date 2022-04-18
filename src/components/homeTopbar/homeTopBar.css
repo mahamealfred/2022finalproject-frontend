@@ -20,10 +20,10 @@
 }
 .logo{
     font-weight: bold;
-    font-size: 18px;
-    color:rgb(37, 132, 221);
+    font-size: 35px;
+    color:rgb(99, 148, 240);
     cursor: pointer;
-    margin: "0 0 0 0";
+    margin-right: 10em;
 }
 .topbarIconContainer{
     position:relative;

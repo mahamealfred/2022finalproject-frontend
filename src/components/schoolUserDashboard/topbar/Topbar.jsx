@@ -9,6 +9,7 @@ import {
 
 } from '@material-ui/core';
 export default function Topbar() {
+    const isAuth = localStorage.getItem("x-access-token");
     const history=useHistory();
     const handleLogout=() =>{
         
@@ -33,12 +34,15 @@ export default function Topbar() {
                         <Language />
                            <span className="topIconBadge"> 2</span>
                     </div>
+                    {
+                        !isAuth? null:
                     <div className="topbarIconContainer">
                     <IconButton color="inherit" onClick={()=>handleLogout()}>
-            <InputIcon />
-          </IconButton>
+                    <InputIcon />
+                     </IconButton>
                           
                     </div>
+}
                     <img src="../Assets/images/reb.jpg" alt="" className="topAvatar" />
                 </div>
 

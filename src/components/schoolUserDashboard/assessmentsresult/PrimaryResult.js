@@ -46,7 +46,7 @@ export default function PrimaryResult({ openn, ...rest }) {
   const [results, setResults] = useState([]);
   const [students, setStudents] = useState([]);
   const [examId, setExamId] = useState("");
-  const todaydate=new Date().toISOString().slice(0,10);
+  const todaydate = new Date().toISOString().slice(0, 10);
   const [exams, setExams] = useState("");
 
   //const [value, setValue] = React.useState(new Date());
@@ -61,87 +61,99 @@ export default function PrimaryResult({ openn, ...rest }) {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-
-useEffect(()=>{
-async function fetchData(){
   
 
-}
-fetchData();
-},[]);
+  const getExamByIdData = async (id) => {
+    setExamId(id);
+    console.log("exam id id ", id);
+    await dispatch(getPrimaryResultsBySchoolUserAction(id));
+    
+            if (primaryResultsState.results) {
+              setResults(primaryResultsState.results);
+            }
+          
+        
+    
+  };
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     if (!primaryResultsState.loading) {
+  //       if (primaryResultsState.results) {
+  //         setResults(primaryResultsState.results);
+  //       }
+  //     }
+  //   }
+  //   fetchData();
+  // }, [primaryResultsState.results]);
 
   useEffect(() => {
     async function fetchData() {
       await dispatch(getAvailablePrimaryExamsDoneAction());
-     
-     
-      setExamId(exams);
-      if (!primaryResultsState.loading) {
-        if (primaryResultsState.results) {
-          setResults(primaryResultsState.results);
-          await dispatch(getPrimaryResultsBySchoolUserAction(examId)); 
-        }
-      }
-    
+  
     }
     fetchData();
-  }, [primaryResultsState.loading,primaryResultsState.results]);
- 
-
-  const generatePrimaryStudentsResult =()=> {
+  }, []);
+  const generatePrimaryStudentsResult = () => {
     const doc = new jsPDF();
     doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
     doc.text("Rwanda Basic Education Board", 20, 50);
     doc.text("School Name:", 20, 55);
     doc.text("Email: info@reb.rw", 20, 60);
-    results.map(result=>{
-      doc.text(`${result.exam.level} ${result.exam.name} Results`,20, 65);
-    })
+    results.map((result) => {
+      doc.text(`${result.exam.level} ${result.exam.name} Results`, 20, 65);
+    });
     doc.setFont("Helvertica", "normal");
     doc.text(`Date ${todaydate}`, 140, 65);
     doc.setFont("Helvertica", "bold");
     doc.text("Primary Student Report", 70, 75);
-     const tableColumn=['Full Name','StudentCode','Gender','Assessment','Marks','Level']
-    const tableRows=[]
+    const tableColumn = [
+      "Full Name",
+      "StudentCode",
+      "Gender",
+      "Assessment",
+      "Marks",
+      "Level",
+    ];
+    const tableRows = [];
 
-    results.map(result =>{
-      const fullname=result.student.lastname+' '+result.student.firstname;
-      const studentResult=[
+    results.map((result) => {
+      const fullname = result.student.lastname + " " + result.student.firstname;
+      const studentResult = [
         fullname,
         result.student.studentcode,
         result.student.gender,
         result.exam.name,
         result.marks,
         result.student.level,
-       // format(new Date(student.updated_at), "yyyy-MM-dd")
+        // format(new Date(student.updated_at), "yyyy-MM-dd")
       ];
       tableRows.push(studentResult);
-      console.log(studentResult)
+      console.log(studentResult);
     });
-   
-  
-  doc.autoTable(tableColumn, tableRows, {
-    startY: 80,
-    theme: "striped",
-    margin: 10,
-    styles: {
-      font: "courier",
-      fontSize: 12,
-      overflow: "linebreak",
-      cellPadding: 3,
-      halign: "center",
-    },
-    head: [tableColumn],
-    body: [tableRows],
-  });
-  const date = Date().split(" ");
 
-  const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
-  doc.save(`report_${dateStr}.pdf`);
+    doc.autoTable(tableColumn, tableRows, {
+      startY: 80,
+      theme: "striped",
+      margin: 10,
+      styles: {
+        font: "courier",
+        fontSize: 12,
+        overflow: "linebreak",
+        cellPadding: 3,
+        halign: "center",
+      },
+      head: [tableColumn],
+      body: [tableRows],
+    });
+    const date = Date().split(" ");
+
+    const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
+    doc.save(`report_${dateStr}.pdf`);
   };
   //const reportResults = results.filter(result => result.status === "completed");
-  const assignColorToTicketStatus = result => {
+  const assignColorToTicketStatus = (result) => {
     if (result.status === "completed") {
       return "p-3 mb-2 bg-success text-white";
     } else if (result.status === "in_progress") {
@@ -160,17 +172,10 @@ fetchData();
           className="featuredStudent"
           style={{ fontSize: 20, fontWeight: 600 }}
         >
-          <DialogTitle>
-          Primary Level Assessment Results (P6)
-          </DialogTitle>
-          
-       
-         
+          <DialogTitle>Primary Level Assessment Results (P6)</DialogTitle>
         </span>
         <Box sx={{ mt: 3 }}>
           <Card>
-          
-
             <Box sx={{ maxWidth: 300 }}>
               <TextField
                 select
@@ -178,8 +183,11 @@ fetchData();
                 label="Select Assessment"
                 variant="outlined"
                 style={{ marginBottom: 30 }}
+                onClick={() => 
+                  getExamByIdData(exams)
+                }
                 value={exams}
-                onChange={(e) => setExams(e.target.value)}
+                onChange={(e) => setExams(e.target.value) }
               >
                 {getAvailablePrimaryExamsDoneState.exams.map((option) => (
                   <MenuItem key={option.id} value={option.id}>
@@ -187,17 +195,17 @@ fetchData();
                   </MenuItem>
                 ))}
               </TextField>
-             
-             
             </Box>
-            
           </Card>
         </Box>
+        {
+          !examId? null:
         <div className="homeWidgets">
-                <PieChartPri />
-                <BarChartPri />
-                </div>
-                <Box sx={{ mt: 3 }}>
+          <PieChartPri examId={examId} />
+          <BarChartPri />
+        </div>
+}
+        <Box sx={{ mt: 3 }}>
           <Card>
             <CardContent>
               <Box sx={{ maxWidth: 500 }}>
@@ -216,19 +224,18 @@ fetchData();
                   placeholder="Search Student"
                   variant="outlined"
                 />
-             
               </Box>
             </CardContent>
-                <IconButton
-                  aria-label="print"
-                  color="secondary"
-                  onClick={() => generatePrimaryStudentsResult()}
-                >
-                  <Report />
-                  Generate Report
-                </IconButton>
-                </Card>
-                </Box>
+            <IconButton
+              aria-label="print"
+              color="secondary"
+              onClick={() => generatePrimaryStudentsResult()}
+            >
+              <Report />
+              Generate Report
+            </IconButton>
+          </Card>
+        </Box>
         <PerfectScrollbar>
           <Box sx={{ minWidth: 1050 }}>
             <Table>

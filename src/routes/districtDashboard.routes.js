@@ -6,9 +6,35 @@ import OrdinaryLevelResults from "../components/districtUserDashboard/studentRes
 import PrimaryResults from "../components/districtUserDashboard/studentResults/PrimaryResults";
 import SchoolDashboard from "../Views/DistrictDashboard";
 // import ListStudent from "../components/districtUserDashboard/students/ListStudent";
-
+import {useEffect} from "react";
+import jwt from "jsonwebtoken";
+import { useHistory } from 'react-router-dom';
 import PrivateRoute from "./PrivateRoute";
 function App() {
+  
+  const decode= (token) => {
+    const JWT_SECRET="mytokensecret";
+    const payload =jwt.verify(token, JWT_SECRET);
+     return payload;
+  }
+  const history= useHistory();
+  useEffect(() => {
+  
+    const token =localStorage.getItem('x-access-token');
+    if (token) {
+    const {exp}=decode(token);
+    console.log(history)
+    if(Date.now()>=exp*1000){
+      localStorage.removeItem("x-access-token")
+     return history.push('/', { push: true })
+    }
+    else{
+      return null
+    }
+  }
+  return history.push('/', { push: true })
+
+  }, [])
   const { path } = useRouteMatch();
   return (
     <Switch>
