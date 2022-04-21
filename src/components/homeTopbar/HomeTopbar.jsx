@@ -25,14 +25,14 @@ export default function HomeTopbar() {
             Primary and Ordinary level Quality Eduction  Booster
           </span>
         </div>
-        {
+        {/* {
           !isAuth? null:
         <div className="toRight">
           <IconButton color="inherit" onClick={() => handleLogout()}>
             <InputIcon />
           </IconButton>
         </div>
-}
+} */}
       </div>
     </div>
   );

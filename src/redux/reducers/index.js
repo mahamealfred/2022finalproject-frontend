@@ -39,9 +39,11 @@ import getQuestionByExamIdReducer from "./getQuestionByExamIdReducer";
 import addResultReducer from "./addResultReducer";
 import getAllStudentNumbersReducer from "./getAllStudentsNumbersReducer";
 import getStudentsBySchoolIdReducer from './getStudentsBySchoolIdReducer';
+import studentSignupReducer from "./studentSingupReducer";
 const allReducers = combineReducers({
   users: usersReducer,
   students: studentsReducer,
+  studentSingup:studentSignupReducer,
   schools: schoolsReducer,
   exams: examsReducer,
   results: resultsReducer,

@@ -106,7 +106,6 @@ export default function ListStudent({ openn, ...rest }) {
       addStudentAction({
         firstname,
         lastname,
-        email,
         dob,
         gender,
         level,
@@ -122,7 +121,7 @@ export default function ListStudent({ openn, ...rest }) {
     setLevel("");
     setSchoolId("");
     await dispatch(getAllStudent());
-    console.log("added");
+   
   };
   useEffect(()=>{
     async function fetchData(){
@@ -223,14 +222,14 @@ export default function ListStudent({ openn, ...rest }) {
               value={lastname}
               variant="outlined"
             />
-            <TextField
+            {/* <TextField
               id="outlined-basic"
               label="Email"
               name="email"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               variant="outlined"
-            />
+            /> */}
             <TextField
               id="date"
               label="Birthday"

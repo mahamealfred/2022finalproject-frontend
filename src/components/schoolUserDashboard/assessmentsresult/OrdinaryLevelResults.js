@@ -110,8 +110,7 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
       tableRows.push(studentResult);
       console.log(studentResult)
     });
-    const imageData=`<img src="../../Assets/images/reb.jpg" alt="" className="topAvatar" />`;
-   console.log('imge...',imageData)
+ 
    doc.autoTable(tableColumn, tableRows, {
     startY: 80,
     theme: "striped",

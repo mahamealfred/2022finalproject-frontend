@@ -16,14 +16,13 @@ import {
   import { Formik, Form, Field, ErrorMessage } from "formik";
   import * as Yup from "yup";
   import HomeTopbar from "../../homeTopbar/HomeTopbar";
-  import { loginAction } from "../../../redux/actions/userLoginAction";
   import { useDispatch, useSelector } from "react-redux";
   import { useHistory } from "react-router-dom";
-  import {studentLoginAction} from "../../../redux/actions/studentLoginAction";
+  import {studentSingupAction} from "../../../redux/actions/studentSingupAction";
   
-  export default function StudentLogin() {
+  export default function StudentSingUp() {
     const dispatch = useDispatch();
-    const studentLogin = useSelector((state) => state.studentLogin);
+    const studentSingup = useSelector((state) => state.studentSingup);
     const history = useHistory();
   
     const paperStyle = {
@@ -48,16 +47,17 @@ import {
     const initialValues = {
       email: "",
       password: "",
-      remember: false,
+      studentcode:"",
     };
     const validationSchema = Yup.object().shape({
       email: Yup.string().email("Please enter valid email").required("Required"),
+      studentcode: Yup.string().required("Required"),
       password: Yup.string().required("Required"),
     });
     const onSubmit = (values, props) => {
       console.log(values);
+      dispatch(studentSingupAction(values, history));
       
-      dispatch(studentLoginAction(values, history));
     };
     return (
       <Grid>
@@ -67,7 +67,7 @@ import {
             <Avatar style={avatarStyle}>
               <LockOutlinedIcon />
             </Avatar>
-            <h2>Sign In</h2>
+            <h2>Sign Up</h2>
           </Grid>
           <Grid style={textStyle}>
             <Formik
@@ -86,15 +86,15 @@ import {
                     required
                     helperText={<ErrorMessage name="email" />}
                   />
-                  {/* <Field
+                  <Field
                     as={TextField}
                     label="Student Code"
-                    name="studentCode"
+                    name="studentcode"
                     placeholder="Enter Code"
                     fullWidth
                     required
-                    helperText={<ErrorMessage name="studentCode" />}
-                  /> */}
+                    helperText={<ErrorMessage name="studentcode" />}
+                  />
                   <Field
                     as={TextField}
                     label="Password"
@@ -105,21 +105,16 @@ import {
                     required
                     helperText={<ErrorMessage name="password" />}
                   />
-  
-                  <Field
-                    as={FormControlLabel}
-                    name="remember"
-                    control={<Checkbox color="primary" />}
-                    label="Remember me"
-                  />
-               {
-                  !studentLogin.error? null:
+                   {
+                  !studentSingup.error? null:
                   <Stack sx={{ width: '100%' }} spacing={2}>
               <Alert variant="filled" severity="error">
-                  {studentLogin.error}
+                  {studentSingup.error}
                    </Alert>
                    </Stack>
                 }
+                
+               {/* <p>{studentSingup.error}</p> */}
                   <Button
                     type="submit"
                     color="primary"
@@ -127,21 +122,15 @@ import {
                     fullWidth
                     style={btnStyle}
                     // disabled={props.isSubmitting}
-
                   >
-                    {studentLogin.loading ? "Loading" : "Sign in"}
+                    {studentSingup.loading ? "Loading" : "Sing Up"}
                   </Button>
                 </Form>
               )}
             </Formik>
             <Typography>
-              <Link href="#" style={forgotStyle}>
-                Forgot password?
-              </Link>
-            </Typography>
-            <Typography>
-              <Link href="/assessments/singup" style={forgotStyle}>
-                Create an account
+              <Link href="/assessments/studentLogin" style={forgotStyle}>
+                Already have an account?
               </Link>
             </Typography>
           </Grid>

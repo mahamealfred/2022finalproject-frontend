@@ -8,10 +8,14 @@ import { useParams } from "react-router-dom";
 
 function PieChart(resultsData) {
   const [data, setData] = useState({ datasets: [] });
-  console.log("examId Id resultsData", resultsData);
+  
   const params = useParams();
+  
+
   useEffect(() => {
+    
     async function fetchData() {
+      console.log("examId Id gg resultsData", resultsData);
       const id = params.id;
       const labelSet = [];
 
@@ -27,9 +31,8 @@ function PieChart(resultsData) {
       const nameSet = [];
       const valueSet = [];
 
-      const res = resultsData;
-
-      console.log("assessmentss detailes", res);
+      const res = resultsData.data;
+     
       labelSet.push("Assessments Analysis");
       for (const key in res) {
         let marks = res[key].marks;
@@ -76,7 +79,7 @@ function PieChart(resultsData) {
           value: marksBetween75and100,
         },
       ];
-      console.log("data set", data);
+    
       data.map((d) => {
         nameSet.push(d.name);
 
@@ -90,22 +93,41 @@ function PieChart(resultsData) {
           {
             label: "",
             data: valueSet,
-            backgroundColor: ["red", "green", "yellow", "pink", "blue"],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(255, 205, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(201, 203, 207, 0.2)'
+            ],
+         borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(75, 192, 192)',
+              'rgb(255, 205, 86)',
+              'rgb(255, 159, 64)',
+              'rgb(54, 162, 235)',
+              'rgb(153, 102, 255)',
+              'rgb(201, 203, 207)'
+            ],
+            borderWidth: 1,
             barThickness: 12,
           },
         ],
       });
     }
     fetchData();
-  }, []);
+  }, [resultsData]);
   return (
     <div className="pieChart">
-      <span className="pieChartTitle">Students Performance Based In {}</span>
-      <div className="chart">{/* <Pie
+      <span className="pieChartTitle">Students Performance Based on Gender {}</span>
+      <div className="chart"><Pie
     data={data}
     >
 
-    </Pie> */}</div>
+    </Pie></div>
     </div>
   );
 }

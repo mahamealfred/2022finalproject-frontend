@@ -30,6 +30,7 @@ import IconButton from "@material-ui/core/IconButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import moment from "moment";
 import { MenuItem } from "@material-ui/core";
+import logo from "../../../images/reb.jpg";
 
 
 import { Search as SearchIcon } from "react-feather";
@@ -109,7 +110,7 @@ export default function ListStudent({ openn, ...rest }) {
 
   const handleAdd = async () => {
     await dispatch(
-      addStudentBySchoolUser({ firstname, lastname, email, dob, gender, level })
+      addStudentBySchoolUser({ firstname, lastname, dob, gender, level })
     );
     setOpen(false);
     setFirstname("");
@@ -119,7 +120,7 @@ export default function ListStudent({ openn, ...rest }) {
     setGender("");
     setLevel("");
     await dispatch(getAllStudentsBySchoolUserAction());
-    console.log("added");
+  
   };
 
 useEffect(()=>{
@@ -157,9 +158,18 @@ useEffect(()=>{
     setOpenDelete(false);
     window.location.reload();
   };
-
-  const generateListOfAllStudent =()=> {
+  const todaydate=new Date().toISOString().slice(0,10);
+  const generateListOfAllPrimaryStudent =()=> {
     const doc = new jsPDF();
+    doc.addImage(logo, "JPEG", 20, 5, 40, 40);
+    doc.setFont("Helvertica", "normal");
+    doc.text("Rwanda Basic Education Board", 20, 50);
+    doc.text("School Name:", 20, 55);
+    doc.text("Email: info@reb.rw", 20, 60);
+    doc.setFont("Helvertica", "normal");
+    doc.text(`Date ${todaydate}`, 140, 65);
+    doc.setFont("Helvertica", "bold");
+    doc.text("Primary Level Students List Report", 70, 75);
      const tableColumn=['Last Name','First Name','Email','StudentCode','Gender','Level']
     const tableRows=[]
 
@@ -172,40 +182,83 @@ useEffect(()=>{
         student.gender,
         student.level,
        // format(new Date(student.updated_at), "yyyy-MM-dd")
+
       ];
+       if(student.level==="P6"){
       tableRows.push(studentData);
-      console.log(studentData)
+       }
+      
     });
-    const imageData=`<img src="../../Assets/images/reb.jpg" alt="" className="topAvatar" />`;
-   console.log('imge...',imageData)
+   
     doc.autoTable(tableColumn, tableRows, { 
-      startY: 20,
-      theme: "grid",
-     margin: 10,
-     styles: {
-       font: "courier",
-       fontSize: 12,
-       overflow: "linebreak",
-       cellPadding: 1,
-       halign: "left"
-     },
+      startY: 80,
+    theme: "striped",
+    margin: 10,
+    styles: {
+      font: "courier",
+      fontSize: 12,
+      overflow: "linebreak",
+      cellPadding: 3,
+      halign: "center",
+    },
+    head: [tableColumn],
+    body: [tableRows],
      });
   const date = Date().split(" ");
   const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
-  doc.text(" Students List.", 14, 15);
- doc.addImage(imageData, 'JPEG', 15, 40, 180, 160);
  doc.save(`report_${dateStr}.pdf`);
   };
-  const reportStudents = students.filter(student => student.status === "completed");
-  const assignColorToTicketStatus = student => {
-    if (student.status === "completed") {
-      return "p-3 mb-2 bg-success text-white";
-    } else if (student.status === "in_progress") {
-      return "p-3 mb-2 bg-warning text-dark";
-    } else if (student.status === "opened") {
-      return "p-3 mb-2 bg-light text-dark";
-    }
+  const generateListOfAllOrdinaryLevelStudent =()=> {
+    const doc = new jsPDF();
+    doc.addImage(logo, "JPEG", 20, 5, 40, 40);
+    doc.setFont("Helvertica", "normal");
+    doc.text("Rwanda Basic Education Board", 20, 50);
+    doc.text("School Name:", 20, 55);
+    doc.text("Email: info@reb.rw", 20, 60);
+    doc.setFont("Helvertica", "normal");
+    doc.text(`Date ${todaydate}`, 140, 65);
+    doc.setFont("Helvertica", "bold");
+    doc.text("Ordinary Level Students List Report", 70, 75);
+     const tableColumn=['Last Name','First Name','Email','StudentCode','Gender','Level']
+    const tableRows=[]
+
+    students.map(student =>{
+      const studentData=[
+        student.lastname,
+        student.firstname,
+        student.email,
+        student.studentcode,
+        student.gender,
+        student.level,
+       // format(new Date(student.updated_at), "yyyy-MM-dd")
+
+      ];
+       if(student.level==="S3"){
+      tableRows.push(studentData);
+       }
+      
+    });
+   
+    doc.autoTable(tableColumn, tableRows, { 
+      startY: 80,
+    theme: "striped",
+    margin: 10,
+    styles: {
+      font: "courier",
+      fontSize: 12,
+      overflow: "linebreak",
+      cellPadding: 3,
+      halign: "center",
+    },
+    head: [tableColumn],
+    body: [tableRows],
+     });
+  const date = Date().split(" ");
+  const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
+ doc.save(`report_${dateStr}.pdf`);
   };
+ 
+  
 
   const searchHandle = async (e) => {};
 
@@ -242,10 +295,18 @@ useEffect(()=>{
       <IconButton
                   aria-label="print"
                   color="secondary"
-                  onClick={() => generateListOfAllStudent(reportStudents)}
+                  onClick={() => generateListOfAllPrimaryStudent()}
                 >
                   <Report />
-                  Generate Report
+                  Generate P6 Report
+                </IconButton>
+                <IconButton
+                  aria-label="print"
+                  color="secondary"
+                  onClick={() => generateListOfAllOrdinaryLevelStudent()}
+                >
+                  <Report />
+                  Generate S3 Report
                 </IconButton>
 
     </Box>
@@ -281,14 +342,14 @@ useEffect(()=>{
               value={lastname}
               variant="outlined"
             />
-            <TextField
+            {/* <TextField
               id="outlined-basic"
               label="Email"
               name="email"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               variant="outlined"
-            />
+            /> */}
             <TextField
               id="date"
               label="Birthday"
@@ -489,9 +550,7 @@ useEffect(()=>{
                     </TableCell>
                     
                     <TableCell color="textPrimary" variant="body1">
-                    <TableBody className={assignColorToTicketStatus(student)}>
-                  {student.status}
-                </TableBody>
+                   
                       <IconButton
                         aria-label="update"
                         onClick={() => {

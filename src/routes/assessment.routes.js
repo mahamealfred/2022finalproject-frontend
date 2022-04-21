@@ -6,6 +6,7 @@ import PrivateRoute from "./PrivateRoute";
 import Home from "../components/pages/assessment/home/Home";
 import AssessmentSelect from "../components/pages/assessment/AssessmentSelect";
 import Question from "../components/pages/assessment/Question";
+import StudentSingUp from '../components/pages/login/StudentSingUp';
 
 
 function App() {
@@ -22,6 +23,11 @@ function App() {
                 exact
                 path={`${path}/studentLogin`}
                 component={StudentLogin}
+              />
+              <PrivateRoute
+                exact
+                path={`${path}/singup`}
+                component={StudentSingUp}
               />
              
               <PrivateRoute

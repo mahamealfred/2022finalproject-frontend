@@ -48,6 +48,7 @@ export default function PrimaryResult({ openn, ...rest }) {
   const [examId, setExamId] = useState("");
   const todaydate = new Date().toISOString().slice(0, 10);
   const [exams, setExams] = useState("");
+  console.log("am a results",results);
 
   //const [value, setValue] = React.useState(new Date());
 
@@ -94,13 +95,15 @@ export default function PrimaryResult({ openn, ...rest }) {
     doc.text("Rwanda Basic Education Board", 20, 50);
     doc.text("School Name:", 20, 55);
     doc.text("Email: info@reb.rw", 20, 60);
-    results.map((result) => {
+    primaryResultsState.results.map((result) => {
       doc.text(`${result.exam.level} ${result.exam.name} Results`, 20, 65);
     });
     doc.setFont("Helvertica", "normal");
     doc.text(`Date ${todaydate}`, 140, 65);
     doc.setFont("Helvertica", "bold");
-    doc.text("Primary Student Report", 70, 75);
+    primaryResultsState.results.map((result) => {
+    doc.text(`Primary Student Report in ${result.exam.name}`, 70, 75);
+    });
     const tableColumn = [
       "Full Name",
       "StudentCode",
@@ -111,7 +114,7 @@ export default function PrimaryResult({ openn, ...rest }) {
     ];
     const tableRows = [];
 
-    results.map((result) => {
+    primaryResultsState.results.map((result) => {
       const fullname = result.student.lastname + " " + result.student.firstname;
       const studentResult = [
         fullname,
