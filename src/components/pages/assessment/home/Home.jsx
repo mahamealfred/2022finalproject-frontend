@@ -6,18 +6,18 @@ import "./home.css"
 import{ useEffect, useRef } from "react"
 import  { init } from "ityped"
 
-import HomeTopbar from '../../../homeTopbar/HomeTopbar';
+import Topbar from "../../../homeTopbar/HomeTopbar";
 import Footer from '../../../Footer/Footer';
 
 export default function Home() {
 
   return (
     <>
-    {/* <Topbar /> */}
-    <HomeTopbar/>
+    <Topbar />
+    {/* <HomeTopbar/> */}
     <div className='header'>
       <div className='headerTitles'>
-      <span className='headerTitlesSm'>REB</span>
+      <span className='headerTitlesSm'>REB </span>
       {/* <span className='headerTitlesLg'>REB</span> */}
       </div>
    <img 

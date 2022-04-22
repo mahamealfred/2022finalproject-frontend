@@ -22,6 +22,7 @@ export default function Sidebar() {
   const history = useHistory();
   const dispatch = useDispatch();
   const [students, setStudents] = useState([]);
+  const todaydate = new Date().toISOString().slice(0, 10);
 
   const studentsState = useSelector(
     (state) => state.getSpecificStudentNumberInSchool
@@ -48,20 +49,27 @@ export default function Sidebar() {
   const generateReports = () => {
     const doc = new jsPDF();
     
-    doc.addImage(logo, "JPEG", 15, 20, 40, 40);
+    doc.addImage(logo, "JPEG", 20, 5, 40, 40);
+    doc.setFont("Helvertica", "normal");
+    doc.text("Rwanda Basic Education Board", 20, 50);
+    doc.text("School Name:", 20, 55);
+    doc.text("Email: info@reb.rw", 20, 60);
+    doc.setFont("Helvertica", "normal");
+    doc.text(`Date ${todaydate}`, 140, 65);
     doc.setFont("Helvertica", "bold");
-    doc.text(" Priamry Student List And Performance.", 20, 20);
+    doc.text(`Primary Student Report`, 70, 75);
+   
     doc.setFont("Helvertica", "bold");
-    doc.text(60, 60, "Level");
-    doc.text(60, 80, "Total Students");
-    doc.text(60, 100, "Number OF Male");
-    doc.text(60, 120, "Number OF Female");
+    doc.text(60, 100, "Level");
+    doc.text(60, 110, "Total Students");
+    doc.text(60, 120, "Number OF Male");
+    doc.text(60, 130, "Number OF Female");
     doc.text(60, 140, "Performance %");
     doc.setFont("Helvertica", "Normal");
-    doc.text(120, 60, "P6");
-    doc.text(120, 80, `${studentsState.students[0].totalStudentInPrimary}`);
-    doc.text(120, 100, `${studentsState.students[0].totalMaleStudentInPrimary}`);
-    doc.text(120, 120, `${studentsState.students[0].totalFemaleStudentInPrimary}`);
+    doc.text(120, 100, "P6");
+    doc.text(120, 110, `${studentsState.students[0].totalStudentInPrimary}`);
+    doc.text(120, 120, `${studentsState.students[0].totalMaleStudentInPrimary}`);
+    doc.text(120, 130, `${studentsState.students[0].totalFemaleStudentInPrimary}`);
     doc.text(120, 140, `${Math.round(
       (studentsState.students[0].primaryStudentPercentage[0]
         .total /
@@ -71,19 +79,26 @@ export default function Sidebar() {
       100
     )} %`);
     doc.addPage();
+    doc.addImage(logo, "JPEG", 20, 5, 40, 40);
+    doc.setFont("Helvertica", "normal");
+    doc.text("Rwanda Basic Education Board", 20, 50);
+    doc.text("School Name:", 20, 55);
+    doc.text("Email: info@reb.rw", 20, 60);
+    doc.setFont("Helvertica", "normal");
+    doc.text(`Date ${todaydate}`, 140, 65);
     doc.setFont("Helvertica", "bold");
-    doc.text(" Ordinary Level Student List And Performance.", 20, 20);
+    doc.text(`Ordinary Level Student Report`, 70, 75);
     doc.setFont("Helvertica", "bold");
-    doc.text(60, 60, "Level");
-    doc.text(60, 80, "Total Students");
-    doc.text(60, 100, "Number OF Male");
-    doc.text(60, 120, "Number OF Female");
+    doc.text(60, 100, "Level");
+    doc.text(60, 110, "Total Students");
+    doc.text(60, 120, "Number OF Male");
+    doc.text(60, 130, "Number OF Female");
     doc.text(60, 140, "Performance %");
     doc.setFont("Helvertica", "Normal");
-    doc.text(120, 60, "P6");
-    doc.text(120, 80, `${studentsState.students[0].totalStudentInOrdinary}`);
-    doc.text(120, 100, `${studentsState.students[0].totalMaleStudentInOrdinary}`);
-    doc.text(120, 120, `${studentsState.students[0].totalFemaleStudentInOrdinary}`);
+    doc.text(120, 100, "P6");
+    doc.text(120, 110, `${studentsState.students[0].totalStudentInOrdinary}`);
+    doc.text(120, 120, `${studentsState.students[0].totalMaleStudentInOrdinary}`);
+    doc.text(120, 130, `${studentsState.students[0].totalFemaleStudentInOrdinary}`);
     doc.text(120, 140, `${Math.round(
       (studentsState.students[0].ordinaryStudentPercentage[0]
         .total /
@@ -100,16 +115,7 @@ export default function Sidebar() {
   const reportStudents = students.filter(
     (student) => student.status === "completed"
   );
-  const assignColorToTicketStatus = (student) => {
-    if (student.status === "completed") {
-      return "p-3 mb-2 bg-success text-white";
-    } else if (student.status === "in_progress") {
-      return "p-3 mb-2 bg-warning text-dark";
-    } else if (student.status === "opened") {
-      return "p-3 mb-2 bg-light text-dark";
-    }
-  };
-
+  
   const handleLogout = () => {
     localStorage.removeItem("x-access-token");
     localStorage.removeItem("user-data");

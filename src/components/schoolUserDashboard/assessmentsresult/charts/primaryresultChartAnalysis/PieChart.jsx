@@ -5,20 +5,21 @@ import React from "react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 function PieChart(resultsData) {
   const [data, setData] = useState({ datasets: [] });
-  
+  const todaydate = new Date().toISOString().slice(0, 10);
   const params = useParams();
   
 
   useEffect(() => {
     
     async function fetchData() {
-      console.log("examId Id gg resultsData", resultsData);
+      console.log("examId Id gg resultsData", resultsData.data);
       const id = params.id;
       const labelSet = [];
-
+     
       let marksbetween0and25Counter = 0;
       let marksbetween25and50Counter = 0;
       let marksbetween50and75Counter = 0;
@@ -120,11 +121,23 @@ function PieChart(resultsData) {
     }
     fetchData();
   }, [resultsData]);
+
+ 
   return (
     <div className="pieChart">
-      <span className="pieChartTitle">Students Performance Based on Gender {}</span>
+      <span className="pieChartTitle">Students Performance in Assessment</span>
       <div className="chart"><Pie
     data={data}
+    options={{
+      layout: {
+        padding: {
+          left: 0,
+          right: 0,
+          top: 15,
+          bottom: 0
+        }
+      }
+    }}
     >
 
     </Pie></div>

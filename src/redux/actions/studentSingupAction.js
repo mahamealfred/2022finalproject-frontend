@@ -32,6 +32,7 @@ export const studentSingupAction = (data, history) => async (dispatch) => {
     const student = await res.data;
     dispatch(studentSingupSuccess({ data: student.data }));
     alert("Your account created successfully");
+    history.push('/assessments/studentLogin')
   } catch (err) {
     console.log(err);
     if (err.response) {

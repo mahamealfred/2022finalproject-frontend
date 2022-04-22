@@ -70,17 +70,7 @@ export default function PrimaryResult({ openn, ...rest }) {
     await dispatch(getPrimaryResultsBySchoolUserAction(id));
   };
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     if (!primaryResultsState.loading) {
-  //       if (primaryResultsState.results) {
-  //         setResults(primaryResultsState.results);
-  //       }
-  //     }
-  //   }
-  //   fetchData();
-  // }, [primaryResultsState.results]);
-
+ 
   useEffect(() => {
     async function fetchData() {
       await dispatch(getAvailablePrimaryExamsDoneAction());
@@ -149,15 +139,7 @@ export default function PrimaryResult({ openn, ...rest }) {
     doc.save(`report_${dateStr}.pdf`);
   };
   //const reportResults = results.filter(result => result.status === "completed");
-  const assignColorToTicketStatus = (result) => {
-    if (result.status === "completed") {
-      return "p-3 mb-2 bg-success text-white";
-    } else if (result.status === "in_progress") {
-      return "p-3 mb-2 bg-warning text-dark";
-    } else if (result.status === "opened") {
-      return "p-3 mb-2 bg-light text-dark";
-    }
-  };
+  
 
   const searchHandle = async (e) => {};
 
@@ -202,9 +184,9 @@ export default function PrimaryResult({ openn, ...rest }) {
           !examId? null:
         <div className="homeWidgets">
           <PieChartPri data={primaryResultsState.results} />
-          <BarChartPri />
+          <BarChartPri data={primaryResultsState.results} />
         </div>
-}
+        }
         <Box sx={{ mt: 3 }}>
           <Card>
             <CardContent>

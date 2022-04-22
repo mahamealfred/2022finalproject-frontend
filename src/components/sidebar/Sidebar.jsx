@@ -119,7 +119,7 @@ export default function Sidebar() {
         </div>
         
         <div className="sideBarMenu">
-          <h3 className="sideBarTitle">Notifications Menu</h3>
+          <h3 className="sideBarTitle">Notifications Menu & Report</h3>
           <ul className="sidebarList">
             <li className="sidebarListItem active">
               <LineStyle className="sidebarIcon" />
@@ -127,7 +127,11 @@ export default function Sidebar() {
             </li>
             <li className="sidebarListItem">
               <Report className="sidebarIcon" />
-              Reports
+              Generate Overall Reports
+            </li>
+            <li className="sidebarListItem">
+              <Report className="sidebarIcon" />
+              Generate School Performance Reports
             </li>
           </ul>
         </div>

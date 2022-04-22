@@ -34,7 +34,7 @@ export default function Topbar() {
                         <Language />
                            <span className="topIconBadge"> 2</span>
                     </div>
-                    {
+                    {/* {
                         !isAuth? null:
                     <div className="topbarIconContainer">
                     <IconButton color="inherit" onClick={()=>handleLogout()}>
@@ -42,7 +42,7 @@ export default function Topbar() {
                      </IconButton>
                           
                     </div>
-}
+} */}
                     <img src="../Assets/images/reb.jpg" alt="" className="topAvatar" />
                 </div>
 

@@ -55,7 +55,7 @@ export default function FeaturedInfo() {
             </span>
           </DialogTitle>
           <div className="featured">
-            <div className="featuredItem">
+            <div className="featuredItemOrdi">
               <span className="featuredTitle">
                 Total Students In Ordinary Level (S3)
               </span>
@@ -69,7 +69,7 @@ export default function FeaturedInfo() {
               </div>
               <span className="featuredSub">Quality Education</span>
             </div>
-            <div className="featuredItem">
+            <div className="featuredItemOrdi">
               <span className="featuredTitle">
                 Total Male Student In Ordinary (S3)
               </span>
@@ -81,10 +81,10 @@ export default function FeaturedInfo() {
                   Students <ArrowDownward className="featuredIcon negative" />
                 </span>
               </div>
-              <span className="featuredSub">Compared to last Month</span>
+              <span className="featuredSub">Compared to last semester</span>
             </div>
 
-            <div className="featuredItem">
+            <div className="featuredItemOrdi">
               <span className="featuredTitle">
                 Total Number of Female Student in Ordinary (P6)
               </span>
@@ -96,9 +96,9 @@ export default function FeaturedInfo() {
                   Students <ArrowDownward className="featuredIcon negative" />
                 </span>
               </div>
-              <span className="featuredSub">Compared to last Month</span>
+              <span className="featuredSub">Compared to last semester</span>
             </div>
-            <div className="featuredItem">
+            <div className="featuredItemOrdi">
               <span className="featuredTitle">General Performance (S3)</span>
               <div className="featuredMoneyContainer">
                   {
@@ -119,7 +119,7 @@ export default function FeaturedInfo() {
                   <ArrowUpward className="featuredIcon " />
                 </span>
               </div>
-              <span className="featuredSub">Compared to last Month</span>
+              <span className="featuredSub">Compared to last semester</span>
             </div>
           </div>
         </div>

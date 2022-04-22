@@ -13,6 +13,7 @@ import { getOrdinaryLevelExamsAction } from "../../../redux/actions/getOrdinaryL
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitle } from "@mui/material";
 import { MenuItem } from "@material-ui/core";
+import "./ordinaryLevelResults.css";
 
 import { Search as SearchIcon } from "react-feather";
 import {
@@ -33,6 +34,8 @@ import "jspdf-autotable";
 import { Report } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import logo from "../../../images/reb.jpg";
+import PieChartOrdi from "./charts/ordinaryresultChartAnalysis/PieChart";
+import BarChartOrdi from "./charts/ordinaryresultChartAnalysis/BarChart";
 
 export default function OrdinaryLevelResults({ openn, ...rest }) {
   const dispatch = useDispatch();
@@ -49,7 +52,7 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
   const [examId, setExamId] = useState("");
 
   const [exams, setExams] = useState("");
-  const todaydate=new Date().toISOString().slice(0,10);
+  const todaydate = new Date().toISOString().slice(0, 10);
   //const [value, setValue] = React.useState(new Date());
 
   const [limit, setLimit] = useState(10);
@@ -66,78 +69,77 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
   useEffect(() => {
     async function fetchData() {
       await dispatch(getOrdinaryLevelExamsAction());
-      setExamId(exams);
-
-      if (!ordinaryResultsState.loading) {
-        if (ordinaryResultsState.results) {
-          setResults(ordinaryResultsState.results);
-          await dispatch(getOrdinaryLevelResultsBySchoolUserAction(examId));
-        }
-      }
     }
     fetchData();
-  }, [ordinaryResultsState.results]);
+  }, []);
 
-  
-  const generateOrdinaryLevelStudentsResult =()=> {
+  const getExamByIdData = async (id) => {
+    setExamId(id);
+    await dispatch(getOrdinaryLevelResultsBySchoolUserAction(id));
+  };
+  const handleExamData = (e) => {
+    
+    const id = e.target.value;
+    setExams(id);
+    getExamByIdData(id);
+  };
+
+  const generateOrdinaryLevelStudentsResult = () => {
     const doc = new jsPDF();
     doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
     doc.text("Rwanda Basic Education Board", 20, 50);
     doc.text("School Name:", 20, 55);
     doc.text("Email: info@reb.rw", 20, 60);
-    results.map(result=>{
-      doc.text(`${result.exam.level} ${result.exam.name} Results`,20, 65);
-    })
+    results.map((result) => {
+      doc.text(`${result.exam.level} ${result.exam.name} Results`, 20, 65);
+    });
     doc.setFont("Helvertica", "normal");
     doc.text(`Date ${todaydate}`, 140, 65);
     doc.setFont("Helvertica", "bold");
     doc.text("Ordinary Level Student Report", 70, 75);
-     const tableColumn=['Full Name','StudentCode','Gender','Assessment','Marks','Level']
-    const tableRows=[]
+    const tableColumn = [
+      "Full Name",
+      "StudentCode",
+      "Gender",
+      "Assessment",
+      "Marks",
+      "Level",
+    ];
+    const tableRows = [];
 
-    results.map(result =>{
-      const fullname=result.student.lastname+' '+result.student.firstname;
-      const studentResult=[
+    ordinaryResultsState.results.map((result) => {
+      const fullname = result.student.lastname + " " + result.student.firstname;
+      const studentResult = [
         fullname,
         result.student.studentcode,
         result.student.gender,
         result.exam.name,
         result.marks,
         result.student.level,
-       // format(new Date(student.updated_at), "yyyy-MM-dd")
+        // format(new Date(student.updated_at), "yyyy-MM-dd")
       ];
       tableRows.push(studentResult);
-      console.log(studentResult)
+      console.log(studentResult);
     });
- 
-   doc.autoTable(tableColumn, tableRows, {
-    startY: 80,
-    theme: "striped",
-    margin: 10,
-    styles: {
-      font: "courier",
-      fontSize: 12,
-      overflow: "linebreak",
-      cellPadding: 3,
-      halign: "center",
-    },
-    head: [tableColumn],
-    body: [tableRows],
-  });
-  const date = Date().split(" ");
-  const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
- doc.save(`report_${dateStr}.pdf`);
-  };
-  //const reportResults = results.filter(result => result.status === "completed");
-  const assignColorToTicketStatus = result => {
-    if (result.status === "completed") {
-      return "p-3 mb-2 bg-success text-white";
-    } else if (result.status === "in_progress") {
-      return "p-3 mb-2 bg-warning text-dark";
-    } else if (result.status === "opened") {
-      return "p-3 mb-2 bg-light text-dark";
-    }
+
+    doc.autoTable(tableColumn, tableRows, {
+      startY: 80,
+      theme: "striped",
+      margin: 10,
+      styles: {
+        font: "courier",
+        fontSize: 12,
+        overflow: "linebreak",
+        cellPadding: 3,
+        halign: "center",
+      },
+      head: [tableColumn],
+      body: [tableRows],
+    });
+    const date = Date().split(" ");
+    const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
+    doc.save(`report_${dateStr}.pdf`);
   };
 
   const searchHandle = async (e) => {};
@@ -152,6 +154,30 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
           <DialogTitle>Ordinary Level Assessment Results (S3)</DialogTitle>
         </span>
         <Box sx={{ mt: 3 }}>
+          <Box sx={{ maxWidth: 300 }}>
+            <TextField
+              select
+              fullWidth
+              label="Select Assessment"
+              variant="outlined"
+              style={{ marginBottom: 30 }}
+              value={exams}
+              onChange={(e) => handleExamData(e)}
+            >
+              {getOrdinaryLevelExamsState.exams.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.subject}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+          {
+          !examId? null:
+        <div className="homeWidgets">
+          <PieChartOrdi data={ordinaryResultsState.results} />
+          <BarChartOrdi data={ordinaryResultsState.results} />
+        </div>
+        }
           <Card>
             <CardContent>
               <Box sx={{ maxWidth: 500 }}>
@@ -172,31 +198,14 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
                 />
               </Box>
             </CardContent>
-            <Box sx={{ maxWidth: 300 }}>
-              <TextField
-                select
-                fullWidth
-                label="Select Assessment"
-                variant="outlined"
-                style={{ marginBottom: 30 }}
-                value={exams}
-                onChange={(e) => setExams(e.target.value)}
-              >
-                {getOrdinaryLevelExamsState.exams.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.subject}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <IconButton
-                  aria-label="print"
-                  color="secondary"
-                  onClick={() => generateOrdinaryLevelStudentsResult()}
-                >
-                  <Report />
-                  Generate Report
-                </IconButton>
-            </Box>
+            <IconButton
+              aria-label="print"
+              color="secondary"
+              onClick={() => generateOrdinaryLevelStudentsResult()}
+            >
+              <Report />
+              Generate Report
+            </IconButton>
           </Card>
         </Box>
 
@@ -216,100 +225,104 @@ export default function OrdinaryLevelResults({ openn, ...rest }) {
               </TableHead>
               <TableBody>
                 <>
-                  {results.slice(0, limit).map((result) => (
-                    <TableRow
-                      hover
-                      key={result.id}
-                      //  selected={selectedStudentIds.indexOf(student.id) !== -1}
-                    >
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {result.student.lastname}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {result.student.firstname}
-                          </Typography>
-                        </Box>
-                      </TableCell>
+                  {ordinaryResultsState.results
+                    ? ordinaryResultsState.results
+                        .slice(0, limit)
+                        .map((result) => (
+                          <TableRow
+                            hover
+                            key={result.id}
+                            //  selected={selectedStudentIds.indexOf(student.id) !== -1}
+                          >
+                            <TableCell>
+                              <Box
+                                sx={{
+                                  alignItems: "center",
+                                  display: "flex",
+                                }}
+                              >
+                                <Typography color="textPrimary" variant="body1">
+                                  {result.student.lastname}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Box
+                                sx={{
+                                  alignItems: "center",
+                                  display: "flex",
+                                }}
+                              >
+                                <Typography color="textPrimary" variant="body1">
+                                  {result.student.firstname}
+                                </Typography>
+                              </Box>
+                            </TableCell>
 
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {result.student.studentcode}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {result.exam.subject}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {result.marks}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {result.student.gender}
-                          </Typography>
-                        </Box>
-                      </TableCell>
+                            <TableCell>
+                              <Box
+                                sx={{
+                                  alignItems: "center",
+                                  display: "flex",
+                                }}
+                              >
+                                <Typography color="textPrimary" variant="body1">
+                                  {result.student.studentcode}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Box
+                                sx={{
+                                  alignItems: "center",
+                                  display: "flex",
+                                }}
+                              >
+                                <Typography color="textPrimary" variant="body1">
+                                  {result.exam.subject}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Box
+                                sx={{
+                                  alignItems: "center",
+                                  display: "flex",
+                                }}
+                              >
+                                <Typography color="textPrimary" variant="body1">
+                                  {result.marks}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Box
+                                sx={{
+                                  alignItems: "center",
+                                  display: "flex",
+                                }}
+                              >
+                                <Typography color="textPrimary" variant="body1">
+                                  {result.student.gender}
+                                </Typography>
+                              </Box>
+                            </TableCell>
 
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {result.student.level}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                            <TableCell>
+                              <Box
+                                sx={{
+                                  alignItems: "center",
+                                  display: "flex",
+                                }}
+                              >
+                                <Typography color="textPrimary" variant="body1">
+                                  {result.student.level}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                    : null}
                 </>
               </TableBody>
             </Table>

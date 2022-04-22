@@ -38,10 +38,13 @@ function PieChart() {
         })
         .then(function (res) {
           labelSet.push( "Assessments Results ");
+          const numberOfMale=parseInt(res[0].studentCount);
+          const numberofFemale =  parseInt( res[1].studentCount);
+          const resCount=numberOfMale + numberofFemale;
           for (const val of res) {
-            const resCount = val.AssessmentCount;
+            // const resCount = val.AssessmentCount;
             const genderValue=val['student.gender']
-            const finalTotal = ((val.total / (resCount * 100)) * 100).toFixed(2);
+            const finalTotal =Math.round((val.total / (resCount * 100)) * 100);
             dataSet1.push(finalTotal);
             genderSet.push(genderValue)
           }
