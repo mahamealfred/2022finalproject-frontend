@@ -1,12 +1,40 @@
 import "./pieChart.css";
 import "chart.js/auto";
 import { Pie } from "react-chartjs-2";
+import 'chartjs-plugin-datalabels';
+import 'chart.piecelabel.js';
 import React from "react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+
+const RADIAN = Math.PI / 180;
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+}) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
 function PieChart(resultsData) {
   const [data, setData] = useState({ datasets: [] });
   const todaydate = new Date().toISOString().slice(0, 10);
@@ -41,27 +69,28 @@ function PieChart(resultsData) {
         console.log("All students", totalNumberStudents);
         if (marks < 25) {
           marksbetween0and25Counter = marksbetween0and25Counter + 1;
-          marksBetween0and25 = Math.round(
+          marksBetween0and25 = (
             (marksbetween0and25Counter / totalNumberStudents) * 100
-          );
+          ).toFixed(2);
           //break;
         } else if (marks <= 50) {
           marksbetween25and50Counter = marksbetween25and50Counter + 1;
-          marksBetween25and50 = Math.round(
+          marksBetween25and50 = (
             (marksbetween25and50Counter / totalNumberStudents) * 100
-          );
+          ).toFixed(2);
           //break;
         } else if (marks <= 75) {
           marksbetween50and75Counter = marksbetween50and75Counter + 1;
-          marksBetween50and75 = Math.round(
+          marksBetween50and75 = (
             (marksbetween50and75Counter / totalNumberStudents) * 100
-          );
+          ).toFixed(2);
+         
           // break;
         } else {
           marksbetween75and100Counter = marksbetween75and100Counter + 1;
-          marksBetween75and100 = Math.round(
+          marksBetween75and100 = (
             (marksbetween75and100Counter / totalNumberStudents) * 100
-          );
+          ).toFixed(2) ;
           // break;
         }
       }
@@ -69,15 +98,15 @@ function PieChart(resultsData) {
         { name: "Marks with range 0-25 ", value: marksBetween0and25 },
         {
           name: "Marks with range 26-50 ",
-          value: marksBetween25and50,
+          value: marksBetween25and50 ,
         },
         {
           name: "Makrs with range 51-75",
-          value: marksBetween50and75,
+          value: marksBetween50and75 ,
         },
         {
-          name: "Makrs with range 76-100 ",
-          value: marksBetween75and100,
+          name: "Makrs with range 76-100",
+          value: marksBetween75and100 ,
         },
       ];
     
@@ -92,7 +121,7 @@ function PieChart(resultsData) {
 
         datasets: [
           {
-            label: "",
+            label: "%",
             data: valueSet,
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
@@ -117,6 +146,7 @@ function PieChart(resultsData) {
             barThickness: 12,
           },
         ],
+      
       });
     }
     fetchData();
@@ -125,18 +155,19 @@ function PieChart(resultsData) {
  
   return (
     <div className="pieChart">
-      <span className="pieChartTitle">Students Performance in Assessment</span>
+      <span className="pieChartTitle">Students Performance in  Assessment</span>
       <div className="chart"><Pie
     data={data}
     options={{
-      layout: {
-        padding: {
-          left: 0,
-          right: 0,
-          top: 15,
-          bottom: 0
-        }
-      }
+      legend: { display: true, position: "right" },
+
+      datalabels: {
+        display: true,
+        color: "white",
+      },
+      tooltips: {
+        backgroundColor: "#5a6e7f",
+      },
     }}
     >
 

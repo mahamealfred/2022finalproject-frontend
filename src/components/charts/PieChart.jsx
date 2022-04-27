@@ -42,11 +42,31 @@ function PieChart() {
         })
         .then(function(res) {
           labelSet.push("Assessments Results ");
+          const numberOfMale=parseInt(res[0].studentCount);
+          const numberofFemale =  parseInt( res[1].studentCount);
+          const resCount=numberOfMale + numberofFemale;
+          const maleTotal=parseInt(res[0].total);
+          const femaleTotal=parseInt(res[1].total);
+          const parcentageOfMaleandFemale=((parseInt(maleTotal)+parseInt(femaleTotal))/(resCount*100)*100).toFixed(2);
+          const parcentageMale=((parseInt(maleTotal)/(resCount*100))*100).toFixed(2)
+          const parcentageFemale=((parseInt(femaleTotal)/(resCount*100))*100).toFixed(2)
+          //const maleTotal=((parseInt(res[0].total)/(numberOfMale*100))*100).toFixed(2);
+          //const femaleTotal=((parseInt(res[1].total)/(numberofFemale*100))*100).toFixed(2);
+         // const parcentageOfMaleandFemale=(parseInt(maleTotal) + parseInt(femaleTotal))/resCount;
+          
           for (const val of res) {
-            const resCount = val.AssessmentCount;
             const genderValue = val["student.gender"];
-            const finalTotal = ((val.total / (resCount * 100)) * 100).toFixed( 2);
-            dataSet1.push(finalTotal);
+            const total=0
+            if(genderValue=="male"){
+              total=((parcentageMale/parcentageOfMaleandFemale)*100).toFixed(2)
+             //total=1
+              dataSet1.push(total);
+            }
+            else{
+              total=((parcentageFemale/parcentageOfMaleandFemale)*100).toFixed(2);
+            // total=2
+              dataSet1.push(total);
+            }
 
             genderSet.push(genderValue);
           }

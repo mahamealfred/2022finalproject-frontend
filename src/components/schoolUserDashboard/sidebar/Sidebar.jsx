@@ -48,7 +48,7 @@ export default function Sidebar() {
 
   const generateReports = () => {
     const doc = new jsPDF();
-    
+    doc.rect(18, 18, doc.internal.pageSize.width - 44, doc.internal.pageSize.height - 44, 'S');
     doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
     doc.text("Rwanda Basic Education Board", 20, 50);
@@ -79,6 +79,7 @@ export default function Sidebar() {
       100
     )} %`);
     doc.addPage();
+    doc.rect(18, 18, doc.internal.pageSize.width - 44, doc.internal.pageSize.height - 44, 'S');
     doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
     doc.text("Rwanda Basic Education Board", 20, 50);
@@ -95,7 +96,7 @@ export default function Sidebar() {
     doc.text(60, 130, "Number OF Female");
     doc.text(60, 140, "Performance %");
     doc.setFont("Helvertica", "Normal");
-    doc.text(120, 100, "P6");
+    doc.text(120, 100, "S3");
     doc.text(120, 110, `${studentsState.students[0].totalStudentInOrdinary}`);
     doc.text(120, 120, `${studentsState.students[0].totalMaleStudentInOrdinary}`);
     doc.text(120, 130, `${studentsState.students[0].totalFemaleStudentInOrdinary}`);
@@ -179,7 +180,7 @@ export default function Sidebar() {
               <IconButton
                 color="secondary"
                 size="small"
-                fontSize="24px"
+                fontSize="20px"
                 onClick={() => generateReports()}
               >
                 <Report className="sidebarIcon" />

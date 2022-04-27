@@ -2,7 +2,7 @@ import React from 'react'
 import './widgetLarge.css';
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+export let p6schoolPerformance=[]
 export default function WidgetLarge() {
 
     const [data,setData]=useState([]);
@@ -35,16 +35,14 @@ export default function WidgetLarge() {
               return res;
             })
             .then(function(res) {
-              
+             
               setData(res)
+              p6schoolPerformance=res
               
             //   for (const val of res) {
             //     const schoolName=val['school.name'];
             //     console.log("schoool name", schoolName)
-            //   }
-    
-             
-              
+            //   }  
             })
             .catch(function(error) {
               console.log("error", error);
@@ -70,7 +68,7 @@ export default function WidgetLarge() {
                 <span className="widgetLargName">{d['school.name']}</span>
                    </td>
                    <td className="widgetLargeAmount">P6</td>
-                   <td className="widgetLargeAmount">{(d['results.avarage'])}%</td>
+                   <td className="widgetLargeAmount">{(d['results.avarage']).toFixed(2)}%</td>
                 </tr>
                            )))
                         }

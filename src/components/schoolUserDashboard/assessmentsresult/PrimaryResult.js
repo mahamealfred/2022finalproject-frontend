@@ -34,6 +34,7 @@ import logo from "../../../images/reb.jpg";
 import "./primaryresult.css";
 import PieChartPri from "./charts/primaryresultChartAnalysis/PieChart";
 import BarChartPri from "./charts/primaryresultChartAnalysis/BarChart";
+import PieChartExample from "./charts/primaryresultChartAnalysis/PieCharExample";
 export default function PrimaryResult({ openn, ...rest }) {
   const dispatch = useDispatch();
   const primaryResultsState = useSelector(
@@ -185,6 +186,7 @@ export default function PrimaryResult({ openn, ...rest }) {
         <div className="homeWidgets">
           <PieChartPri data={primaryResultsState.results} />
           <BarChartPri data={primaryResultsState.results} />
+      
         </div>
         }
         <Box sx={{ mt: 3 }}>

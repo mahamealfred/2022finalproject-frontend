@@ -2,7 +2,7 @@ import React from 'react'
 import './ordinaryLevelWidgetLarge.css';
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+export let s3SchoolsPerformance=[];
 export default function OrdinaryLevelWidgetLarge() {
 
     const [data,setData]=useState([]);
@@ -37,6 +37,7 @@ export default function OrdinaryLevelWidgetLarge() {
             .then(function(res) {
               
               setData(res)
+              s3SchoolsPerformance=res;
               
             //   for (const val of res) {
             //     const schoolName=val['school.name'];
@@ -67,7 +68,7 @@ export default function OrdinaryLevelWidgetLarge() {
                 <span className="widgetLargName">{d['school.name']}</span>
                    </td>
                    <td className="widgetLargeAmount">S3</td>
-                   <td className="widgetLargeAmount">{(d['results.avarage'])}%</td>
+                   <td className="widgetLargeAmount">{(d['results.avarage']).toFixed(2)}%</td>
                 </tr>
                            )))
                         }

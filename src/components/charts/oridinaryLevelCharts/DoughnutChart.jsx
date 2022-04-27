@@ -12,7 +12,7 @@ function DoughnutChart() {
       const labelSet = [];
       const dataSet1 = [];
       const dataSet2 = [];
-      const examSet=[]
+      const schoolSet=[]
       const token = await localStorage.getItem("x-access-token");
       let headers;
       if (token) {
@@ -26,7 +26,7 @@ function DoughnutChart() {
         };
       }
       await axios
-        .get(`http://localhost:8000/results/ordinarylevelpersentageresultsinallassessment`, {
+        .get(`http://localhost:8000/results/topordinarylevelresult`, {
           headers: headers,
         })
         .then(function (response) {
@@ -34,17 +34,18 @@ function DoughnutChart() {
           return res;
         })
         .then(function (res) {
-          labelSet.push(" All Assessment Results ");
+          labelSet.push(" Ordinary Level Schools Performance ");
           for (const val of res) {
-            const resCount = val.AssessmentCount;
-            const examName=val['exam.Name']
-            const finalTotal = ((val.total / (resCount * 100)) * 100).toFixed(2);
-            dataSet1.push(finalTotal);
-            examSet.push(examName)
+            
+            const schoolName=val['school.name'] +"%";
+           // const finalTotal = ((val.total / (resCount * 100)) * 100).toFixed(2);
+           const percentageResult=val['results.avarage']
+            dataSet1.push(percentageResult);
+            schoolSet.push(schoolName)
           }
-          console.log("lebal set...:", res);
+        
           setData({
-            labels:examSet,
+            labels:schoolSet,
           datasets: [
             {
               label: labelSet,
