@@ -4,6 +4,7 @@ import { useRouteMatch, Switch, Route } from "react-router-dom";
 import Home from "../components/districtUserDashboard/home/Home";
 import OrdinaryLevelResults from "../components/districtUserDashboard/studentResults/OrdinaryLevelResults";
 import PrimaryResults from "../components/districtUserDashboard/studentResults/PrimaryResults";
+import School from "../components/districtUserDashboard/school/School";
 import SchoolDashboard from "../Views/DistrictDashboard";
 // import ListStudent from "../components/districtUserDashboard/students/ListStudent";
 import {useEffect} from "react";
@@ -46,7 +47,7 @@ function App() {
 
               <PrivateRoute exact path={`${path}/primaryresults`} component={PrimaryResults} />
               <PrivateRoute exact path={`${path}/ordinarylevelresults`} component={OrdinaryLevelResults} />
-
+              <PrivateRoute exact path={`${path}/schools`} component={School} />
               {/* <PrivateRoute
                 exact
                 path={`${path}/students`}

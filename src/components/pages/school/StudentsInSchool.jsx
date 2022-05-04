@@ -38,6 +38,7 @@ import PieChartPri from "../school/schoolAnalytics/primary/PieChart";
 import BarChartPri from "../school/schoolAnalytics/primary/BarChart";
 import DoughnutChartOrdi from "../school/schoolAnalytics/ordinarylevel/DoughnutChart";
 import DoughnutChartPri from "../school/schoolAnalytics/primary/DoughnutChart";
+
 const StudentsInSchool = ({ ...rest }) => {
   // const dispatch = useDispatch()
 
@@ -54,6 +55,8 @@ const StudentsInSchool = ({ ...rest }) => {
   const [selectedProductIds, setSelectedProductIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [results, setResults] = useState({});
+ 
   const todaydate=new Date().toISOString().slice(0,10);
 
   const handleLimitChange = (event) => {
@@ -219,7 +222,53 @@ const StudentsInSchool = ({ ...rest }) => {
     }
   }, [!getStudentBySchoolIdState.loading]);
 
-  const searchHandle = async (e) => {};
+  const trimString = (s) => {
+    var l = 0,
+      r = s.length - 1;
+    while (l < s.length && s[l] == " ") l++;
+    while (r > l && s[r] == " ") r -= 1;
+    return s.substring(l, r + 1);
+  };
+  const compareObjects = (o1, o2) => {
+    var k = "";
+    for (k in o1) if (o1[k] != o2[k]) return false;
+    for (k in o2) if (o1[k] != o2[k]) return false;
+    return true;
+  };
+  const itemExists = (haystack, needle) => {
+    for (var i = 0; i < haystack.length; i++)
+      if (compareObjects(haystack[i], needle)) return true;
+    return false;
+  };
+  const searchHandle = async (e) => {
+    setSearch(true);
+    const searchKey = e.target.value;
+    // console.log(e.target.value)
+
+    try {
+      var results = [];
+      const toSearch = trimString(searchKey); // trim it
+      for (var i = 0; i < students.length; i++) {
+        for (var key in students[i]) {
+          if (students[i][key] != null) {
+            if (
+              students[i][key].toString().toLowerCase().indexOf(toSearch) !=
+              -1
+            ) {
+              if (!itemExists(results, students[i]))
+                results.push(students[i]);
+            }
+          }
+        }
+      }
+      setResults(results);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+ 
+  
+
 
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
@@ -299,6 +348,98 @@ const StudentsInSchool = ({ ...rest }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
+                {
+                    search?(
+                      <>
+                      {results.slice(0, limit).map((student) => (
+                        <TableRow
+                          hover
+                          key={student.id}
+                          selected={selectedProductIds.indexOf(student.id) !== -1}
+                        >
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                {student.lastname + " " + student.firstname}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                {student.studentcode}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                {student.gender}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+    
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                {student.level}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                <Box
+                                  sx={{
+                                    alignItems: "center",
+                                    display: "flex",
+                                  }}
+                                >
+                                  {!student.results[0] ? (
+                                    "No Marks"
+                                  ) : (
+                                    <Typography color="textPrimary" variant="body1">
+                                      {student.results[0].marks}
+                                    </Typography>
+                                  )}
+                                </Box>
+                              </Typography>
+                            </Box>
+                          </TableCell>
+    
+                          <TableCell
+                            color="textPrimary"
+                            variant="body1"
+                          ></TableCell>
+                        </TableRow>
+                      ))}
+                    </>
+                    ):(
                 <>
                   {students.slice(0, limit).map((student) => (
                     <TableRow
@@ -388,6 +529,7 @@ const StudentsInSchool = ({ ...rest }) => {
                     </TableRow>
                   ))}
                 </>
+                    )}
               </TableBody>
             </Table>
           </Box>

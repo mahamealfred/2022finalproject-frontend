@@ -47,6 +47,8 @@ export default function PrimaryResult({ openn, ...rest }) {
   const [results, setResults] = useState([]);
   const [students, setStudents] = useState([]);
   const [examId, setExamId] = useState("");
+  const [search, setSearch] = useState(false);
+  const [searchresults,setSearchresults]=useState({});
   const todaydate = new Date().toISOString().slice(0, 10);
   const [exams, setExams] = useState("");
   console.log("am a results",results);
@@ -142,7 +144,52 @@ export default function PrimaryResult({ openn, ...rest }) {
   //const reportResults = results.filter(result => result.status === "completed");
   
 
-  const searchHandle = async (e) => {};
+  
+  const trimString = (s) => {
+    var l = 0,
+      r = s.length - 1;
+    while (l < s.length && s[l] == " ") l++;
+    while (r > l && s[r] == " ") r -= 1;
+    return s.substring(l, r + 1);
+  };
+  const compareObjects = (o1, o2) => {
+    var k = "";
+    for (k in o1) if (o1[k] != o2[k]) return false;
+    for (k in o2) if (o1[k] != o2[k]) return false;
+    return true;
+  };
+  const itemExists = (haystack, needle) => {
+    for (var i = 0; i < haystack.length; i++)
+      if (compareObjects(haystack[i], needle)) return true;
+    return false;
+  };
+  const searchHandle = async (e) => {
+    setSearch(true);
+    const searchKey = e.target.value;
+    // console.log(e.target.value)
+
+    try {
+      var searchresults = [];
+      const toSearch = trimString(searchKey); // trim it
+      for (var i = 0; i < students.length; i++) {
+        for (var key in students[i]) {
+          if (students[i][key] != null) {
+            if (
+              students[i][key].toString().toLowerCase().indexOf(toSearch) !=
+              -1
+            ) {
+              if (!itemExists(searchresults, students[i]))
+              searchresults.push(students[i]);
+            }
+          }
+        }
+      }
+      setSearchresults(searchresults);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   const handleExamData = (e) => {
     console.log("hahahahah majhame")
@@ -150,6 +197,7 @@ export default function PrimaryResult({ openn, ...rest }) {
     setExams(id)
     getExamByIdData(id)
   }
+  
 
   return (
     <>
@@ -235,6 +283,106 @@ export default function PrimaryResult({ openn, ...rest }) {
                 </TableRow>
               </TableHead>
               <TableBody>
+                {
+
+                search?(
+                  <>
+                  { searchresults.slice(0, limit).map((result) => (
+                    <TableRow
+                      hover
+                      key={result.id}
+                      //  selected={selectedStudentIds.indexOf(student.id) !== -1}
+                    >
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {result.student.lastname}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {result.student.firstname}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {result.student.studentcode}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {result.exam.subject}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {result.marks}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {result.student.gender}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {result.student.level}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  )) }
+                </>
+                ):(
                 <>
                   {primaryResultsState.results ? primaryResultsState.results.slice(0, limit).map((result) => (
                     <TableRow
@@ -331,6 +479,7 @@ export default function PrimaryResult({ openn, ...rest }) {
                     </TableRow>
                   )) : null}
                 </>
+                )}
               </TableBody>
             </Table>
           </Box>

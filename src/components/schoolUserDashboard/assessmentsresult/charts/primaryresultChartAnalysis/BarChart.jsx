@@ -34,29 +34,29 @@ function BarChart(resultsData) {
         let marks = res[key].marks;
         let totalNumberStudents = res.length;
         console.log("All students", totalNumberStudents);
-        if (marks < 25) {
+        if (marks <= 25) {
           marksbetween0and25Counter = marksbetween0and25Counter + 1;
-          marksBetween0and25 = Math.round(
+          marksBetween0and25 = (
             (marksbetween0and25Counter / totalNumberStudents) * 100
-          );
+          ).toFixed(2);
           //break;
-        } else if (marks <= 50) {
+        } else if (marks>25 && marks <= 50) {
           marksbetween25and50Counter = marksbetween25and50Counter + 1;
-          marksBetween25and50 = Math.round(
+          marksBetween25and50 = (
             (marksbetween25and50Counter / totalNumberStudents) * 100
-          );
+          ).toFixed(2);
           //break;
-        } else if (marks <= 75) {
+        } else if (marks>50 &&marks <= 75) {
           marksbetween50and75Counter = marksbetween50and75Counter + 1;
-          marksBetween50and75 = Math.round(
+          marksBetween50and75 = (
             (marksbetween50and75Counter / totalNumberStudents) * 100
-          );
+          ).toFixed(2);
           // break;
         } else {
           marksbetween75and100Counter = marksbetween75and100Counter + 1;
-          marksBetween75and100 = Math.round(
+          marksBetween75and100 = (
             (marksbetween75and100Counter / totalNumberStudents) * 100
-          );
+          ).toFixed(2);
           // break;
         }
       }

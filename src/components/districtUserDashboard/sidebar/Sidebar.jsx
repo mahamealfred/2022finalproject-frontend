@@ -38,19 +38,15 @@ export default function Sidebar() {
                 Home
               </li>
             </Link>
-            <li className="sidebarListItem">
-              <Timeline className="sidebarIcon" />
-              Analytics
-            </li>
           </ul>
         </div>
         <div className="sideBarMenu">
           <h3 className="sideBarTitle">Schools Menu</h3>
           <ul className="sidebarList">
-            <Link to="/districtdashboard/school" className="link">
+            <Link to="/districtdashboard/schools" className="link">
               <li className="sidebarListItem">
                 <Person className="sidebarIcon" />
-                Students
+                Schools
               </li>
             </Link>
           </ul>

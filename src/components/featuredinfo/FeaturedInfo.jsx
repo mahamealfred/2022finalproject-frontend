@@ -39,7 +39,7 @@ export default function FeaturedInfo() {
       ) : (
           <>
            <DialogTitle>
-            <span className="featuredStudent">Primary Level Information (P6)</span>
+            <span className="featuredStudent">Primary Level Analytics (P6)</span>
           </DialogTitle>
         <div className="featured" >
             <div className="featuredItem">

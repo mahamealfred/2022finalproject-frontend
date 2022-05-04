@@ -72,7 +72,8 @@ export default function ListStudent({ openn, ...rest }) {
   const [schoolId, setSchoolId] = useState("");
   const [studentId, setStudentId] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
-
+  const [results, setResults] = useState({});
+  const [search, setSearch] = useState(false);
   const addStudent = useSelector((state) => state.addStudentBySchoolUser);
   const deleteStudent = useSelector((state) => state.deleteStudent);
   //const [value, setValue] = React.useState(new Date());
@@ -260,7 +261,50 @@ useEffect(()=>{
  
   
 
-  const searchHandle = async (e) => {};
+  const trimString = (s) => {
+    var l = 0,
+      r = s.length - 1;
+    while (l < s.length && s[l] == " ") l++;
+    while (r > l && s[r] == " ") r -= 1;
+    return s.substring(l, r + 1);
+  };
+  const compareObjects = (o1, o2) => {
+    var k = "";
+    for (k in o1) if (o1[k] != o2[k]) return false;
+    for (k in o2) if (o1[k] != o2[k]) return false;
+    return true;
+  };
+  const itemExists = (haystack, needle) => {
+    for (var i = 0; i < haystack.length; i++)
+      if (compareObjects(haystack[i], needle)) return true;
+    return false;
+  };
+  const searchHandle = async (e) => {
+    setSearch(true);
+    const searchKey = e.target.value;
+    // console.log(e.target.value)
+
+    try {
+      var results = [];
+      const toSearch = trimString(searchKey); // trim it
+      for (var i = 0; i < students.length; i++) {
+        for (var key in students[i]) {
+          if (students[i][key] != null) {
+            if (
+              students[i][key].toString().toLowerCase().indexOf(toSearch) !=
+              -1
+            ) {
+              if (!itemExists(results, students[i]))
+                results.push(students[i]);
+            }
+          }
+        }
+      }
+      setResults(results);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
@@ -451,6 +495,141 @@ useEffect(()=>{
               </TableRow>
             </TableHead>
             <TableBody>
+              {
+                search?(
+                  <>
+                  {results.slice(0, limit).map((student) => (
+                    <TableRow
+                      hover
+                      key={student.id}
+                      //  selected={selectedStudentIds.indexOf(student.id) !== -1}
+                    >
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {student.lastname}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {student.firstname}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {student.email}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {student.studentcode}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {student.gender}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            12
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {student.level}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        {moment(student.createdAt).format("DD/MM/YYYY")}
+                      </TableCell>
+                      <TableCell>
+                        {moment(student.updatedAt).format("DD/MM/YYYY")}
+                      </TableCell>
+                      
+                      <TableCell color="textPrimary" variant="body1">
+                     
+                        <IconButton
+                          aria-label="update"
+                          onClick={() => {
+                            // setproductId(product.id);
+                            // setName(product.name);
+                            // setcategoryId(product.categoryId);
+                            // setPrice(product.price);
+                            // setImageUrl(product.imageUrl);
+                            // setDescription(product.description)
+                            // setQuantity(product.quantity);
+                            setOpenUpdate(true);
+                          }}
+                        >
+                          <BorderColorIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label="delete"
+                          color="secondary"
+                          onClick={() => {
+                            setStudentId(student.id);
+                            setFirstname(student.firstname);
+                            setLastname(student.lastname);
+                            setOpenDelete(true);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+                ):(
+              
               <>
                 {students.slice(0, limit).map((student) => (
                   <TableRow
@@ -582,6 +761,7 @@ useEffect(()=>{
                   </TableRow>
                 ))}
               </>
+                )}
             </TableBody>
           </Table>
         </Box>

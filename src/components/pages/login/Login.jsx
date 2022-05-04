@@ -32,11 +32,13 @@ export default function Login() {
     margin: "80px auto",
   };
   const avatarStyle = {
-    backgroundColor: "green",
+    backgroundColor: "#0474BA",
     margin: "8px 0px",
   };
   const btnStyle = {
-    margin: "8px 0px",
+    backgroundColor: "#F9842C",
+    margin: "6px 0px",
+    color:"#FFFF",
   };
   const textStyle = {
     margin: "30px 0px",

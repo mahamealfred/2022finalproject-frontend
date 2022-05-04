@@ -70,7 +70,7 @@ export default function District({ openn, ...rest }) {
   const [openDelete, setOpenDelete] = useState(false);
   const [examId, setExamId] = useState("");
   const [level, setLevel] = useState("");
-
+  const [results, setResults] = useState({});
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
@@ -180,8 +180,50 @@ export default function District({ openn, ...rest }) {
     }
   }, [!examsState.exams,!getDistrictsState.districts]);
 
-  const searchHandle = async (e) => {};
+  const trimString = (s) => {
+    var l = 0,
+      r = s.length - 1;
+    while (l < s.length && s[l] == " ") l++;
+    while (r > l && s[r] == " ") r -= 1;
+    return s.substring(l, r + 1);
+  };
+  const compareObjects = (o1, o2) => {
+    var k = "";
+    for (k in o1) if (o1[k] != o2[k]) return false;
+    for (k in o2) if (o1[k] != o2[k]) return false;
+    return true;
+  };
+  const itemExists = (haystack, needle) => {
+    for (var i = 0; i < haystack.length; i++)
+      if (compareObjects(haystack[i], needle)) return true;
+    return false;
+  };
+  const searchHandle = async (e) => {
+    setSearch(true);
+    const searchKey = e.target.value;
+    // console.log(e.target.value)
 
+    try {
+      var results = [];
+      const toSearch = trimString(searchKey); // trim it
+      for (var i = 0; i < districts.length; i++) {
+        for (var key in districts[i]) {
+          if (districts[i][key] != null) {
+            if (
+              districts[i][key].toString().toLowerCase().indexOf(toSearch) !=
+              -1
+            ) {
+              if (!itemExists(results, districts[i]))
+                results.push(districts[i]);
+            }
+          }
+        }
+      }
+      setResults(results);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
       <Box sx={{ mt: 3 }}>
@@ -200,7 +242,7 @@ export default function District({ openn, ...rest }) {
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search an Exam"
+                placeholder="Search a district"
                 variant="outlined"
               />
             </Box>
@@ -360,6 +402,81 @@ export default function District({ openn, ...rest }) {
               </TableRow>
             </TableHead>
             <TableBody>
+              {
+
+              search?(
+                <>
+                {results.slice(0, limit).map((district) => (
+                  <TableRow
+                    hover
+                    key={district.id}
+                    selected={selectedExamIds.indexOf(district.id) !== -1}
+                  >
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography color="textPrimary" variant="body1">
+                          {district.name}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography color="textPrimary" variant="body1">
+                          {district.provincename}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+
+                    <TableCell>
+                      {moment(district.createdAt).format("DD/MM/YYYY")}
+                    </TableCell>
+                    <TableCell>
+                      {moment(district.updatedAt).format("DD/MM/YYYY")}
+                    </TableCell>
+                    <TableCell color="textPrimary" variant="body1">
+                      <IconButton
+                        aria-label="update"
+                        onClick={() => {
+                        //   setExamId(exam.id);
+                        //   setName(exam.name);
+                        //   setSubject(exam.subject);
+                        //   setStartDate(exam.startDate);
+
+                          setOpenUpdate(true);
+                        }}
+                      >
+                        <BorderColorIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        color="secondary"
+                        onClick={() => {
+                        //   setExamId(exam.id);
+                        //   setName(exam.name);
+                        //   setSubject(exam.subject);
+                        //   setLevel(exam.level);
+                        //   setStartDate(exam.startDate);
+                         setOpenDelete(true);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+              ):(
               <>
                 {districts.slice(0, limit).map((district) => (
                   <TableRow
@@ -431,6 +548,7 @@ export default function District({ openn, ...rest }) {
                   </TableRow>
                 ))}
               </>
+              )}
             </TableBody>
           </Table>
         </Box>

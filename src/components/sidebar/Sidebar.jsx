@@ -428,7 +428,7 @@ export default function Sidebar() {
         <div className="sideBarMenu">
           <h3 className="sideBarTitle">Results Menu</h3>
           <ul className="sidebarList">
-            <Link to="/dashboard/exams" className="link">
+            <Link to="/dashboard/results" className="link">
               <li className="sidebarListItem active">
                 <LineStyle className="sidebarIcon" />
                 Primary Results

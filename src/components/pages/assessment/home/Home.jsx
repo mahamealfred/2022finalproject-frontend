@@ -16,10 +16,9 @@ export default function Home() {
     <Topbar />
     {/* <HomeTopbar/> */}
     <div className='header'>
-      <div className='headerTitles'>
+      {/* <div className='headerTitles'>
       <span className='headerTitlesSm'>REB </span>
-      {/* <span className='headerTitlesLg'>REB</span> */}
-      </div>
+      </div> */}
    <img 
    className='headerImg'
    src="../../Assets/images/students5.jpg"
@@ -28,14 +27,19 @@ export default function Home() {
    <div  className='startassessment'>
    <Button
          
-          variant="contained"
-          color="primary"
+         style={{
+          borderRadius: 10,
+          backgroundColor: "#F9842C",
+          fontSize: "18px",
+          alignSelf:"center", marginTop:20 
+          }}
+         variant="contained"
           size="large"
-          style={{alignSelf:"center", marginTop:20 }}
+         
           href="/assessments/studentLogin"
           
         >
-          Go To Assessment
+          Go To Assessment 
         </Button>
    </div>
     

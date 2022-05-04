@@ -5,6 +5,8 @@ import "./homeTopBar.css";
 import InputIcon from "@material-ui/icons/Input";
 import { IconButton } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 
 export default function HomeTopbar() {
   const history = useHistory();
@@ -16,24 +18,28 @@ export default function HomeTopbar() {
   };
   return (
     <div className="topbar">
-      <div className="topbarWrapper">
-        <div className="topLeft">
-          <img src="../../Assets/images/reb.jpg" alt="" className="topAvatar" />
+        <div className="topbarWrapper">
+            <div className="topLeft">
+            <img src="../../Assets/images/reb.jpg" alt="" className="topAvatar" />
+            </div>
+            <div className="topCenter">
+            <span className="centerText">
+            Primary and Ordinary level Quality Eduction Booster
+             </span>
+            </div>
+            
+            {/* <div className="topRight">
+            {
+                !isAuth ?null: 
+            <Stack spacing={2} direction="row">
+            <Button variant="text">BEN</Button>
+            <Button variant="outlined">Logout</Button>
+           </Stack>
+              }
+            </div> */}
+       
         </div>
-        <div className="leftTopBar">
-          <span className="logo">
-            Primary and Ordinary level Quality Eduction  Booster
-          </span>
-        </div>
-        {/* {
-          !isAuth? null:
-        <div className="toRight">
-          <IconButton color="inherit" onClick={() => handleLogout()}>
-            <InputIcon />
-          </IconButton>
-        </div>
-} */}
-      </div>
+
     </div>
   );
 }

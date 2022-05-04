@@ -1,11 +1,12 @@
 .topbar{
     width: 100%;
-    height: 80px;
-    background-color:rgb(255, 255, 255);
+    height: 190px;
+    background-color:rgb(231, 29, 29);
+    /* background-color:rgb(255, 255, 255); */
     position: sticky;
     top:0;
     z-index: 999;
-
+    align-items: center;
 }
 
 .topbarWrapper{
@@ -15,45 +16,117 @@
     align-items: center;
     justify-content: space-between;
 }
-.leftTopBar{
-    margin: "0 0 0 0";
-}
-.logo{
-    font-weight: bold;
-    font-size: 35px;
-    color:rgb(99, 148, 240);
-    cursor: pointer;
-    margin-right: 10em;
-}
-.topbarIconContainer{
-    position:relative;
-    cursor: pointer;
-    margin-right: 10px;
-    color: #555;
-
-}
-.topIconBadge{
-    width: 15px;
-    height: 15px;
-    position:absolute;
-    top: -5px;
-    right: 0px;
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 10px;
-}
-.toRight{
-    display: flex;
-    align-items: center;
-}
 .topAvatar{
-    width: 80px;
-    height: 80px;
-    border-radius: 30%;
+    /* width: 300px;
+    height: 300px; */
+    border-radius: 8em;
     object-fit: contain;
     cursor: pointer;
 } 
+.centerText{
+    font-weight: bold;
+    font-size: 35px;
+    color:#0474BA;
+    cursor: pointer;
+    margin-right: 9em;
+}
+/* .toLeft{
+    width: 300px;
+    height: 300px; 
+} */
+.topCenter{
+ 
+    margin: "0 0 0 0";
+}
+
+@media  (max-width: 1200px) {
+    .centerText {
+        font-weight: bold;
+        font-size: 28px;
+        margin-right: 3em;
+        
+    }
+    .topRightItem{
+        font-size: 28px;  
+    }
+    .topAvatar{
+        width: 90px;
+        height: 100px;
+    } 
+    .topRight{
+  
+    }
+    .topbarWrapper{
+        padding: 0px 6px;
+        justify-content: space-between;
+    }
+   
+}  
+@media  (max-width: 800px) {
+    .centerText {
+        font-weight: bold;
+        font-size: 22px;
+        margin-right: 2.5em; 
+    }
+    .topRightItem{
+        font-size: 20px;  
+    }
+    .topAvatar{
+        width: 90px;
+        height: 100px; 
+    } 
+    .topRight{
+   
+    }
+    .topbarWrapper{
+        padding: 0px 4px;
+        justify-content: space-between;
+    }
+}  
+@media (max-width: 600px) {
+    .centerText {
+        font-weight: bold;
+        font-size: 17px;
+        margin-right: 1.5em;   
+    }
+    .topRightItem{
+        font-size: 16px;  
+    }
+    .topAvatar{
+        width: 80px;
+        height: 900px;
+       
+    } 
+    .topRight{
+    
+    }
+    .topbarWrapper{
+       
+        padding: 0px 2px;
+        justify-content: space-between;
+    }
+}
+@media (max-width: 500px) {
+    .centerText {
+        font-weight: bold;
+        font-size: 17px;
+        margin-right: 1.5em;   
+    }
+    .topRightItem{
+        font-size: 8px;  
+    }
+    .topAvatar{
+        width: 60px;
+        height: 700px;
+       
+    } 
+    .topRight{
+    
+   
+    }
+    .topbarWrapper{
+       
+        padding: 0px 1px;
+        justify-content: space-between;
+    }
+}

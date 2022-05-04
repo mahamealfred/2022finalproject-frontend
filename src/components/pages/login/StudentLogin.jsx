@@ -33,11 +33,15 @@ import {
       margin: "80px auto",
     };
     const avatarStyle = {
-      backgroundColor: "green",
+      
+      backgroundColor: "#0474BA",
       margin: "8px 0px",
     };
     const btnStyle = {
+      backgroundColor: "#F9842C",
       margin: "6px 0px",
+      color:"#FFFF",
+     
     };
     const textStyle = {
       margin: "20px 0px",
@@ -122,7 +126,6 @@ import {
                 }
                   <Button
                     type="submit"
-                    color="primary"
                     variant="contained"
                     fullWidth
                     style={btnStyle}

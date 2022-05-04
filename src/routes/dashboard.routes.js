@@ -84,6 +84,11 @@ function App() {
                 path={`${path}/districts`}
                 component={District}
               />
+              <PrivateRoute
+                exact
+                path={`${path}/results`}
+                component={Result}
+              />
               <PrivateRoute exact path={`${path}/studentsinschool/:id`} component={StudentsInSchool}/>
             </>
           )}

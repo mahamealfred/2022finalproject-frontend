@@ -19,7 +19,7 @@ import { addSchoolAction } from "../../../redux/actions/addSchoolAction";
 import { updateSchoolAction } from "../../../redux/actions/updateSchoolAction";
 import { deleteSchoolAction } from "../../../redux/actions/deleteSchoolAction";
 import { getAllDistrict } from "../../../redux/actions/districtsAction";
-
+import {searchSchoolAction} from "../../../redux/actions/searchSchoolAction";
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
 import IconButton from "@material-ui/core/IconButton";
@@ -47,6 +47,7 @@ export default function School({ openn, ...rest }) {
   const dispatch = useDispatch();
   const schoolsState = useSelector((state) => state.schools);
   const districtsState = useSelector((state) => state.districts);
+  const searchSchool=useSelector((state)=>state.searchSchool);
   const [schools, setSchools] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [open, setOpen] = React.useState(false);
@@ -151,7 +152,6 @@ export default function School({ openn, ...rest }) {
     setDistrictId("");
     setSector("");
     setCell("");
-
     setSearch(false);
     await dispatch(getAllSchool());
   };
@@ -162,8 +162,60 @@ export default function School({ openn, ...rest }) {
     window.location.reload();
   };
 
-  const searchHandle = async (e) => {};
+  // const searchHandle = async (e) => {
+  //   setSearch(true);
+  //   let searchKey=e.target.value;
+  //   await dispatch(searchSchoolAction(searchKey));
+  //   setResults(schools)
+  //   console.log("school...",searchSchool);
+  // };
+
+  const trimString = (s) => {
+    var l = 0,
+      r = s.length - 1;
+    while (l < s.length && s[l] == " ") l++;
+    while (r > l && s[r] == " ") r -= 1;
+    return s.substring(l, r + 1);
+  };
+  const compareObjects = (o1, o2) => {
+    var k = "";
+    for (k in o1) if (o1[k] != o2[k]) return false;
+    for (k in o2) if (o1[k] != o2[k]) return false;
+    return true;
+  };
+  const itemExists = (haystack, needle) => {
+    for (var i = 0; i < haystack.length; i++)
+      if (compareObjects(haystack[i], needle)) return true;
+    return false;
+  };
+  const searchHandle = async (e) => {
+    setSearch(true);
+    const searchKey = e.target.value;
+    // console.log(e.target.value)
+
+    try {
+      var results = [];
+      const toSearch = trimString(searchKey); // trim it
+      for (var i = 0; i < schools.length; i++) {
+        for (var key in schools[i]) {
+          if (schools[i][key] != null) {
+            if (
+              schools[i][key].toString().toLowerCase().indexOf(toSearch) !=
+              -1
+            ) {
+              if (!itemExists(results, schools[i]))
+                results.push(schools[i]);
+            }
+          }
+        }
+      }
+      setResults(results);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   console.log(results);
+  
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
       <Box sx={{ mt: 3 }}>
@@ -182,7 +234,7 @@ export default function School({ openn, ...rest }) {
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search School"
+                placeholder="Search School "
                 variant="outlined"
               />
             </Box>
@@ -378,106 +430,212 @@ export default function School({ openn, ...rest }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              <>
-                {schools.slice(0, limit).map((school) => (
-                  <TableRow
-                    hover
-                    key={school.id}
-                    selected={selectedSchoolIds.indexOf(school.id) !== -1}
-                  >
-                    <TableCell>
-                      <Box
-                        sx={{
-                          alignItems: "center",
-                          display: "flex",
-                        }}
-                      >
-                        <Typography color="textPrimary" variant="body1">
-                          {school.name}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          alignItems: "center",
-                          display: "flex",
-                        }}
-                      >
-                        <Typography color="textPrimary" variant="body1">
-                          {school.district.name}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          alignItems: "center",
-                          display: "flex",
-                        }}
-                      >
-                        <Typography color="textPrimary" variant="body1">
-                          {school.sector}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          alignItems: "center",
-                          display: "flex",
-                        }}
-                      >
-                        <Typography color="textPrimary" variant="body1">
-                          {school.cell}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-
-                    <TableCell>
-                      {moment(school.createdAt).format("DD/MM/YYYY")}
-                    </TableCell>
-                    <TableCell>
-                      {moment(school.updatedAt).format("DD/MM/YYYY")}
-                    </TableCell>
-                    <TableCell color="textPrimary" variant="body1">
-                    <IconButton arial-label="add">
-                        <Link to={`/dashboard/studentsinschool/${school.id}`}>
-                          <ViewComfyIcon/>
-                        </Link>
-                      </IconButton>
-                      <IconButton
-                        aria-label="update"
-                        onClick={() => {
-                          setSchoolId(school.id);
-                          setName(school.name);
-                          setDistrictId(school.districtId);
-                          setSector(school.sector);
-                          setCell(school.cell);
-                          setOpenUpdate(true);
-                          setOpenUpdate(true);
-                        }}
-                      >
-                        <BorderColorIcon />
-                      </IconButton>
-                      <IconButton
-                        aria-label="delete"
-                        color="secondary"
-                        onClick={() => {
-                          setSchoolId(school.id);
-                          setName(school.name);
-                          setDistrictId(school.districtId);
-                          setSector(school.sector);
-                          setCell(school.cell);
-                          setOpenDelete(true);
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </>
+              {
+                search ? (
+                  <>
+                  {results.slice(0, limit).map((school) => (
+                    <TableRow
+                      hover
+                      key={school.id}
+                      selected={selectedSchoolIds.indexOf(school.id) !== -1}
+                    >
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {school.name}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {school.district.name}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {school.sector}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {school.cell}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+  
+                      <TableCell>
+                        {moment(school.createdAt).format("DD/MM/YYYY")}
+                      </TableCell>
+                      <TableCell>
+                        {moment(school.updatedAt).format("DD/MM/YYYY")}
+                      </TableCell>
+                      <TableCell color="textPrimary" variant="body1">
+                      <IconButton arial-label="add">
+                          <Link to={`/dashboard/studentsinschool/${school.id}`}>
+                            <ViewComfyIcon/>
+                          </Link>
+                        </IconButton>
+                        <IconButton
+                          aria-label="update"
+                          onClick={() => {
+                            setSchoolId(school.id);
+                            setName(school.name);
+                            setDistrictId(school.districtId);
+                            setSector(school.sector);
+                            setCell(school.cell);
+                            setOpenUpdate(true);
+                            setOpenUpdate(true);
+                          }}
+                        >
+                          <BorderColorIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label="delete"
+                          color="secondary"
+                          onClick={() => {
+                            setSchoolId(school.id);
+                            setName(school.name);
+                            setDistrictId(school.districtId);
+                            setSector(school.sector);
+                            setCell(school.cell);
+                            setOpenDelete(true);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+                ):(
+                  <>
+                  {schools.slice(0, limit).map((school) => (
+                    <TableRow
+                      hover
+                      key={school.id}
+                      selected={selectedSchoolIds.indexOf(school.id) !== -1}
+                    >
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {school.name}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {school.district.name}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {school.sector}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {school.cell}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+  
+                      <TableCell>
+                        {moment(school.createdAt).format("DD/MM/YYYY")}
+                      </TableCell>
+                      <TableCell>
+                        {moment(school.updatedAt).format("DD/MM/YYYY")}
+                      </TableCell>
+                      <TableCell color="textPrimary" variant="body1">
+                      <IconButton arial-label="add">
+                          <Link to={`/dashboard/studentsinschool/${school.id}`}>
+                            <ViewComfyIcon/>
+                          </Link>
+                        </IconButton>
+                        <IconButton
+                          aria-label="update"
+                          onClick={() => {
+                            setSchoolId(school.id);
+                            setName(school.name);
+                            setDistrictId(school.districtId);
+                            setSector(school.sector);
+                            setCell(school.cell);
+                            setOpenUpdate(true);
+                            setOpenUpdate(true);
+                          }}
+                        >
+                          <BorderColorIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label="delete"
+                          color="secondary"
+                          onClick={() => {
+                            setSchoolId(school.id);
+                            setName(school.name);
+                            setDistrictId(school.districtId);
+                            setSector(school.sector);
+                            setCell(school.cell);
+                            setOpenDelete(true);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+                )
+              }
+             
             </TableBody>
           </Table>
         </Box>

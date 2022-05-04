@@ -1,18 +1,19 @@
 .header{
-    margin-top: 60px;
+    margin-top: 30px;
 }
 .headerTitles{
     display: flex;
     flex-direction: column;
     align-items: center;
     font-family: 'Lora',serif;
-    color: #444;
+    color: rgb(68, 68, 68);
+    
 }
 .headerTitlesSm{
     position: absolute;
     top: 18%;
     font-size: 30px;
-    color: rgb(82, 82, 248);
+    color: #0474BA;
     font-weight: bold;
     
 }

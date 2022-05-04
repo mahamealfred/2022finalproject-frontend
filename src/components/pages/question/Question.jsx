@@ -161,7 +161,50 @@ const Question = ({ ...rest }) => {
     }
   }, [!getQuestionByExamIdState.loading]);
 
-  const searchHandle = async (e) => {};
+  const trimString = (s) => {
+    var l = 0,
+      r = s.length - 1;
+    while (l < s.length && s[l] == " ") l++;
+    while (r > l && s[r] == " ") r -= 1;
+    return s.substring(l, r + 1);
+  };
+  const compareObjects = (o1, o2) => {
+    var k = "";
+    for (k in o1) if (o1[k] != o2[k]) return false;
+    for (k in o2) if (o1[k] != o2[k]) return false;
+    return true;
+  };
+  const itemExists = (haystack, needle) => {
+    for (var i = 0; i < haystack.length; i++)
+      if (compareObjects(haystack[i], needle)) return true;
+    return false;
+  };
+  const searchHandle = async (e) => {
+    setSearch(true);
+    const searchKey = e.target.value;
+    // console.log(e.target.value)
+
+    try {
+      var results = [];
+      const toSearch = trimString(searchKey); // trim it
+      for (var i = 0; i < questions.length; i++) {
+        for (var key in questions[i]) {
+          if (questions[i][key] != null) {
+            if (
+              questions[i][key].toString().toLowerCase().indexOf(toSearch) !=
+              -1
+            ) {
+              if (!itemExists(results, questions[i]))
+                results.push(questions[i]);
+            }
+          }
+        }
+      }
+      setResults(results);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
@@ -345,6 +388,100 @@ const Question = ({ ...rest }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
+                {
+                  search ? (
+                    <>
+                    {results.slice(0, limit).map((question) => (
+                      <TableRow
+                        hover
+                        key={question.id}
+                        selected={selectedProductIds.indexOf(question.id) !== -1}
+                      >
+                        <TableCell>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <Typography color="textPrimary" variant="body1">
+                              {question.question}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <Typography color="textPrimary" variant="body1">
+                              {question.correct_answer}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <Typography color="textPrimary" variant="body1">
+                              {question.incorrect_answer.map((answer) => (
+                                <Box
+                                  sx={{
+                                    alignItems: "center",
+                                    display: "flex",
+                                  }}
+                                >
+                                  <Typography color="textPrimary" variant="body1">
+                                    {answer}
+                                  </Typography>
+                                </Box>
+                              ))}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+  
+                        <TableCell>
+                          {moment(question.createdAt).format("DD/MM/YYYY")}
+                        </TableCell>
+                        <TableCell>
+                          {moment(question.updatedAt).format("DD/MM/YYYY")}
+                        </TableCell>
+                        <TableCell color="textPrimary" variant="body1">
+                          <IconButton
+                            aria-label="update"
+                            onClick={() => {
+                              setQuestionId(question.id);
+                              setQuestion(question.question);
+                              setCorrect_answer(question.correct_answer);
+                              setIncorrect_answer(question.incorrect_answer);
+                              setOpenUpdate(true);
+                            }}
+                          >
+                            <BorderColorIcon />
+                          </IconButton>
+                          <IconButton
+                            aria-label="delete"
+                            color="secondary"
+                            onClick={() => {
+                              setQuestionId(question.id);
+                              setQuestion(question.question);
+                              setCorrect_answer(question.correct_answer);
+                              setIncorrect_answer(question.incorrect_answer);
+                              setOpenDelete(true);
+                            }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
+                  ):(
                 <>
                   {questions.slice(0, limit).map((question) => (
                     <TableRow
@@ -436,6 +573,7 @@ const Question = ({ ...rest }) => {
                     </TableRow>
                   ))}
                 </>
+                )}
               </TableBody>
             </Table>
           </Box>

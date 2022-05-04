@@ -39,7 +39,7 @@ export default function FeaturedInfoOrdi() {
       ) : (
           <>
           <DialogTitle>
-            <span className="featuredStudent">Ordinary Level Information (S3)</span>
+            <span className="featuredStudent">Ordinary Level Analytics (S3)</span>
           </DialogTitle>
         <div className="featured" >
             <div className="featuredItemOrdinary">

@@ -63,10 +63,37 @@ export default function Exam({ openn, ...rest }) {
   const [openDelete, setOpenDelete] = useState(false);
   const [examId, setExamId] = useState("");
   const [level, setLevel] = useState("");
+  const [results, setResults] = useState({});
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
+  const subjects = [
+    {
+      value: "Mathematics",
+      label: "Mathematics",
+    },
+    {
+      value: "English",
+      label: "English",
+    },
+    {
+      value: "Physics",
+      label: "Physics",
+    },
+    {
+      value: "Kinyarwanda",
+      label: "Kinyarwanda",
+    },
+    {
+      value: "Social Study",
+      label: "Social Study",
+    },
+    {
+      value: "Chemistry",
+      label: "Chemistry",
+    },
+  ];
   const levels = [
     {
       value: "P6",
@@ -159,7 +186,50 @@ export default function Exam({ openn, ...rest }) {
     }
   }, [examsState.exams]);
 
-  const searchHandle = async (e) => {};
+  const trimString = (s) => {
+    var l = 0,
+      r = s.length - 1;
+    while (l < s.length && s[l] == " ") l++;
+    while (r > l && s[r] == " ") r -= 1;
+    return s.substring(l, r + 1);
+  };
+  const compareObjects = (o1, o2) => {
+    var k = "";
+    for (k in o1) if (o1[k] != o2[k]) return false;
+    for (k in o2) if (o1[k] != o2[k]) return false;
+    return true;
+  };
+  const itemExists = (haystack, needle) => {
+    for (var i = 0; i < haystack.length; i++)
+      if (compareObjects(haystack[i], needle)) return true;
+    return false;
+  };
+  const searchHandle = async (e) => {
+    setSearch(true);
+    const searchKey = e.target.value;
+    // console.log(e.target.value)
+
+    try {
+      var results = [];
+      const toSearch = trimString(searchKey); // trim it
+      for (var i = 0; i < exams.length; i++) {
+        for (var key in exams[i]) {
+          if (exams[i][key] != null) {
+            if (
+              exams[i][key].toString().toLowerCase().indexOf(toSearch) !=
+              -1
+            ) {
+              if (!itemExists(results, exams[i]))
+                results.push(exams[i]);
+            }
+          }
+        }
+      }
+      setResults(results);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
@@ -179,7 +249,7 @@ export default function Exam({ openn, ...rest }) {
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search an Exam"
+                placeholder="Search an Assessment"
                 variant="outlined"
               />
             </Box>
@@ -188,11 +258,11 @@ export default function Exam({ openn, ...rest }) {
       </Box>
 
       <Button variant="outlined" onClick={handleClickOpen}>
-        Add Exam
+        Add Assessment
       </Button>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Exam Details</DialogTitle>
+        <DialogTitle>Assessment Details</DialogTitle>
         {
                   !addExam.error? null:
                   <Stack sx={{ width: '100%' }} spacing={2}>
@@ -203,7 +273,7 @@ export default function Exam({ openn, ...rest }) {
                 }
         <DialogContent>
           <DialogContentText>
-            Please enter Exam information here.
+            Please enter Assessment information here.
           </DialogContentText>
 
           <Box
@@ -214,14 +284,27 @@ export default function Exam({ openn, ...rest }) {
             noValidate
             autoComplete="off"
           >
-            <TextField
+            {/* <TextField
               id="outlined-basic"
               label="Subject"
               name="subject"
               onChange={(e) => setSubject(e.target.value)}
               value={subject}
               variant="outlined"
-            />
+            /> */}
+             <TextField
+              id="outlined-select-currency"
+              select
+              onChange={(e) => setSubject(e.target.value)}
+              label="subject"
+              helperText="Please select your subject"
+            >
+              {subjects.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
             <TextField
               id="outlined-basic"
               label="Description"
@@ -267,10 +350,10 @@ export default function Exam({ openn, ...rest }) {
       </Dialog>
 
       <Dialog open={openUpdate} onClose={handleClose}>
-        <DialogTitle>Update Exam Details</DialogTitle>
+        <DialogTitle>Update Assessment Details</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please Edit Exam information here.
+            Please Edit Assessment information here.
           </DialogContentText>
 
           <Box
@@ -361,7 +444,8 @@ export default function Exam({ openn, ...rest }) {
             <TableHead>
               <TableRow>
                 <TableCell>Subject</TableCell>
-                <TableCell>Assessment Name</TableCell>
+                <TableCell>Assessment Description</TableCell>
+                <TableCell>Level</TableCell>
                 <TableCell>Start Date</TableCell>
                 <TableCell>Created Date</TableCell>
                 <TableCell>Update Date</TableCell>
@@ -369,8 +453,10 @@ export default function Exam({ openn, ...rest }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              <>
-                {exams.slice(0, limit).map((exam) => (
+              {
+              search?(
+                <>
+                {results.slice(0, limit).map((exam) => (
                   <TableRow
                     hover
                     key={exam.id}
@@ -408,7 +494,19 @@ export default function Exam({ openn, ...rest }) {
                         }}
                       >
                         <Typography color="textPrimary" variant="body1">
-                          {exam.startDate}
+                          {exam.level}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography color="textPrimary" variant="body1">
+                          {moment(exam.startDate).format("DD/MM/YYYY")}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -456,6 +554,107 @@ export default function Exam({ openn, ...rest }) {
                   </TableRow>
                 ))}
               </>
+              ):(
+              <>
+                {exams.slice(0, limit).map((exam) => (
+                  <TableRow
+                    hover
+                    key={exam.id}
+                    selected={selectedExamIds.indexOf(exam.id) !== -1}
+                  >
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography color="textPrimary" variant="body1">
+                          {exam.subject}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography color="textPrimary" variant="body1">
+                          {exam.name}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography color="textPrimary" variant="body1">
+                          {exam.level}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography color="textPrimary" variant="body1">
+                          {moment(exam.startDate).format("DD/MM/YYYY")}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+
+                    <TableCell>
+                      {moment(exams.createdAt).format("DD/MM/YYYY")}
+                    </TableCell>
+                    <TableCell>
+                      {moment(exam.updatedAt).format("DD/MM/YYYY")}
+                    </TableCell>
+                    <TableCell color="textPrimary" variant="body1">
+                      <IconButton arial-label="add">
+                        <Link to={`/dashboard/questions/${exam.id}`}>
+                          <DescriptionIcon />
+                        </Link>
+                      </IconButton>
+                      <IconButton
+                        aria-label="update"
+                        onClick={() => {
+                          setExamId(exam.id);
+                          setName(exam.name);
+                          setSubject(exam.subject);
+                          setStartDate(exam.startDate);
+
+                          setOpenUpdate(true);
+                        }}
+                      >
+                        <BorderColorIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        color="secondary"
+                        onClick={() => {
+                          setExamId(exam.id);
+                          setName(exam.name);
+                          setSubject(exam.subject);
+                          setLevel(exam.level);
+                          setStartDate(exam.startDate);
+                          setOpenDelete(true);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+              )}
             </TableBody>
           </Table>
         </Box>
