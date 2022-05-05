@@ -106,7 +106,7 @@ function RadarChart() {
             labels: nameSet,
             datasets: [
               {
-                label: "Ordinary Level Students Results In All Assessment :%",
+                label: "Ordinary level students performance in all Assessment :%",
                 data: valueSet,
                 backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
@@ -162,7 +162,7 @@ function RadarChart() {
   }, []);
   return (
     <div className="radarChart">
-    <span className="radarChartTitle">S3 Students Performance In All Assessment</span>
+    <span className="radarChartTitle">S3 students performance in all assessment</span>
       
       <Radar
         data={data}

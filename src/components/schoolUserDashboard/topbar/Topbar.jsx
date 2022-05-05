@@ -3,6 +3,9 @@ import './topbar.css';
 import { NotificationsNone,Language, Settings, Logout }  from '@material-ui/icons';
 import InputIcon from '@material-ui/icons/Input';
 import { useHistory } from 'react-router-dom';
+import {useEffect,useState} from "react";
+import jwt from "jsonwebtoken";
+import axios from "axios";
 import {
  
   IconButton,
@@ -16,14 +19,45 @@ export default function Topbar() {
         localStorage.removeItem('x-access-token');
         localStorage.removeItem('user-data');
         history.push("/", { push: true} );
-       
         
           }
+          const [name,setName]=useState("")
+          const decode= (token) => {
+              const JWT_SECRET="mytokensecret";
+              const payload =jwt.verify(token, JWT_SECRET);
+               return payload;
+            }
+           // const history= useHistory();
+            useEffect(async() => {
+            
+              const token =localStorage.getItem('x-access-token');
+              if (token) {
+              const details=decode(token);
+              const schoolId=details.userSchooldbId
+              await axios.get(`http://localhost:8000/schools/schoolbyid/${schoolId}`
+              ).then(function (response) {
+              const res = response.data.data;
+             
+              return res;
+              })
+              .then(function (res) {
+                  setName(res.name);
+                  //districtName=res.name;
+                console.log("distict name",res)
+              })
+          }
+      
+      
+              else{
+                return null
+              }
+          
+            }, [])
     return (
         <div className="topbar">
             <div className="topbarWrapper">
                 <div className="topLeft">
-                    <span className="logo">School User</span>
+                    <span className="logo">{name} School</span>
                      </div>
              <div className="toRight">
                     <div className="topbarIconContainer">

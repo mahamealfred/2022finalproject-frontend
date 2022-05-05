@@ -43,6 +43,7 @@ import studentSignupReducer from "./studentSingupReducer";
 import searchSchoolReducer from "./searchSchoolReducer";
 import primaryLeveStudentResultsReducer from "./getPrimaryLevelStudentsResultsReducer";
 import getStudentNumberByDistictUserReducer from "./getStudentNumberByDistrictUserReducer";
+import getAllSchoolsByDistrictUserReducer from "./getAllSchoolsDistrictUserReducer";
 const allReducers = combineReducers({
   users: usersReducer,
   students: studentsReducer,
@@ -87,6 +88,7 @@ const allReducers = combineReducers({
   searchSchool:searchSchoolReducer,
   getPrimaryLevelStudentsResults:primaryLeveStudentResultsReducer,
   getStudentNumberByDistictUser:getStudentNumberByDistictUserReducer,
+  getAllSchoolsByDistrictUser: getAllSchoolsByDistrictUserReducer,
 });
 
 export default allReducers;

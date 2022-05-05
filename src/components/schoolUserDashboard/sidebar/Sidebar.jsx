@@ -16,21 +16,50 @@ import { getSpecificStudentNumberInSchoolAction } from "../../../redux/actions/g
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import logo from "../../../images/reb.jpg";
-
+import jwt from "jsonwebtoken";
+import axios from "axios";
 import { IconButton } from "@material-ui/core";
 export default function Sidebar() {
   const history = useHistory();
   const dispatch = useDispatch();
+  const [schoolName,setSchoolName]=useState("");
   const [students, setStudents] = useState([]);
   const todaydate = new Date().toISOString().slice(0, 10);
 
   const studentsState = useSelector(
     (state) => state.getSpecificStudentNumberInSchool
   );
-
+  const decode= (token) => {
+    const JWT_SECRET="mytokensecret";
+    const payload =jwt.verify(token, JWT_SECRET);
+     return payload;
+  }
+  const getSchoolName=async()=>{
+   
+    // const id = params.id;
+     const token =localStorage.getItem('x-access-token');
+     if (token) {
+     const details=decode(token);
+     const schoolId=details.userSchooldbId;
+       
+     await axios.get(`http://localhost:8000/schools/schoolbyid/${schoolId}`
+     ).then(function (response) {
+     const res = response.data.data;
+    
+     return res;
+     })
+     .then(function (res) {
+         setSchoolName(res.name);
+         //districtName=res.name;
+       console.log("school name",res)
+     })
+     }
+   }
+ 
   useEffect(() => {
     async function fetchData() {
       await dispatch(getSpecificStudentNumberInSchoolAction());
+      getSchoolName();
     }
     fetchData();
   }, []);
@@ -52,7 +81,7 @@ export default function Sidebar() {
     doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
     doc.text("Rwanda Basic Education Board", 20, 50);
-    doc.text("School Name:", 20, 55);
+    doc.text(`School Name: ${schoolName}`, 20, 55);
     doc.text("Email: info@reb.rw", 20, 60);
     doc.setFont("Helvertica", "normal");
     doc.text(`Date ${todaydate}`, 140, 65);
@@ -83,7 +112,7 @@ export default function Sidebar() {
     doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
     doc.text("Rwanda Basic Education Board", 20, 50);
-    doc.text("School Name:", 20, 55);
+    doc.text(`School Name: ${schoolName}`, 20, 55);
     doc.text("Email: info@reb.rw", 20, 60);
     doc.setFont("Helvertica", "normal");
     doc.text(`Date ${todaydate}`, 140, 65);

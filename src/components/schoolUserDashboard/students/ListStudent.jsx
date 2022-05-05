@@ -51,6 +51,8 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Report } from "@material-ui/icons";
 import { format } from "date-fns";
+import jwt from "jsonwebtoken";
+import axios from "axios";
 
 export default function ListStudent({ openn, ...rest }) {
   const dispatch = useDispatch();
@@ -62,7 +64,7 @@ export default function ListStudent({ openn, ...rest }) {
 
   const [students, setStudents] = useState([]);
   const [open, setOpen] = React.useState(false);
-
+ const [schoolName,setSchoolName]=useState('');
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -128,6 +130,7 @@ useEffect(()=>{
   async function fetchData(){
     await dispatch(getAllStudentsBySchoolUserAction());
     await dispatch(getAllSchool());
+    getSchoolName();
   }
   fetchData();
   
@@ -153,6 +156,32 @@ useEffect(()=>{
   const handleCloseDelete = () => {
     setOpenDelete(false);
   };
+  const decode= (token) => {
+    const JWT_SECRET="mytokensecret";
+    const payload =jwt.verify(token, JWT_SECRET);
+     return payload;
+  }
+  const getSchoolName=async()=>{
+   
+   // const id = params.id;
+    const token =localStorage.getItem('x-access-token');
+    if (token) {
+    const details=decode(token);
+    const schoolId=details.userSchooldbId;
+      
+    await axios.get(`http://localhost:8000/schools/schoolbyid/${schoolId}`
+    ).then(function (response) {
+    const res = response.data.data;
+   
+    return res;
+    })
+    .then(function (res) {
+        setSchoolName(res.name);
+        //districtName=res.name;
+      console.log("school name",res)
+    })
+    }
+  }
 
   const handleDelete = async () => {
     await dispatch(deleteStudentAction(studentId));
@@ -165,7 +194,7 @@ useEffect(()=>{
     doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
     doc.text("Rwanda Basic Education Board", 20, 50);
-    doc.text("School Name:", 20, 55);
+    doc.text(`School Name: ${schoolName}`, 20, 55);
     doc.text("Email: info@reb.rw", 20, 60);
     doc.setFont("Helvertica", "normal");
     doc.text(`Date ${todaydate}`, 140, 65);
@@ -214,7 +243,7 @@ useEffect(()=>{
     doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
     doc.text("Rwanda Basic Education Board", 20, 50);
-    doc.text("School Name:", 20, 55);
+    doc.text(`School Name: ${schoolName}`, 20, 55);
     doc.text("Email: info@reb.rw", 20, 60);
     doc.setFont("Helvertica", "normal");
     doc.text(`Date ${todaydate}`, 140, 65);

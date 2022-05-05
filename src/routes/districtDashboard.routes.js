@@ -6,6 +6,7 @@ import OrdinaryLevelResults from "../components/districtUserDashboard/studentRes
 import PrimaryResults from "../components/districtUserDashboard/studentResults/PrimaryResults";
 import School from "../components/districtUserDashboard/school/School";
 import SchoolDashboard from "../Views/DistrictDashboard";
+import StudentsInSchool from "../components/pages/school/StudentsInSchool";
 // import ListStudent from "../components/districtUserDashboard/students/ListStudent";
 import {useEffect} from "react";
 import jwt from "jsonwebtoken";
@@ -48,6 +49,7 @@ function App() {
               <PrivateRoute exact path={`${path}/primaryresults`} component={PrimaryResults} />
               <PrivateRoute exact path={`${path}/ordinarylevelresults`} component={OrdinaryLevelResults} />
               <PrivateRoute exact path={`${path}/schools`} component={School} />
+              <PrivateRoute exact path={`${path}/studentsinschool/:id`} component={StudentsInSchool}/>
               {/* <PrivateRoute
                 exact
                 path={`${path}/students`}

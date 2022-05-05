@@ -5,27 +5,36 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { getSpecificStudentNumberInSchoolAction } from "../../../redux/actions/getSpecificStudentNumberInSchoolAction";
 import { DialogTitle } from "@mui/material";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import jwt from "jsonwebtoken";
+
 export default function FeaturedInfo() {
   const dispatch = useDispatch();
+  const params = useParams();
+  const [schoolName,setSchoolName]=useState('');
   const studentsState = useSelector(
     (state) => state.getSpecificStudentNumberInSchool
   );
+  
 
   const [students, setStudents] = useState([]);
   useEffect(() => {
     async function fetchData() {
       await dispatch(getSpecificStudentNumberInSchoolAction());
+     
     }
     fetchData();
   }, []);
   console.log(studentsState.students.totalStudent);
-
+ 
   return (
     <>
       {studentsState.loading ? (
         "Loading"
       ) : studentsState.students.length > 0 ? (
         <>
+          
           <DialogTitle>
             <span className="featuredStudent">Ordinary Level (S3)</span>
           </DialogTitle>

@@ -37,7 +37,7 @@ function BarChartOrd() {
         return res;
         })
         .then(function (res) {
-          labelSet.push(res.length + "  Available Assessment Results ");
+          labelSet.push(res.length + "  Available assessments results ");
           for (const val of res) {
             const resCount = val.AssessmentCount;
             const examName=val['exam.Name']
@@ -92,7 +92,7 @@ function BarChartOrd() {
   }, []);
   return (
     <div className="barChart">
-    <span className="barChartTitle">S3 Students Performance </span>
+    <span className="barChartTitle">S3 students performance </span>
       
       <Bar
         data={data}

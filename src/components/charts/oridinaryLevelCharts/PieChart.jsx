@@ -41,7 +41,7 @@ function PieChart() {
           return res;
         })
         .then(function(res) {
-          labelSet.push("Assessments Results ");
+          labelSet.push("Assessments results ");
           const numberOfMale=parseInt(res[0].studentCount);
           const numberofFemale =  parseInt( res[1].studentCount);
           const resCount=numberOfMale + numberofFemale;
@@ -126,7 +126,7 @@ function PieChart() {
   }, []);
   return (
     <div className="pieChart">
-    <span className="pieChartTitle">Students Performance Based on Gender In S3</span>
+    <span className="pieChartTitle">S3 Students performance based on gender </span>
     
     <Pie
     data={data}

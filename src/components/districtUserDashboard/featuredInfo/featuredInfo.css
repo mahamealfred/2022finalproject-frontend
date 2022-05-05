@@ -17,7 +17,7 @@ box-shadow: 0px 0px 15px -10px rgba(0,0,0,0.75);
     margin: 0px 20px;
     padding: 30px;
     border-radius: 10px;
-    background-color:rgba(108, 226, 84, 0.2);
+    background-color:#FFFF;
     cursor: pointer;
     -webkit-box-shadow: 5px 5px 15px 5px #000000; 
 box-shadow: 0px 0px 15px -10px rgba(0,0,0,0.75);
@@ -33,6 +33,7 @@ box-shadow: 0px 0px 15px -10px rgba(0,0,0,0.75);
 .featuredStudent{
     font-size: 30px;
     font-weight: 600;
+    color:#0474BA;
 }
 .featuredRate{
     display: flex;
@@ -42,11 +43,11 @@ box-shadow: 0px 0px 15px -10px rgba(0,0,0,0.75);
 .featuredIcon{
     font-size: 14px;
     margin-left: 5px;
-    color: green;
+    color: #F9842C;
 
 }
 .featuredIcon.negative{
-    color: red;
+    color: #F9842C;
 }
 .featuredSub{
     font-size: 15px;

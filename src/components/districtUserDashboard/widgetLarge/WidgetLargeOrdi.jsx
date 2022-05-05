@@ -1,65 +1,82 @@
-import React from "react";
-import "./widgetLarge.css";
+import React from 'react'
+import './widgetLarge.css';
+import { useEffect, useState } from "react";
+import axios from "axios";
+export let s3SchoolsPerformance=[];
+export default function widgetLargeoOrdi() {
 
-export default function WidgetLarge() {
-  return (
-      <>
-       <div className="widgetLarge">
-      
-        
-       <h3 className="widgetLargeTitle">Student Performance in S3</h3>
-      <table className="widgetLargeTable">
-        <tr className="widgetLargeTr">
-          <th className="widgetLargeTh">Student Name</th>
-          <th className="widgetLargeTh">Student Code</th>
-          <th className="widgetLargeTh">Assessment</th>
-          <th className="widgetLargeTh">Level</th>
-          <th className="widgetLargeTh">%</th>
-        </tr>
-        <tr className="widgetLargeTr">
-          <td className="widgetLargeUser">
-            <span className="widgetLargName">Mirindi Sagi</span>
-            
-          </td>
-          <td>
-          <span className="widgetLargName">STD-1234</span>
-          </td>
-          <td className="widgetLargeDate">English</td>
-          <td className="widgetLargeAmount">S3</td>
-          <td className="widgetLargeAmount">90%</td>
-        </tr>
-        <tr className="widgetLargeTr">
-          <td className="widgetLargeUser">
-            <span className="widgetLargName">Uwera Ange</span>
-            
-          </td>
-          <td>
-          <span className="widgetLargName">STD-256</span>
-          </td>
-          <td className="widgetLargeDate">English</td>
-          <td className="widgetLargeAmount">S3</td>
-          <td className="widgetLargeAmount">50%</td>
-        </tr>
-        <tr className="widgetLargeTr">
-          <td className="widgetLargeUser">
-            <span className="widgetLargName">Ismael Kagabo</span>
-            
-          </td>
-          <td>
-          <span className="widgetLargName">STD-45674</span>
-          </td>
-          <td className="widgetLargeDate">English</td>
-          <td className="widgetLargeAmount">S3</td>
-          <td className="widgetLargeAmount">70%</td>
-        </tr>
-      </table>
-
-     
-    </div>
-
-  
-     
-      </>
-   
-  );
+    const [data,setData]=useState([]);
+    console.log("all data",data)
+    useEffect(() => {
+        async function fetchData() {
+          const genderSet = [];
+          const token = await localStorage.getItem("x-access-token");
+          let headers;
+          if (token) {
+            headers = {
+              "Content-Type": "application/json",
+              token: `${token}`,
+            };
+          } else {
+            headers = {
+              "Content-Type": "application/json",
+            };
+          }
+    
+          await axios
+            .get(
+              `http://localhost:8000/results/ordinarylevelschoolperformanceindistrict`,
+              {
+                headers: headers,
+              }
+            )
+            .then(function(response) {
+              const res = response.data.data;
+              return res;
+            })
+            .then(function(res) {
+              
+              setData(res)
+              s3SchoolsPerformance=res;
+              
+            //   for (const val of res) {
+            //     const schoolName=val['school.name'];
+            //     console.log("schoool name", schoolName)
+            //   } 
+            })
+            .catch(function(error) {
+              console.log("error", error);
+            });
+        }
+        fetchData();
+      }, []);
+    
+    return (
+        <div className="widgetLarge">
+            <h3 className="widgetLargeTitle">S3 schools Performance</h3>
+          
+            <table className="widgetLargeTable">
+                <tr className="widgetLargeTr">
+                    <th className="widgetLargeTh">Shoool Name</th>
+                    <th className="widgetLargeTh">Level</th>
+                    <th className="widgetLargeTh">%</th>
+                </tr>
+                {
+                !data? null:(data.map((d)=> (
+                <tr className="widgetLargeTr">
+                   <td className="widgetLargeUser">  
+                <span className="widgetLargName">{d['school.name']}</span>
+                   </td>
+                   <td className="widgetLargeAmount">S3</td>
+                   { 
+                   !(d['results.avarage'])?"Not yet provided":
+                   <td className="widgetLargeAmount">{(d['results.avarage']).toFixed(2)}%</td>
+                    }
+                </tr>
+                           )))
+                        }
+            </table>
+    
+        </div>
+    )
 }

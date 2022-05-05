@@ -19,6 +19,7 @@ import { addSchoolAction } from "../../../redux/actions/addSchoolAction";
 import { updateSchoolAction } from "../../../redux/actions/updateSchoolAction";
 import { deleteSchoolAction } from "../../../redux/actions/deleteSchoolAction";
 import { getAllDistrict } from "../../../redux/actions/districtsAction";
+import {getAllSchoolsByDistrictUserAction} from "../../../redux/actions/getAllSchoolsByDistrictUserAction";
 import {searchSchoolAction} from "../../../redux/actions/searchSchoolAction";
 import DeleteIcon from "@material-ui/icons/Delete";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
@@ -45,7 +46,7 @@ import {
 
 export default function School({ openn, ...rest }) {
   const dispatch = useDispatch();
-  const schoolsState = useSelector((state) => state.schools);
+  const schoolsState = useSelector((state) => state.getAllSchoolsByDistrictUser);
   const districtsState = useSelector((state) => state.districts);
   const searchSchool=useSelector((state)=>state.searchSchool);
   const [schools, setSchools] = useState([]);
@@ -110,14 +111,14 @@ export default function School({ openn, ...rest }) {
     setCell("");
     setFullname("");
     setEmail("");
-    await dispatch(getAllSchool());
+    await dispatch(getAllSchoolsByDistrictUserAction());
 
     console.log("added");
   };
   console.log(name);
   useEffect(() => {
     async function fetchData() {
-      await dispatch(getAllSchool());
+      await dispatch(getAllSchoolsByDistrictUserAction());
       await dispatch(getAllDistrict());
     }
     fetchData();
@@ -128,6 +129,7 @@ export default function School({ openn, ...rest }) {
       if (!schoolsState.loading) {
         if (schoolsState.schools) {
           setSchools(schoolsState.schools);
+         
         }
       }
       if (!districtsState.loading) {
@@ -153,7 +155,7 @@ export default function School({ openn, ...rest }) {
     setSector("");
     setCell("");
     setSearch(false);
-    await dispatch(getAllSchool());
+    await dispatch(getAllSchoolsByDistrictUserAction());
   };
 
   const handleDelete = async () => {
@@ -207,7 +209,7 @@ export default function School({ openn, ...rest }) {
       console.log(error);
     }
   };
-  console.log(results);
+  console.log("schools detailes",schools)
   
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
@@ -590,7 +592,7 @@ export default function School({ openn, ...rest }) {
                       </TableCell>
                       <TableCell color="textPrimary" variant="body1">
                       <IconButton arial-label="add">
-                          <Link to={`/dashboard/studentsinschool/${school.id}`}>
+                          <Link to={`/districtdashboard/studentsinschool/${school.id}`}>
                             <ViewComfyIcon/>
                           </Link>
                         </IconButton>

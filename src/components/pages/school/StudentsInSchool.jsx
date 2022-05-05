@@ -38,14 +38,15 @@ import PieChartPri from "../school/schoolAnalytics/primary/PieChart";
 import BarChartPri from "../school/schoolAnalytics/primary/BarChart";
 import DoughnutChartOrdi from "../school/schoolAnalytics/ordinarylevel/DoughnutChart";
 import DoughnutChartPri from "../school/schoolAnalytics/primary/DoughnutChart";
-
+import axios from "axios";
+import { DialogTitle } from "@mui/material";
 const StudentsInSchool = ({ ...rest }) => {
   // const dispatch = useDispatch()
 
   const [search, setSearch] = useState(false);
-
   const [schoolId, setSchoolId] = useState("");
   const [students, setStudents] = useState([]);
+  const [schoolName,setSchoolName]=useState('');
   const params = useParams();
   const dispatch = useDispatch();
 
@@ -62,7 +63,22 @@ const StudentsInSchool = ({ ...rest }) => {
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
   };
-
+  const getSchoolName=async()=>{
+    const id = params.id;
+      
+    await axios.get(`http://localhost:8000/schools/schoolbyid/${id}`
+    ).then(function (response) {
+    const res = response.data.data;
+   
+    return res;
+    })
+    .then(function (res) {
+        setSchoolName(res.name);
+        //districtName=res.name;
+      console.log("school name",res)
+    })
+  
+  }
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
@@ -80,7 +96,7 @@ const StudentsInSchool = ({ ...rest }) => {
     doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
     doc.text("Rwanda Basic Education Board", 20, 50);
-    doc.text("School Name:", 20, 55);
+    doc.text(`School Name: ${schoolName}`, 20, 55);
     doc.text("Email: info@reb.rw", 20, 60);
     doc.setFont("Helvertica", "normal");
     doc.text(`Date ${todaydate}`, 140, 65);
@@ -145,7 +161,7 @@ const StudentsInSchool = ({ ...rest }) => {
     doc.addImage(logo, "JPEG", 20, 5, 40, 40);
     doc.setFont("Helvertica", "normal");
     doc.text("Rwanda Basic Education Board", 20, 50);
-    doc.text("School Name:", 20, 55);
+    doc.text(`School Name: ${schoolName}`, 20, 55);
     doc.text("Email: info@reb.rw", 20, 60);
     doc.setFont("Helvertica", "normal");
     doc.text(`Date ${todaydate}`, 140, 65);
@@ -208,8 +224,9 @@ const StudentsInSchool = ({ ...rest }) => {
 
 
   useEffect(() => {
+   getSchoolName();
     const id = params.id;
-    console.log("my id", id);
+  
     setSchoolId(id);
     dispatch(getStudentsBySchoolIdAction(id));
   }, []);
@@ -272,6 +289,9 @@ const StudentsInSchool = ({ ...rest }) => {
 
   return (
     <div style={{ flex: 4, height: "auto", width: "400px" }}>
+       <DialogTitle>
+            <span style={{ fontWeight:"600",fontSize:"30px", color:"#F9842C" }}>{schoolName} School</span>
+          </DialogTitle>
       <div className="homeWidgets">
         <FeaturedInfoOrdi />
       </div>

@@ -34,7 +34,7 @@ function DoughnutChart() {
           return res;
         })
         .then(function (res) {
-          labelSet.push(" Ordinary Level Schools Performance ");
+          labelSet.push(" Ordinary level schools performance ");
           for (const val of res) {
             
             const schoolName=val['school.name'] +"%";
@@ -106,7 +106,7 @@ function DoughnutChart() {
   }, []);
   return (
     <div className="doughnutChart">
-    <span className="doughnutChartTitle">S3 Students Performance In Assessment</span>
+    <span className="doughnutChartTitle">S3 schools performance in all assessment</span>
     
     <Doughnut
     data={data }

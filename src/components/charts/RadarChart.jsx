@@ -162,7 +162,7 @@ function RadarChart() {
   }, []);
   return (
     <div className="radarChart">
-    <span className="radarChartTitle">P6 Students Performance In All Assessment</span>
+    <span className="radarChartTitle">P6 Students Performance in all assessments</span>
       
       <Radar
         data={datas}
