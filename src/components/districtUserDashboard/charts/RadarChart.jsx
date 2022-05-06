@@ -21,7 +21,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-export let data=[]
+export let P6Performance=[]
 
 function RadarChart() {
     const [datas, setDatas] = useState({ datasets: [] });
@@ -95,7 +95,7 @@ function RadarChart() {
               // break;
             }
           }
-           data = [
+          P6Performance = [
             { name: "Marks with range 0-25 ", value: marksBetween0and25 },
             {
               name: "Marks with range 26-50",
@@ -110,7 +110,7 @@ function RadarChart() {
               value: marksBetween75and100 ,
             },
           ];
-          data.map((d) => {
+          P6Performance.map((d) => {
             nameSet.push(d.name);
 
             valueSet.push(d.value);

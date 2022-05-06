@@ -12,7 +12,6 @@ export default function FeaturedInfoOrdi() {
   const studentsState = useSelector(
     (state) => state.getStudentNumberByDistictUser
   );
-
   useEffect(() => {
     async function fetchData() {
       await dispatch(getStudentNumberByDistrictUserAction());

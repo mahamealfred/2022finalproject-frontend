@@ -50,7 +50,7 @@ export default function FeaturedInfo() {
       {data.length > 0 ? (
         <div>
           <DialogTitle>
-            <span className="featuredTitle">
+            <span className="featuredStudent">
               Ordinary Level Information (S3)
             </span>
           </DialogTitle>

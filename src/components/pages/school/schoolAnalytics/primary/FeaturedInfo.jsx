@@ -50,14 +50,14 @@ export default function FeaturedInfo() {
       {data.length > 0 ? (
         <div>
           <DialogTitle>
-            <span className="featuredTitle">
-              Primary Level Information (P6)
+            <span className="featuredStudent">
+              Primary level Information (P6)
             </span>
           </DialogTitle>
           <div className="featured">
             <div className="featuredItem">
               <span className="featuredTitle">
-                Total Students In Primary Level (p6)
+               P6 Total students 
               </span>
               <div className="featuredMoneyContainer">
                 <span className="featuredStudent">
@@ -71,7 +71,7 @@ export default function FeaturedInfo() {
             </div>
             <div className="featuredItem">
               <span className="featuredTitle">
-                Total Male Student In Primary (P6)
+               P6 Total male students 
               </span>
               <div className="featuredMoneyContainer">
                 <span className="featuredStudent">

@@ -115,11 +115,11 @@ export default function Sidebar() {
     doc.setFont("Helvertica", "normal");
     doc.text(`Date ${todaydate}`, 140, 75);
     doc.setFont("Helvertica", "bold");
-    doc.text(`Ordinary level Students Performance Report`, 67, 85);
+    doc.text(`Ordinary level Students Performance Report`, 45, 85);
 
     const tableColumn = [];
     const tableRows = [];
-    const columnData = ["Ordinary Level Students Performance Analysis"];
+    const columnData = ["Ordinary level students performance Analytics %"];
     tableColumn.push(columnData);
     dataOrdi.map((dt) => {
       const rowsData = [dt.name + ": " + dt.value];
