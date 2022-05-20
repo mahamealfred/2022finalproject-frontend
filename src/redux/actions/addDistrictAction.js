@@ -32,6 +32,7 @@ export const addDistrictAction = (data, history) => async (dispatch) => {
     // localStorage.setItem('my-token', user.data.token);
      localStorage.setItem('district-data', JSON.stringify(district.data));
     dispatch(districtSuccess ({ data: district.data }));
+    alert(" District created successfully");
     history('/dashboard', { replace: true })
    
   } catch (err) {

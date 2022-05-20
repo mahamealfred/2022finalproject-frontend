@@ -68,7 +68,7 @@ export default function Sidebar() {
 
     const tableColumn = [];
     const tableRows = [];
-    const columnData = ["Primary Students Performance Analysis"];
+    const columnData = ["Primary Students Performance Analysis %"];
 
     tableColumn.push(columnData);
     data.map((dt) => {
@@ -379,7 +379,7 @@ export default function Sidebar() {
           <ul className="sidebarList">
             <Link to="/dashboard/districts" className="link">
               <li className="sidebarListItem active">
-                <Person className="sidebarIcon" />
+                <LineStyle className="sidebarIcon" />
                 Districts
               </li>
             </Link>
@@ -428,13 +428,13 @@ export default function Sidebar() {
         <div className="sideBarMenu">
           <h3 className="sideBarTitle">Results Menu</h3>
           <ul className="sidebarList">
-            <Link to="/dashboard/results" className="link">
+            <Link to="/dashboard/primarylistresults" className="link">
               <li className="sidebarListItem active">
                 <LineStyle className="sidebarIcon" />
                 Primary Results
               </li>
             </Link>
-            <Link to="/dashboard/questions" className="link">
+            <Link to="/dashboard/ordinarylistresults" className="link">
               <li className="sidebarListItem ">
                 <LineStyle className="sidebarIcon" />
                 Ordinary Results

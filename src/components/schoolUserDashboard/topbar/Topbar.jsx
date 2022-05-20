@@ -57,7 +57,7 @@ export default function Topbar() {
         <div className="topbar">
             <div className="topbarWrapper">
                 <div className="topLeft">
-                    <span className="logo">{name} School</span>
+                    <span className="logo"> School {name}</span>
                      </div>
              <div className="toRight">
                     <div className="topbarIconContainer">

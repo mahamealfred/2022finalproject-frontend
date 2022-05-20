@@ -52,6 +52,7 @@ export default function Exam({ openn, ...rest }) {
   const [subject, setSubject] = useState("");
   const [name, setName] = useState("");
   const [startDate, setStartDate] = useState("");
+  const [endDate,setEndDate]=useState("");
 
   const addExam = useSelector((state) => state.addExam);
   const deleteExam = useSelector((state) => state.deleteExam);
@@ -138,12 +139,12 @@ export default function Exam({ openn, ...rest }) {
   };
 
   const handleAdd = async () => {
-    console.log(subject, name, startDate, level);
     await dispatch(
       addExamAction({
         name,
         subject,
         startDate,
+        endDate,
         level,
       })
     );
@@ -162,7 +163,7 @@ export default function Exam({ openn, ...rest }) {
     }
     console.log(examId);
     await dispatch(
-      updateExamAction({ name, subject, level, startDate, id: examId })
+      updateExamAction({ name, subject, level, startDate,endDate, id: examId })
     );
     setOpenUpdate(false);
 
@@ -326,6 +327,19 @@ export default function Exam({ openn, ...rest }) {
                 shrink: true,
               }}
             />
+             <TextField
+              id="date"
+              label="End Date"
+              type="date"
+              name="endDate"
+              onChange={(e) => setEndDate(e.target.value)}
+              value={endDate}
+              defaultValue="2017-05-24"
+              sx={{ width: 220 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
             <TextField
               id="outlined-select-currency"
               select
@@ -344,7 +358,7 @@ export default function Exam({ openn, ...rest }) {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleAdd} color="primary" autoFocus>
-            {addExam.loading ? "Loading..." : "Add new Exam"}
+            {addExam.loading ? "Loading..." : "Add new Assessment"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -393,6 +407,19 @@ export default function Exam({ openn, ...rest }) {
                 shrink: true,
               }}
             />
+             <TextField
+              id="date"
+              label="End Date"
+              type="date"
+              name="endDate"
+              onChange={(e) => setEndDate(e.target.value)}
+              value={endDate}
+              defaultValue="2017-05-24"
+              sx={{ width: 220 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
             <TextField
               id="outlined-select-currency"
               select
@@ -411,7 +438,7 @@ export default function Exam({ openn, ...rest }) {
         <DialogActions>
           <Button onClick={handleCloseUpdate}>Cancel</Button>
           <Button onClick={handleUpdate} color="primary" autoFocus>
-            {updateExam.loading ? "Loading..." : "Update Exam"}
+            {updateExam.loading ? "Loading..." : "Update Assessment"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -447,6 +474,7 @@ export default function Exam({ openn, ...rest }) {
                 <TableCell>Assessment Description</TableCell>
                 <TableCell>Level</TableCell>
                 <TableCell>Start Date</TableCell>
+                <TableCell>End Date</TableCell>
                 <TableCell>Created Date</TableCell>
                 <TableCell>Update Date</TableCell>
                 <TableCell>Action</TableCell>
@@ -510,6 +538,18 @@ export default function Exam({ openn, ...rest }) {
                         </Typography>
                       </Box>
                     </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography color="textPrimary" variant="body1">
+                          {moment(exam.endDate).format("DD/MM/YYYY")}
+                        </Typography>
+                      </Box>
+                    </TableCell>
 
                     <TableCell>
                       {moment(exams.createdAt).format("DD/MM/YYYY")}
@@ -530,6 +570,7 @@ export default function Exam({ openn, ...rest }) {
                           setName(exam.name);
                           setSubject(exam.subject);
                           setStartDate(exam.startDate);
+                          setEndDate(exam.endDate);
 
                           setOpenUpdate(true);
                         }}
@@ -545,6 +586,7 @@ export default function Exam({ openn, ...rest }) {
                           setSubject(exam.subject);
                           setLevel(exam.level);
                           setStartDate(exam.startDate);
+                          setEndDate(exam.endDate);
                           setOpenDelete(true);
                         }}
                       >
@@ -610,6 +652,18 @@ export default function Exam({ openn, ...rest }) {
                         </Typography>
                       </Box>
                     </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography color="textPrimary" variant="body1">
+                          {moment(exam.endDate).format("DD/MM/YYYY")}
+                        </Typography>
+                      </Box>
+                    </TableCell>
 
                     <TableCell>
                       {moment(exams.createdAt).format("DD/MM/YYYY")}
@@ -630,6 +684,7 @@ export default function Exam({ openn, ...rest }) {
                           setName(exam.name);
                           setSubject(exam.subject);
                           setStartDate(exam.startDate);
+                          setEndDate(exam.endDate);
 
                           setOpenUpdate(true);
                         }}
@@ -645,6 +700,7 @@ export default function Exam({ openn, ...rest }) {
                           setSubject(exam.subject);
                           setLevel(exam.level);
                           setStartDate(exam.startDate);
+                          setEndDate(exam.endDate);
                           setOpenDelete(true);
                         }}
                       >

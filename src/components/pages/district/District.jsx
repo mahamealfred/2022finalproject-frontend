@@ -290,7 +290,10 @@ export default function District({ openn, ...rest }) {
                 </MenuItem>
               ))}
             </TextField>
-         
+            <DialogContentText>
+            Please enter District user information here.
+          </DialogContentText>
+
             <TextField
               id="outlined-basic"
               label="FullName"

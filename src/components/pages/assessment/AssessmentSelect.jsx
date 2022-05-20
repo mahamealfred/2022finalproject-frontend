@@ -26,8 +26,10 @@ const AssessmentSelect = () => {
   const history = useHistory();
   const [exams, setExams] = useState("");
   const [examId, setExamId] = useState("");
-  const [allowed, setAllow] = useState(false);
+  const [allow, setAllow] = useState(false);
   const [startDate, setStartDate] = useState("");
+  const [endDate,setEndDate]=useState("");
+  const [errorMessage,setErrorMessage]=useState("");
 
   const handleSubmit = () => {
     setError(false);
@@ -38,13 +40,43 @@ const AssessmentSelect = () => {
     if (e) {
       console.log("exams",e.target.value.id )
       setExams(e.target.value.id);
-      const currentDate = moment(new Date()).format("YYYY-MM-DD  HH:mm:ss");
+      const currentDate = moment(new Date()).format("YYYY-MM-DD  HH:mm:ss a");
       var m = moment.utc(e.target.value.startDate, "YYYY-MM-DD  HH:mm:ss");
+      var stdate= moment(new Date(e.target.value.startDate)).format("YYYY-MM-DD  HH:mm:ss a");
+      var endate= moment(new Date(e.target.value.endDate)).format("YYYY-MM-DD  HH:mm:ss a");
+      
+      //var endDate=moment(new Date('2022-05-20 13:23:00')).format("YYYY-MM-DD  HH:mm:ss")
+      
+      var startTime=new Date(e.target.value.startDate)
+    var start_time=startTime.getHours()+":"+startTime.getMinutes()+":"+startTime.getSeconds()
 
-      var isBefore = m.isSameOrBefore(currentDate);
-      setAllow(isBefore);
+    var currentTime=new Date()
+    var current_time=currentTime.getHours()+":"+currentTime.getMinutes()+":"+currentTime.getSeconds()
+   
+     // var isBefore =m.isSame(stdate);
+      if(endate<currentDate){
+        setAllow(false)
+        setErrorMessage(`This Assessment was available untill: ${endate}`)
+      }
+     else if(stdate>currentDate){
+        setAllow(false)
+        setErrorMessage(`This will be available From: ${stdate} \n To ${endate}`)
+      }
+      else if( stdate<=currentDate && start_time > current_time){
+        setAllow(false)
+        setErrorMessage(`This will be available from: ${stdate}`);
+      }
+     else if( (stdate<=currentDate)  && (start_time <= current_time) && (endate>=currentDate)){
+      setErrorMessage(`This Assessment is available from ${stdate} To  ${endate}`)
+        setAllow(true)
+      }
+      else{
+        setAllow(false)
+      }
+      // setAllow(isBefore);
       
       setStartDate(e.target.value.startDate);
+      setEndDate(e.target.value.endDate);
     }
   };
   const decode = (token) => {
@@ -67,7 +99,7 @@ const AssessmentSelect = () => {
     }
     return history.push("/", { push: true });
   }, []);
-  console.log("exam id...:", exams);
+
   useEffect(() => {
     setExams("");
     handlegetAssessment();
@@ -112,18 +144,19 @@ const AssessmentSelect = () => {
               variant="contained"
               color="primary"
               size="large"
-              disabled={exams && allowed ? false : true}
+              disabled={exams && allow ? false : true}
               onClick={() => handleSubmit()}
               style={{ borderStartEndRadius: 5 }}
             >
-              {allowed === true ? " Start Assessment" : allowed == false ? "Not Yet Time" :  "Start Assessment"}
+              {allow=== true ? " Start Assessment" : allow== false ? "Not Yet Time" :  "Start Assessment"}
             </Button>
           </div>
         </div>
         {!startDate ? null : (
           <span style={{ fontSize: 20 }}>
-            This Assessments will be available till:
-            {moment(startDate).format("MMMM Do YYYY, h:mm:ss a")}
+            {/* This Assessments will be available till:
+            {moment(startDate).format("MMMM Do YYYY, h:mm:ss a")} */}
+            {errorMessage}
           </span>
         )}
         <img

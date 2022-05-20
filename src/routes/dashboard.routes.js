@@ -14,6 +14,8 @@ import PrivateRoute from "./PrivateRoute";
 import Result from "../components/pages/result/Result";
 import District from "../components/pages/district/District";
 import StudentsInSchool from "../components/pages/school/StudentsInSchool";
+import PrimaryListResult from "../components/pages/result/primarylevel/PrimaryLevelResult";
+import OrdinaryListResult from "../components/pages/result/ordinarylevel/OrdinaryLevelResult";
 //import {decode} from "../helpers/jwtTokenizer";
 import {useEffect} from "react";
 import jwt from "jsonwebtoken";
@@ -88,6 +90,16 @@ function App() {
                 exact
                 path={`${path}/results`}
                 component={Result}
+              />
+              <PrivateRoute
+                exact
+                path={`${path}/primarylistresults`}
+                component={PrimaryListResult}
+              />
+               <PrivateRoute
+                exact
+                path={`${path}/ordinarylistresults`}
+                component={OrdinaryListResult}
               />
               <PrivateRoute exact path={`${path}/studentsinschool/:id`} component={StudentsInSchool}/>
             </>

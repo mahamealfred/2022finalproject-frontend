@@ -18,7 +18,7 @@ export default function FeaturedInfoOrdi() {
     }
     fetchData();
   }, []);
-  console.log(studentsState.students);
+  console.log("length",studentsState.students);
   return (
     <>
       {studentsState.loading ? (

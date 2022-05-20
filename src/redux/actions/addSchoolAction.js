@@ -33,7 +33,7 @@ export const addSchoolAction = (data, history) => async (dispatch) => {
     );
     const school = await res.data;
     dispatch(addSchoolSuccess({ data: school.data }));
-    alert("Your school has been added successfully");
+    alert(" School has been added successfully");
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;

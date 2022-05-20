@@ -31,6 +31,7 @@ export const addQuestionAction = (data, history) => async (dispatch) => {
     // localStorage.setItem('my-token', user.data.token);
      localStorage.setItem('question-data', JSON.stringify(question.data));
     dispatch(questionSuccess ({ data: question.data }));
+    alert(" Question Added successfully");
     history('/dashboard', { replace: true })
    
   } catch (err) {

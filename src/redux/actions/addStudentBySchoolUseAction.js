@@ -32,7 +32,8 @@ export const addStudentBySchoolUser = (data, navigate) => async (dispatch) => {
     console.log(students)
     //localStorage.setItem('token', user.data.token);
    // localStorage.setItem("students-data", JSON.stringify(students.data));
-    //dispatch(loginUserSuccess({ data: students.data }));
+    dispatch(studentsSuccess({ data: students.data }));
+    alert(" Student Added successfully");
     navigate("/schooldashboard", { replace: true });
   } catch (err) {
     if (err.response) {
