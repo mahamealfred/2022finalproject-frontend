@@ -20,10 +20,12 @@ export const deleteSchoolAction = (id) => async (dispatch) => {
         "Content-Type": "application/json",
       };
     }
-    await axios.delete(`http://localhost:8000/schools/${id}`, {
+ const res=   await axios.delete(`http://localhost:8000/schools/${id}`, {
       headers: headers,
     });
-    dispatch(deleteSchoolSuccess());
+    const successMessage=await res.data.message
+    console.log("success message",successMessage)
+    dispatch(deleteSchoolSuccess(successMessage));
    
   } catch (err) {
     if (err.response) {

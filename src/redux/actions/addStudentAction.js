@@ -8,7 +8,7 @@ import {
 export const addStudentAction = (data, navigate) => async (dispatch) => {
   try {
     dispatch(studentsRequest());
-    const token = await localStorage.getItem("token");
+    const token = await localStorage.getItem("x-access-token");
     let headers;
     if (token) {
       headers = {
@@ -29,11 +29,9 @@ export const addStudentAction = (data, navigate) => async (dispatch) => {
     );
 
     const students = await res.data;
-    console.log(students)
-    //localStorage.setItem('token', user.data.token);
-   // localStorage.setItem("students-data", JSON.stringify(students.data));
-    //dispatch(loginUserSuccess({ data: students.data }));
-    navigate("/dashboard", { replace: true });
+   const successMessage=await res.data.message
+    console.log("success message",successMessage)
+  dispatch(studentsSuccess(successMessage));
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;

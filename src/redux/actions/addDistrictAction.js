@@ -8,7 +8,7 @@ import {
 
 export const addDistrictAction = (data, history) => async (dispatch) => {
   try {
-    dispatch(districtRequest());
+    dispatch(adddistrictRequest());
     const token = await localStorage.getItem("x-access-token");
     let headers;
     if (token) {
@@ -28,36 +28,38 @@ export const addDistrictAction = (data, history) => async (dispatch) => {
     });
 
     const district = await res.data;
-    console.log(district)
+    
     // localStorage.setItem('my-token', user.data.token);
      localStorage.setItem('district-data', JSON.stringify(district.data));
-    dispatch(districtSuccess ({ data: district.data }));
-    alert(" District created successfully");
-    history('/dashboard', { replace: true })
+     const successMessage=await res.data.message
+     console.log("Add success message",successMessage)
+    dispatch(adddistrictSuccess (successMessage));
+    //alert(" District created successfully");
+   // history('/dashboard', { replace: true })
    
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;
-      dispatch(districtFailure(errorMessage));
+      dispatch(adddistrictFailure(errorMessage));
     } else {
-      dispatch(districtFailure("Network Error"));
+      dispatch(adddistrictFailure("Network Error"));
     }
   }
 };
 
-export const districtRequest = () => {
+export const adddistrictRequest = () => {
   return {
     type: ADD_DISTRICT_REQUEST,
   };
 };
 
-export const districtSuccess = (districts) => {
+export const adddistrictSuccess = (districts) => {
   return {
     type: ADD_DISTRICT_SUCCESS,
     payload: districts,
   };
 };
-export const districtFailure = (error) => {
+export const adddistrictFailure = (error) => {
   return {
     type: ADD_DISTRICT_FAILURE,
     payload: error,

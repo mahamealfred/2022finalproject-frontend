@@ -16,6 +16,9 @@
   padding: 5px 10px;
   border-radius: 5px;
 }
+.resultwrapper{
+  color: rgb(67, 216, 67);
+}
 .assessmentInf {
   width: 100%;
   display: flex;

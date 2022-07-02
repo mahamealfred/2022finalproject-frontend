@@ -35,8 +35,10 @@ export const updateExamAction = (data) => async (dispatch) => {
     });
 
     const exam = await res.data;
+    const successMessage=await res.data.message
+    console.log("success message",successMessage)
     localStorage.setItem('exam-data', JSON.stringify(exam.data));
-    dispatch(updateExamSuccess({ data: exam.data }));
+    dispatch(updateExamSuccess(successMessage));
     
    
   } catch (err) {

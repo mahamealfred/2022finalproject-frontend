@@ -46,6 +46,13 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alerts = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 
 export default function ListStudent({ openn, ...rest }) {
   const dispatch = useDispatch();
@@ -70,6 +77,9 @@ export default function ListStudent({ openn, ...rest }) {
   const addStudent = useSelector((state) => state.addStudent);
   const deleteStudent = useSelector((state) => state.deleteStudent);
   //const [value, setValue] = React.useState(new Date());
+  const [openSuccessmessage, setOpenSuccessmessage] = React.useState(false);
+  const [openUpdateSuccessmessage, setOpenUpdateSuccessmessage] = React.useState(false);
+  const [openDeleteSuccessmessage, setOpenDeleteSuccessmessage] = React.useState(false);
 
   const [openUpdate, setOpenUpdate] = useState(false);
 
@@ -86,6 +96,14 @@ export default function ListStudent({ openn, ...rest }) {
       label: "Ordinary 3",
     },
   ];
+  const handleCloseMessage = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSuccessmessage(false);
+    setOpenUpdateSuccessmessage(false);
+    setOpenDeleteSuccessmessage(false);
+  };
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -121,6 +139,7 @@ export default function ListStudent({ openn, ...rest }) {
     setGender("");
     setLevel("");
     setSchoolId("");
+    setOpenSuccessmessage(true)
     await dispatch(getAllStudent());
    
   };
@@ -157,6 +176,7 @@ export default function ListStudent({ openn, ...rest }) {
   const handleDelete = async () => {
     await dispatch(deleteStudentAction(studentId));
     setOpenDelete(false);
+    setOpenDeleteSuccessmessage(true)
     window.location.reload();
   };
 
@@ -349,6 +369,48 @@ export default function ListStudent({ openn, ...rest }) {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSuccessmessage}
+        autoHideDuration={6000}
+        onClose={handleCloseMessage}
+      >
+        <Alerts
+          onClose={handleClose}
+          severity="success"
+          color="info"
+          sx={{ width: "100%" }}
+        >
+          {addStudent.students}
+        </Alerts>
+      </Snackbar>
+      <Snackbar
+        open={openUpdateSuccessmessage}
+        autoHideDuration={6000}
+        onClose={handleCloseMessage}
+      >
+        <Alerts
+          onClose={handleClose}
+          severity="success"
+          color="info"
+          sx={{ width: "100%" }}
+        >
+         
+        </Alerts>
+      </Snackbar>
+      <Snackbar
+        open={openDeleteSuccessmessage}
+        autoHideDuration={6000}
+        onClose={handleCloseMessage}
+      >
+        <Alerts
+          onClose={handleClose}
+          severity="success"
+          color="warning"
+          sx={{ width: "100%" }}
+        >
+          {deleteStudent.students}
+        </Alerts>
+      </Snackbar>
 
       <Dialog
         open={openDelete}

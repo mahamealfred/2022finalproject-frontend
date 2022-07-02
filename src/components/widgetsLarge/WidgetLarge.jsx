@@ -68,7 +68,10 @@ export default function WidgetLarge() {
                 <span className="widgetLargName">{d['school.name']}</span>
                    </td>
                    <td className="widgetLargeAmount">P6</td>
+                   {
+                    !(d['results.avarage'])?"Not yet provided":
                    <td className="widgetLargeAmount">{(d['results.avarage']).toFixed(2)}%</td>
+                   }
                 </tr>
                            )))
                         }

@@ -20,10 +20,12 @@ export const deleteStudentAction = (id) => async (dispatch) => {
         "Content-Type": "application/json",
       };
     }
-    await axios.delete(`http://localhost:8000/students/${id}`, {
+    const res=await axios.delete(`http://localhost:8000/students/${id}`,{
       headers: headers,
     });
-    dispatch(deleteStudentSuccess());
+    const successMessage=await res.data.message
+    console.log("success message",successMessage)
+    dispatch(deleteStudentSuccess(successMessage));
    
   } catch (err) {
     if (err.response) {

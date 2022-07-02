@@ -14,6 +14,9 @@
   padding: 10px;
   margin-top: 5px;
 }
+.correctanswer{
+color: rgb(41, 219, 41);
+}
 
 .options {
   width: 100%;

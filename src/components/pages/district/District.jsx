@@ -42,6 +42,12 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alerts = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function District({ openn, ...rest }) {
   const dispatch = useDispatch();
@@ -63,6 +69,9 @@ export default function District({ openn, ...rest }) {
   const getDistrictsState=useSelector((state)=>state.districts);
   const addDistrict=useSelector((state)=>state.addDistrict);
   //const [value, setValue] = React.useState(new Date());
+  const [openSuccessmessage, setOpenSuccessmessage] = React.useState(false);
+  const [openUpdateSuccessmessage, setOpenUpdateSuccessmessage] = React.useState(false);
+  const [openDeleteSuccessmessage, setOpenDeleteSuccessmessage] = React.useState(false);
 
   const [selectedExamIds, setSelectedExamIds] = useState([]);
   const [search, setSearch] = useState(false);
@@ -96,6 +105,14 @@ export default function District({ openn, ...rest }) {
         label: "Kigali City",
       },
   ];
+  const handleCloseMessage = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSuccessmessage(false);
+    setOpenUpdateSuccessmessage(false);
+    setOpenDeleteSuccessmessage(false);
+  };
   const handleCloseUpdate = () => {
     setName("");
     setSubject("");
@@ -130,15 +147,17 @@ export default function District({ openn, ...rest }) {
   };
 
   const handleAdd = async () => {
-    console.log(provincename, name,fullname,email);
+  
     await dispatch( addDistrictAction({provincename, name,fullname, email}) );
     setOpen(false);
     setProvincename("");
     setName("");
     setFullname("");
     setEmail("");
+    console.log("district =",addDistrict.districts)
+    setOpenSuccessmessage(true);
     await dispatch(getAllDistrict());
-    console.log("added");
+    
   };
 
   const handleUpdate = async () => {
@@ -321,7 +340,48 @@ export default function District({ openn, ...rest }) {
           </Button>
         </DialogActions>
       </Dialog>
-
+      <Snackbar
+        open={openSuccessmessage}
+        autoHideDuration={6000}
+        onClose={handleCloseMessage}
+      >
+        <Alerts
+          onClose={handleClose}
+          severity="success"
+          color="info"
+          sx={{ width: "100%" }}
+        >
+          {addDistrict.districts}
+        </Alerts>
+      </Snackbar>
+      <Snackbar
+        open={openUpdateSuccessmessage}
+        autoHideDuration={6000}
+        onClose={handleCloseMessage}
+      >
+        <Alerts
+          onClose={handleClose}
+          severity="success"
+          color="info"
+          sx={{ width: "100%" }}
+        >
+          {/* {updateDistrict.districts} */}
+        </Alerts>
+      </Snackbar>
+      <Snackbar
+        open={openDeleteSuccessmessage}
+        autoHideDuration={6000}
+        onClose={handleCloseMessage}
+      >
+        <Alerts
+          onClose={handleClose}
+          severity="success"
+          color="warning"
+          sx={{ width: "100%" }}
+        >
+          {/* {deleteDistrict.districts} */}
+        </Alerts>
+      </Snackbar>
       <Dialog open={openUpdate} onClose={handleClose}>
         <DialogTitle>Update Exam Details</DialogTitle>
         <DialogContent>

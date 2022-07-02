@@ -21,11 +21,13 @@ export const deleteExamAction = (id) => async (dispatch) => {
         "Content-Type": "application/json",
       };
     }
-    await axios.delete(`http://localhost:8000/exams/${id}`, {
+   const res= await axios.delete(`http://localhost:8000/exams/${id}`, {
       headers: headers,
     });
-    dispatch(deleteExamSuccess());
-   AlarmTwoTone('Deleted Successull')
+    const successMessage=await res.data.message
+    console.log("success message",successMessage)
+    dispatch(deleteExamSuccess(successMessage));
+  //  AlarmTwoTone('Deleted Successull')
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;

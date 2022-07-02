@@ -42,6 +42,13 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alerts = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 
 export default function School({ openn, ...rest }) {
   const dispatch = useDispatch();
@@ -59,7 +66,9 @@ export default function School({ openn, ...rest }) {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [schoolId, setSchoolId] = useState("");
-
+  const [openSuccessmessage, setOpenSuccessmessage] = React.useState(false);
+  const [openUpdateSuccessmessage, setOpenUpdateSuccessmessage] = React.useState(false);
+  const [openDeleteSuccessmessage, setOpenDeleteSuccessmessage] = React.useState(false);
   const addSchool = useSelector((state) => state.addSchool);
   const updateSchool = useSelector((state) => state.updateSchool);
   const deleteSchool = useSelector((state) => state.deleteSchool);
@@ -76,6 +85,14 @@ export default function School({ openn, ...rest }) {
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
   };
+  const handleCloseMessage = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSuccessmessage(false);
+    setOpenUpdateSuccessmessage(false);
+    setOpenDeleteSuccessmessage(false);
+  };
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -88,6 +105,7 @@ export default function School({ openn, ...rest }) {
     setFullname("");
     setEmail("");
     setOpenUpdate(false);
+    
   };
   const handleClickOpen = () => {
     setOpen(true);
@@ -110,9 +128,10 @@ export default function School({ openn, ...rest }) {
     setCell("");
     setFullname("");
     setEmail("");
+    setOpenSuccessmessage(true);
     await dispatch(getAllSchool());
 
-    console.log("added");
+   
   };
   console.log(name);
   useEffect(() => {
@@ -153,12 +172,14 @@ export default function School({ openn, ...rest }) {
     setSector("");
     setCell("");
     setSearch(false);
+    setOpenUpdateSuccessmessage(true);
     await dispatch(getAllSchool());
   };
 
   const handleDelete = async () => {
     await dispatch(deleteSchoolAction(schoolId));
     setOpenDelete(false);
+    setOpenDeleteSuccessmessage(true);
     window.location.reload();
   };
 
@@ -328,6 +349,48 @@ export default function School({ openn, ...rest }) {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSuccessmessage}
+        autoHideDuration={6000}
+        onClose={handleCloseMessage}
+      >
+        <Alerts
+          onClose={handleClose}
+          severity="success"
+          color="info"
+          sx={{ width: "100%" }}
+        >
+          {addSchool.schools}
+        </Alerts>
+      </Snackbar>
+      <Snackbar
+        open={openUpdateSuccessmessage}
+        autoHideDuration={6000}
+        onClose={handleCloseMessage}
+      >
+        <Alerts
+          onClose={handleClose}
+          severity="success"
+          color="info"
+          sx={{ width: "100%" }}
+        >
+          {updateSchool.schools}
+        </Alerts>
+      </Snackbar>
+      <Snackbar
+        open={openDeleteSuccessmessage}
+        autoHideDuration={6000}
+        onClose={handleCloseMessage}
+      >
+        <Alerts
+          onClose={handleClose}
+          severity="success"
+          color="warning"
+          sx={{ width: "100%" }}
+        >
+          {deleteSchool.schools}
+        </Alerts>
+      </Snackbar>
 
       <Dialog open={openUpdate} onClose={handleCloseUpdate}>
         <DialogTitle>Update School Information</DialogTitle>

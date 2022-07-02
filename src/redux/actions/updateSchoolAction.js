@@ -37,8 +37,10 @@ export const updateSchoolAction = (data) => async (dispatch) => {
     });
 
     const school = await res.data;
+    const successMessage=await res.data.message
+    console.log("success message",successMessage)
     localStorage.setItem('school-data', JSON.stringify(school.data));
-    dispatch(updateSchoolSuccess({ data: school.data }));
+    dispatch(updateSchoolSuccess(successMessage));
     
    
   } catch (err) {
