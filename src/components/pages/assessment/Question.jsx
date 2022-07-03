@@ -14,8 +14,10 @@ import { Button } from "@mui/material";
 import { addResultAction } from "../../../redux/actions/addResultAction";
 import { useParams } from "react-router-dom";
 
+let getExamAndQuestionState
+
 export default function Question({ ...rest }) {
-  const getExamAndQuestionState = useSelector(
+  getExamAndQuestionState = useSelector(
     (state) => state.getExamAndQuestionById
   );
   const addResultState = useSelector((state) => state.addResult);
@@ -35,17 +37,16 @@ export default function Question({ ...rest }) {
 var startTimer=null
 
 const handleStopTime=()=>{
+  console.log(getExamAndQuestionState.exams[0])
 clearInterval(startTimer)
+handleSubmit();
+
 }
 const handelClock=(hr, mm, ss)=>{
   function startInterval(){
      startTimer=setInterval(function(){
       if(hr==0 && mm==0 && ss==0){
         handleStopTime();
-        if( getExamAndQuestionState.exams.length > 0 ){
-          handleSubmit();
-        }
-       
       }
       else if(ss!=0){
         ss--;
